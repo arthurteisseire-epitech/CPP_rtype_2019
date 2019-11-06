@@ -11,6 +11,8 @@ Makefile
 *.gcov
 units
 coverage
+client_tests_run
+server_tests_run
 
 # cmake
 .idea/
