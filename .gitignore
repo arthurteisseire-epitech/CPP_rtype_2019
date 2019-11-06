@@ -1,0 +1,31 @@
+# General
+*.o
+*.a
+*~
+vgcore*
+Makefile
+
+# Unit Tests
+*.gcno
+*.gcda
+*.gcov
+units
+coverage
+
+# cmake
+.idea/
+cmake-build-debug/
+CMakeFiles/
+CMakeCache.txt
+*.cbp
+cmake_install.cmake
+Testing/
+CTestTestfile.cmake
+feature_tests.c
+CMakeCCompilerId.c
+bin/
+
+# Project
+r-type_client
+r-type_server
+build
