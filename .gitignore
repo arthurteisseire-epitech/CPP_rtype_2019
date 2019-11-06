@@ -29,3 +29,10 @@ bin/
 r-type_client
 r-type_server
 build
+
+#conan
+conan.lock
+conanbuildinfo.cmake
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json

@@ -1,0 +1,9 @@
+[requires]
+boost/1.71.0@conan/stable
+
+[build_requires]
+sfml/2.5.1@bincrafters/stable
+gtest/1.8.1@bincrafters/stable
+
+[generators]
+cmake
