@@ -5,7 +5,24 @@
 ** main.cpp
 */
 
+#include <iostream>
+#include <memory>
+#include "network/Network.hpp"
+
+class Functor {
+public:
+    bool operator()(const std::array<char, BUFFER_SIZE> &request, std::array<char, BUFFER_SIZE> &response)
+    {
+        for (auto &c : request) {
+            std::cout << c;
+        }
+        std::cout << std::endl;
+        std::copy(request.begin(), request.end(), response.begin());
+        return false;
+    }
+};
+
 int main()
 {
-    return 0;
+    Network<Functor> network(1234, std::make_shared<Functor>());
 }
