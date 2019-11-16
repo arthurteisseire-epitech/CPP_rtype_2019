@@ -19,9 +19,9 @@ class Connection : public boost::enable_shared_from_this<Connection<Func>> {
 public:
 
     template<typename Fun>
-    static boost::shared_ptr<Connection> create(boost::asio::executor &executor, std::shared_ptr<Fun> callback)
+    static boost::shared_ptr<Connection> create(boost::asio::io_context &ioContext, std::shared_ptr<Fun> callback)
     {
-        return boost::shared_ptr<Connection>(new Connection(executor, callback));
+        return boost::shared_ptr<Connection>(new Connection(ioContext, callback));
     }
 
     void start()
@@ -76,9 +76,9 @@ public:
     }
 
 private:
-    Connection(boost::asio::executor &executor, std::shared_ptr<Func> callback) :
+    Connection(boost::asio::io_context &ioContext, std::shared_ptr<Func> callback) :
         callback(std::move(callback)),
-        sock(executor),
+        sock(ioContext),
         readBuffer(),
         writeBuffer()
     {

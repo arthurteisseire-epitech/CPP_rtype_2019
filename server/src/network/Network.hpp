@@ -35,8 +35,7 @@ public:
 private:
     void startAccept()
     {
-        auto executor = acceptor->get_executor();
-        auto connection = Connection<Func>::create(executor, callback);
+        auto connection = Connection<Func>::create(ioContext, callback);
 
         acceptor->async_accept(
             connection->socket(),
