@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 11)
 project(rtype)
 add_definitions("-fPIC")
 
+
+# TODO -- use a conanfile at root to build two other conanfiles in server an client if possible
 include(${CMAKE_SOURCE_DIR}/build/conanbuildinfo.cmake)
 conan_basic_setup()
 
