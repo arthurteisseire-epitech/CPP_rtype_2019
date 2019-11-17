@@ -28,45 +28,51 @@ namespace net
 
         void start()
         {
+            receive();
+        }
+
+        void receive()
+        {
             readBuffer.fill(0);
-            writeBuffer.fill(0);
             sock.async_read_some(
                 boost::asio::buffer(readBuffer),
                 boost::bind(
-                    &Connection::handleRead,
+                    &Connection::handleReceive,
                     this->shared_from_this(),
                     boost::asio::placeholders::error
                 )
             );
         }
 
-        void handleRead(const boost::system::error_code &err)
+        void handleReceive(const boost::system::error_code &err)
         {
+            std::array<char, BUFFER_SIZE> response{};
+
             if (!err) {
-                auto wantToContinue = (*callback)(readBuffer, writeBuffer);
-                send(writeBuffer);
+                auto wantToContinue = (*callback)(readBuffer, response);
+                send(response);
                 if (!wantToContinue)
                     close();
                 else
-                    start();
+                    receive();
             } else {
                 close();
             }
         }
 
-        void send(const std::array<char, 1024> &response)
+        void send(const std::array<char, BUFFER_SIZE> &response)
         {
             sock.async_write_some(
                 boost::asio::buffer(response),
                 boost::bind(
-                    &Connection::handleWrite,
+                    &Connection::handleSend,
                     this->shared_from_this(),
                     boost::asio::placeholders::error
                 )
             );
         }
 
-        void handleWrite(const boost::system::error_code &err)
+        void handleSend(const boost::system::error_code &err)
         {
             if (err)
                 close();
@@ -81,8 +87,7 @@ namespace net
         Connection(boost::asio::io_context &ioContext, std::shared_ptr<Func> callback) :
             callback(std::move(callback)),
             sock(ioContext),
-            readBuffer(),
-            writeBuffer()
+            readBuffer()
         {
         }
 
@@ -99,9 +104,7 @@ namespace net
 
         std::shared_ptr<Func> callback;
         boost::asio::ip::tcp::socket sock;
-
         std::array<char, BUFFER_SIZE> readBuffer;
-        std::array<char, BUFFER_SIZE> writeBuffer;
     };
 }
 
