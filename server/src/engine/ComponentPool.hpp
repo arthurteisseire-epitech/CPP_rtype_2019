@@ -12,11 +12,10 @@
 
 namespace ecs
 {
-    template<typename T>
+    template<typename T, int PadSize = 20>
     class ComponentPool {
     public:
-        explicit ComponentPool(int padSize) :
-            padSize(padSize)
+        explicit ComponentPool()
         {
             reallocate();
         }
@@ -42,13 +41,12 @@ namespace ecs
 
         void reallocate()
         {
-            pool.reserve(pool.size() + padSize);
-            for (int i = 0; i < padSize; ++i)
+            pool.reserve(pool.size() + PadSize);
+            for (int i = 0; i < PadSize; ++i)
                 pool.emplace_back(true, std::move(T()));
         }
 
     private:
-        int padSize;
         std::vector<std::pair<bool, T>> pool;
     };
 }
