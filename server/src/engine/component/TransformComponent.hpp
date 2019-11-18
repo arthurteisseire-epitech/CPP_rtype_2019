@@ -8,6 +8,8 @@
 #ifndef RTYPE_TRANSFORMCOMPONENT_HPP
 #define RTYPE_TRANSFORMCOMPONENT_HPP
 
+#include "IComponent.hpp"
+
 namespace ecs
 {
     struct TransformComponent : public IComponent {

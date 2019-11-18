@@ -6,6 +6,7 @@ include_directories(
 	src/engine/component
 	src/engine/entity
 	src/engine/system
+	src/engine
 	src/network
 	src
 )
