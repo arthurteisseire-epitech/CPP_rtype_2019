@@ -2,10 +2,17 @@ set(SERVER_NAME r-type_server)
 
 project(${SERVER_NAME})
 
-include_directories(src)
+include_directories(
+	src/engine/component
+	src/engine/entity
+	src/engine/system
+	src/network
+	src
+)
 
 file(GLOB_RECURSE server_sources src/*.cpp src/*.hpp)
+list(FILTER server_sources EXCLUDE REGEX "src/main.cpp$")
 
-add_executable(${SERVER_NAME} ${server_sources})
-target_link_libraries(${SERVER_NAME} ${CONAN_LIBS})
+add_executable(${SERVER_NAME} ${server_sources} src/main.cpp)
+target_link_libraries(${SERVER_NAME} ${CONAN_LIBS} pthread)
 add_subdirectory(tests EXCLUDE_FROM_ALL)
