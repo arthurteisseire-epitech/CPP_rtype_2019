@@ -7,4 +7,3 @@
 
 #include "EntityManager.hpp"
 
-unsigned int ecs::EntityManager::nextEntity = 0;
