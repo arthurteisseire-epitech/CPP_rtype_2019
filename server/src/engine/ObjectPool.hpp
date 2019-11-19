@@ -16,47 +16,39 @@ namespace ecs
     template<typename T, int PadSize = 20>
     class ObjectPool {
     public:
-        explicit ObjectPool()
+        explicit ObjectPool() :
+            sizeAllocated(0)
         {
             reallocate();
         }
 
         T *create()
         {
-            auto it = std::find_if(pool.begin(), pool.end(), [](const std::pair<Memory, T> &p) {
-                return p.first == AVAILABLE;
-            });
-
-            if (it == pool.end()) {
+            if (pool.size() == sizeAllocated)
                 reallocate();
-                it = std::prev(pool.end());
-            }
-            it->first = UNAVAILABLE;
-            return &it->second;
+            pool.emplace_back();
+            return &pool.back();
         }
 
         void destroy(T *obj)
         {
-            auto it = std::find_if(pool.begin(), pool.end(), [obj](const std::pair<Memory, T> &p) {
-                return obj == &p.second;
+            auto it = std::find_if(pool.begin(), pool.end(), [obj](const T &p) {
+                return obj == &p;
             });
-            it->first = AVAILABLE;
+            std::iter_swap(it, std::prev(pool.end()));
+            pool.pop_back();
         }
 
     private:
 
         void reallocate()
         {
-            pool.reserve(pool.size() + PadSize);
-            for (int i = 0; i < PadSize; ++i)
-                pool.emplace_back(AVAILABLE, std::move(T()));
+            sizeAllocated += PadSize;
+            pool.reserve(sizeAllocated);
         }
 
-        enum Memory {
-            AVAILABLE,
-            UNAVAILABLE
-        };
-        std::vector<std::pair<Memory, T>> pool;
+        std::vector<T> pool;
+        int sizeAllocated;
     };
 }
 
