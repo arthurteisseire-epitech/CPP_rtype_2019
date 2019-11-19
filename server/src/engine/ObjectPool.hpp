@@ -22,11 +22,12 @@ namespace ecs
             reallocate();
         }
 
-        T *create()
+        template<typename ...Args>
+        T *create(Args ...args)
         {
             if (pool.size() == sizeAllocated)
                 reallocate();
-            pool.emplace_back();
+            pool.emplace_back(args...);
             return &pool.back();
         }
 

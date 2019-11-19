@@ -18,6 +18,15 @@ TEST(ComponentPool, create)
     ASSERT_TRUE(p != nullptr);
 }
 
+TEST(ComponentPool, createWithArgs)
+{
+    ecs::ObjectPool<ecs::HealthComponent, 10> healthComponentPool;
+
+    auto p = healthComponentPool.create(20);
+
+    ASSERT_TRUE(p->life == 20);
+}
+
 TEST(ComponentPool, destroy)
 {
     ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
