@@ -5,17 +5,17 @@
 ** PoolComponent.hpp
 */
 
-#ifndef RTYPE_COMPONENTPOOL_HPP
-#define RTYPE_COMPONENTPOOL_HPP
+#ifndef RTYPE_OBJECTPOOL_HPP
+#define RTYPE_OBJECTPOOL_HPP
 
 #include "HealthComponent.hpp"
 
 namespace ecs
 {
     template<typename T, int PadSize = 20>
-    class ComponentPool {
+    class ObjectPool {
     public:
-        explicit ComponentPool()
+        explicit ObjectPool()
         {
             reallocate();
         }

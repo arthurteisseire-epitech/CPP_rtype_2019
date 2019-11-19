@@ -6,12 +6,12 @@
 */
 
 #include "gtest/gtest.h"
-#include "ComponentPool.hpp"
+#include "ObjectPool.hpp"
 #include "HealthComponent.hpp"
 
 TEST(ComponentPool, init)
 {
-    ecs::ComponentPool<ecs::HealthComponent, 20> healthComponentPool;
+    ecs::ObjectPool<ecs::HealthComponent, 20> healthComponentPool;
 
     auto p = healthComponentPool.create();
 
