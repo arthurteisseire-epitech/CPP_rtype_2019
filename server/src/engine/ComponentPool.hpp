@@ -24,10 +24,8 @@ namespace ecs
         {
             auto *component = findFreeComponent();
 
-            if (component == nullptr) {
-                reallocate();
-                component = findFreeComponent();
-            }
+            if (component == nullptr)
+                component = reallocate();
             return component;
         }
 
@@ -39,11 +37,12 @@ namespace ecs
             return nullptr;
         }
 
-        void reallocate()
+        T *reallocate()
         {
             pool.reserve(pool.size() + PadSize);
             for (int i = 0; i < PadSize; ++i)
                 pool.emplace_back(true, std::move(T()));
+            return &pool.back().second;
         }
 
     private:
