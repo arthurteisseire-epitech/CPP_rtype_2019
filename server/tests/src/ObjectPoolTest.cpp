@@ -9,11 +9,20 @@
 #include "ObjectPool.hpp"
 #include "HealthComponent.hpp"
 
-TEST(ComponentPool, init)
+TEST(ComponentPool, create)
 {
-    ecs::ObjectPool<ecs::HealthComponent, 20> healthComponentPool;
+    ecs::ObjectPool<ecs::HealthComponent, 10> healthComponentPool;
 
     auto p = healthComponentPool.create();
 
     ASSERT_TRUE(p != nullptr);
+}
+
+TEST(ComponentPool, destroy)
+{
+    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
+    auto p = healthComponentPool.create();
+
+    healthComponentPool.destroy(p);
+    ASSERT_EQ(p, healthComponentPool.create());
 }

@@ -8,6 +8,7 @@
 #ifndef RTYPE_OBJECTPOOL_HPP
 #define RTYPE_OBJECTPOOL_HPP
 
+#include <algorithm>
 #include "HealthComponent.hpp"
 
 namespace ecs
@@ -22,31 +23,40 @@ namespace ecs
 
         T *create()
         {
-            auto *component = findFreeComponent();
+            auto it = std::find_if(pool.begin(), pool.end(), [](const std::pair<Memory, T> &p) {
+                return p.first == AVAILABLE;
+            });
 
-            if (component == nullptr)
-                component = reallocate();
-            return component;
+            if (it == pool.end()) {
+                reallocate();
+                it = std::prev(pool.end());
+            }
+            it->first = UNAVAILABLE;
+            return &it->second;
         }
 
-        T *findFreeComponent()
+        void destroy(T *obj)
         {
-            for (auto &p : pool)
-                if (p.first == true)
-                    return &p.second;
-            return nullptr;
-        }
-
-        T *reallocate()
-        {
-            pool.reserve(pool.size() + PadSize);
-            for (int i = 0; i < PadSize; ++i)
-                pool.emplace_back(true, std::move(T()));
-            return &pool.back().second;
+            auto it = std::find_if(pool.begin(), pool.end(), [obj](const std::pair<Memory, T> &p) {
+                return obj == &p.second;
+            });
+            it->first = AVAILABLE;
         }
 
     private:
-        std::vector<std::pair<bool, T>> pool;
+
+        void reallocate()
+        {
+            pool.reserve(pool.size() + PadSize);
+            for (int i = 0; i < PadSize; ++i)
+                pool.emplace_back(AVAILABLE, std::move(T()));
+        }
+
+        enum Memory {
+            AVAILABLE,
+            UNAVAILABLE
+        };
+        std::vector<std::pair<Memory, T>> pool;
     };
 }
 
