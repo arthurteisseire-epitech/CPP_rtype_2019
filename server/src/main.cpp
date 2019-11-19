@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include "Network.hpp"
-#include "EntityManager.hpp"
+#include "EntityAdmin.hpp"
 #include "IComponent.hpp"
 #include "HealthComponent.hpp"
 #include "TransformComponent.hpp"
@@ -27,7 +27,7 @@ public:
 int main()
 {
     //    net::Network<Functor> network(1234, std::make_shared<Functor>());
-    ecs::EntityManager entityManager;
+    ecs::EntityAdmin entityManager;
 
     std::vector<std::unique_ptr<ecs::IComponent>> a;
     a.reserve(2);

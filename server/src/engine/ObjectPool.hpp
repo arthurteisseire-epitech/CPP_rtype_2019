@@ -9,7 +9,8 @@
 #define RTYPE_OBJECTPOOL_HPP
 
 #include <algorithm>
-#include "HealthComponent.hpp"
+#include <vector>
+#include <iostream>
 
 namespace ecs
 {
@@ -17,7 +18,7 @@ namespace ecs
     class ObjectPool {
     public:
         explicit ObjectPool() :
-            sizeAllocated(0)
+            pool()
         {
             reallocate();
         }
@@ -25,7 +26,7 @@ namespace ecs
         template<typename ...Args>
         T *create(Args ...args)
         {
-            if (pool.size() == sizeAllocated)
+            if (pool.size() == pool.capacity())
                 reallocate();
             pool.emplace_back(args...);
             return &pool.back();
@@ -40,16 +41,19 @@ namespace ecs
             pool.pop_back();
         }
 
+        std::vector<T> &get()
+        {
+            return pool;
+        }
+
     private:
 
         void reallocate()
         {
-            sizeAllocated += PadSize;
-            pool.reserve(sizeAllocated);
+            pool.reserve(pool.size() + PadSize);
         }
 
         std::vector<T> pool;
-        int sizeAllocated;
     };
 }
 

@@ -2,8 +2,8 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** EntityManager.cpp
+** EntityAdmin.cpp
 */
 
-#include "EntityManager.hpp"
+#include "EntityAdmin.hpp"
 
