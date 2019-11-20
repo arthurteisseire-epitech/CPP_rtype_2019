@@ -15,7 +15,7 @@ ecs::HealthSystem::HealthSystem(std::shared_ptr<EntityAdmin> admin) :
 
 void ecs::HealthSystem::update(float dt)
 {
-    for (auto &c : admin->getHealthPool().get()) {
+    for (auto &c : admin->getPool<HealthComponent>().get()) {
         if (c.life == 100)
             c.life -= 20;
     }
