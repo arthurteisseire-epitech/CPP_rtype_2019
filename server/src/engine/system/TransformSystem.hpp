@@ -15,10 +15,7 @@ namespace ecs
 {
     class TransformSystem {
     public:
-        explicit TransformSystem(std::shared_ptr<EntityAdmin> admin);
-        void update(float dt);
-    private:
-        std::shared_ptr<EntityAdmin> admin;
+        static void update(float dt, ecs::EntityAdmin &admin);
     };
 }
 

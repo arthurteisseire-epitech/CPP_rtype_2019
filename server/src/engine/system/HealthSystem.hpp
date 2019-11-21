@@ -15,10 +15,7 @@ namespace ecs
 {
     class HealthSystem {
     public:
-        explicit HealthSystem(std::shared_ptr<EntityAdmin> admin);
-        void update(float dt);
-    private:
-        std::shared_ptr<EntityAdmin> admin;
+        static void update(float dt, EntityAdmin &admin);
     };
 }
 

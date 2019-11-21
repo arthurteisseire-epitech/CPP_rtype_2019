@@ -13,22 +13,20 @@
 
 TEST(System, updateHealth)
 {
-    auto admin = std::make_shared<ecs::EntityAdmin>();
-    ecs::HealthSystem healthSystem(admin);
-    auto healthComponent = admin->getPool<ecs::HealthComponent>().create(100);
+    ecs::EntityAdmin admin;
+    auto healthComponent = admin.getPool<ecs::HealthComponent>().create(100);
 
-    healthSystem.update(0.16);
+    ecs::HealthSystem::update(0.16, admin);
 
-    ASSERT_EQ(healthComponent->life, 80);
+    EXPECT_EQ(healthComponent->life, 80);
 }
 
 TEST(System, updateTransform)
 {
-    auto admin = std::make_shared<ecs::EntityAdmin>();
-    ecs::TransformSystem transformSystem(admin);
-    auto transformComponent = admin->getPool<ecs::TransformComponent>().create(100);
+    ecs::EntityAdmin admin;
+    auto transformComponent = admin.getPool<ecs::TransformComponent>().create();
 
-    transformSystem.update(0.16);
+    ecs::TransformSystem::update(0.16, admin);
 
-    ASSERT_EQ(transformComponent->x, 2);
+    EXPECT_EQ(transformComponent->x, 2);
 }
