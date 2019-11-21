@@ -14,10 +14,11 @@
 
 namespace ecs
 {
-    template<typename T, int PadSize = 20>
+    template<typename T>
     class ObjectPool {
     public:
-        explicit ObjectPool() :
+        explicit ObjectPool(int padSize = 20) :
+            padSize(padSize),
             pool()
         {
             reallocate();
@@ -55,10 +56,11 @@ namespace ecs
 
         void reallocate()
         {
-            pool.reserve(pool.size() + PadSize);
+            pool.reserve(pool.size() + padSize);
         }
 
         std::vector<T> pool;
+        int padSize;
     };
 }
 

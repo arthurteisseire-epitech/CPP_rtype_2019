@@ -11,7 +11,7 @@
 
 TEST(ComponentPool, create)
 {
-    ecs::ObjectPool<ecs::HealthComponent, 10> healthComponentPool;
+    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
 
     auto p = healthComponentPool.create();
 
@@ -20,7 +20,7 @@ TEST(ComponentPool, create)
 
 TEST(ComponentPool, createWithArgs)
 {
-    ecs::ObjectPool<ecs::HealthComponent, 10> healthComponentPool;
+    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
 
     auto p = healthComponentPool.create(20);
 
