@@ -5,11 +5,28 @@
 ** EntityTest.cpp
 */
 
-#include <TransformComponent.hpp>
 #include "ObjectPool.hpp"
 #include "gtest/gtest.h"
 #include "Entity.hpp"
 #include "HealthComponent.hpp"
+#include "TransformComponent.hpp"
+
+TEST(Entity, create)
+{
+    auto healthPool = ecs::ObjectPool<ecs::HealthComponent>();
+    auto transformPool = ecs::ObjectPool<ecs::TransformComponent>();
+
+    auto entity1 = std::make_unique<ecs::Entity<ecs::HealthComponent, ecs::TransformComponent>>(
+        healthPool.create(10),
+        transformPool.create()
+    );
+
+    auto entity2 = std::make_unique<ecs::Entity<ecs::HealthComponent>>(
+        healthPool.create()
+    );
+
+    EXPECT_EQ(entity2->getId(), entity1->getId() + 1);
+}
 
 TEST(Entity, getComponent)
 {

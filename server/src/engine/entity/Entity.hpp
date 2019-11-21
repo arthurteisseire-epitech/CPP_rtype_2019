@@ -10,6 +10,7 @@
 
 #include <tuple>
 #include "IEntity.hpp"
+#include "Id.hpp"
 
 namespace ecs
 {
@@ -19,6 +20,7 @@ namespace ecs
         explicit Entity(Args *... args) :
             components(args...)
         {
+            id = nextId();
         }
 
         template<typename T>
@@ -33,8 +35,14 @@ namespace ecs
             return std::make_tuple(get<R>()...);
         }
 
+        int getId() const
+        {
+            return id;
+        }
+
     private:
         std::tuple<Args *...> components;
+        int id;
     };
 }
 
