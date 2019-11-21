@@ -41,9 +41,14 @@ namespace ecs
             pool.pop_back();
         }
 
-        std::vector<T> &get()
+        typename std::vector<T>::iterator begin()
         {
-            return pool;
+            return pool.begin();
+        }
+
+        typename std::vector<T>::iterator end()
+        {
+            return pool.end();
         }
 
     private:

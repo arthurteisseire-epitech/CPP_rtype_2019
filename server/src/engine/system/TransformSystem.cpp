@@ -10,7 +10,7 @@
 
 void ecs::TransformSystem::update(float dt, EntityAdmin &admin)
 {
-    for (auto &c : admin.getPool<TransformComponent>().get()) {
+    for (auto &c : admin.getPool<TransformComponent>()) {
         c.x = 2;
     }
 }

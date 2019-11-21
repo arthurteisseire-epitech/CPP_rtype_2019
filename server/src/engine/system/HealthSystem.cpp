@@ -9,7 +9,7 @@
 
 void ecs::HealthSystem::update(float dt, EntityAdmin &admin)
 {
-    for (auto &c : admin.getPool<HealthComponent>().get()) {
+    for (auto &c : admin.getPool<HealthComponent>()) {
         if (c.life == 100)
             c.life -= 20;
     }

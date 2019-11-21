@@ -35,3 +35,17 @@ TEST(ComponentPool, destroy)
     healthComponentPool.destroy(p);
     ASSERT_EQ(p, healthComponentPool.create());
 }
+
+TEST(ComponentPool, iterate)
+{
+    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
+    int nbComponents = 3;
+    int actualNbComponents = 0;
+
+    for (int i = 0; i < nbComponents; ++i)
+        healthComponentPool.create();
+    for (auto &pool : healthComponentPool)
+        ++actualNbComponents;
+
+    EXPECT_EQ(actualNbComponents, nbComponents);
+}
