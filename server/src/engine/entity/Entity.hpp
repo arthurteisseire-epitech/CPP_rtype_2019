@@ -29,12 +29,6 @@ namespace ecs
             return std::get<T *>(components);
         }
 
-        template<typename... R>
-        std::tuple<R *...> getMany()
-        {
-            return std::make_tuple(get<R>()...);
-        }
-
         int getId() const
         {
             return id;
