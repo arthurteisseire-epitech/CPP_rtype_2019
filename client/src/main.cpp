@@ -9,7 +9,8 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    auto s = new sf::String("toto");
+    sf::RenderWindow window(sf::VideoMode(200, 200), *s);
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
