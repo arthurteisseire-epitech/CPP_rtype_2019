@@ -8,9 +8,6 @@
 #include <iostream>
 #include "Network.hpp"
 #include "EntityAdmin.hpp"
-#include "IComponent.hpp"
-#include "HealthComponent.hpp"
-#include "TransformComponent.hpp"
 
 class Functor {
 public:
@@ -26,13 +23,5 @@ public:
 
 int main()
 {
-    //    net::Network<Functor> network(1234, std::make_shared<Functor>());
-    ecs::EntityAdmin entityManager;
-
-    std::vector<std::unique_ptr<ecs::IComponent>> a;
-    a.reserve(2);
-    a.emplace_back(new ecs::HealthComponent);
-    a.emplace_back(new ecs::TransformComponent);
-
-    entityManager.createEntity<ecs::HealthComponent, ecs::TransformComponent>();
+    net::Network<Functor> network(1234, std::make_shared<Functor>());
 }
