@@ -10,11 +10,12 @@
 #include "HealthSystem.hpp"
 #include "TransformSystem.hpp"
 #include "TransformComponent.hpp"
+#include "GetPool.hpp"
 
 TEST(System, updateHealth)
 {
     ecs::EntityAdmin admin;
-    auto healthComponent = admin.getPool<ecs::HealthComponent>().create(100);
+    auto healthComponent = ecs::GetPool<ecs::HealthComponent>(admin).create(100);
 
     ecs::HealthSystem::update(0.16, admin);
 
@@ -24,7 +25,7 @@ TEST(System, updateHealth)
 TEST(System, updateTransform)
 {
     ecs::EntityAdmin admin;
-    auto transformComponent = admin.getPool<ecs::TransformComponent>().create();
+    auto transformComponent = ecs::GetPool<ecs::TransformComponent>(admin).create();
 
     ecs::TransformSystem::update(0.16, admin);
 

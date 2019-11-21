@@ -16,16 +16,11 @@
 
 namespace ecs
 {
-    class EntityAdmin {
-    public:
-        template<typename T>
-        ObjectPool<T> &getPool()
-        {
-            return std::get<ObjectPool<T>>(pools);
-        }
-
-    private:
-        std::tuple<ObjectPool<HealthComponent>, ObjectPool<TransformComponent>> pools;
+    struct EntityAdmin {
+        std::tuple<
+            ObjectPool<HealthComponent>,
+            ObjectPool<TransformComponent>
+        > pools;
     };
 }
 
