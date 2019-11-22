@@ -10,6 +10,7 @@
 
 #define BUFFER_SIZE 1024
 
+#include <iostream>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>

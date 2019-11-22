@@ -9,6 +9,7 @@
 #define NETWORK_HPP
 
 #include <boost/asio.hpp>
+#include <memory>
 #include "Connection.hpp"
 
 namespace net
@@ -19,11 +20,9 @@ namespace net
         Network(int portNumber, std::shared_ptr<Func> callback) :
             callback(callback)
         {
-            acceptor = std::unique_ptr<boost::asio::ip::tcp::acceptor>(
-                new boost::asio::ip::tcp::acceptor(
-                    ioContext,
-                    boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), portNumber)
-                )
+            acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(
+                ioContext,
+                boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), portNumber)
             );
             startAccept();
             ioContext.run();
