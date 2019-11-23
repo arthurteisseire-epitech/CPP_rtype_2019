@@ -18,24 +18,26 @@ ecs::ConnectionSystem::ConnectionSystem(std::shared_ptr<EntityAdmin> admin) : AS
 void ecs::ConnectionSystem::update(float deltaTime)
 {
     startAccept();
+    admin->network.ioContext.run();
 }
 
 void ecs::ConnectionSystem::startAccept()
 {
-    auto conn = ConnectionComponent(admin->network.ioContext);
+    conn = ConnectionComponent(admin->network.ioContext);
 
     admin->network.acceptor.async_accept(
-        conn.socket,
-        boost::bind(&ecs::ConnectionSystem::handleAccept, this, &conn, boost::asio::placeholders::error)
+        conn.value().socket,
+        boost::bind(&ecs::ConnectionSystem::handleAccept, this, boost::asio::placeholders::error)
     );
 }
 
-void ecs::ConnectionSystem::handleAccept(ConnectionComponent *conn,
-                                         const boost::system::error_code &err)
+void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
 {
     auto &connPool = GetPool<ecs::ConnectionComponent>(admin);
 
-    if (!err)
-        connPool.move(std::move(*conn));
+    if (err)
+        std::cout << err << std::endl;
+    else
+        connPool.move(std::move(conn.value()));
     startAccept();
 }

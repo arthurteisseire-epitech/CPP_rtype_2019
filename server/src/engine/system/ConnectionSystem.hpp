@@ -8,6 +8,7 @@
 #ifndef RTYPE_CONNECTIONSYSTEM_HPP
 #define RTYPE_CONNECTIONSYSTEM_HPP
 
+#include <optional>
 #include "ASystem.hpp"
 #include "EntityAdmin.hpp"
 #include "ConnectionComponent.hpp"
@@ -20,7 +21,10 @@ namespace ecs
 
         void update(float deltaTime);
         void startAccept();
-        void handleAccept(ConnectionComponent *conn, const boost::system::error_code &err);
+        void handleAccept(const boost::system::error_code &err);
+
+    private:
+        std::optional<ConnectionComponent> conn;
     };
 }
 

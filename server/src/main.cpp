@@ -11,9 +11,9 @@
 
 int main()
 {
-    ecs::EntityAdmin admin;
+    auto admin = std::make_shared<ecs::EntityAdmin>();
+    ecs::ConnectionSystem connSystem(admin);
 
-    ecs::ConnectionSystem::update(0.16, admin);
-
-
+    connSystem.update(0.16);
+    std::cout << "end" << std::endl;
 }
