@@ -10,12 +10,15 @@
 
 #include <memory>
 #include "EntityAdmin.hpp"
+#include "ASystem.hpp"
 
 namespace ecs
 {
-    class HealthSystem {
+    class HealthSystem : public ASystem {
     public:
-        static void update(float dt, EntityAdmin &admin);
+        explicit HealthSystem(std::shared_ptr<EntityAdmin> admin);
+
+        void update(float dt);
     };
 }
 

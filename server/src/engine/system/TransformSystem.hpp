@@ -8,14 +8,17 @@
 #ifndef RTYPE_TRANSFORMSYSTEM_HPP
 #define RTYPE_TRANSFORMSYSTEM_HPP
 
-#include "EntityAdmin.hpp"
 #include <memory>
+#include "EntityAdmin.hpp"
+#include "ASystem.hpp"
 
 namespace ecs
 {
-    class TransformSystem {
+    class TransformSystem : public ASystem {
     public:
-        static void update(float dt, ecs::EntityAdmin &admin);
+        explicit TransformSystem(std::shared_ptr<EntityAdmin> admin);
+
+        void update(float dt);
     };
 }
 

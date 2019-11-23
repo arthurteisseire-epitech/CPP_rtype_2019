@@ -5,22 +5,37 @@
 ** ConnectionSystem.cpp
 */
 
+#include "NetworkComponent.hpp"
 #include "Network.hpp"
 #include "ConnectionSystem.hpp"
+#include "ConnectionComponent.hpp"
+#include "GetPool.hpp"
 
-class Functor {
-public:
-    bool operator()(const std::array<char, BUFFER_SIZE> &request, std::array<char, BUFFER_SIZE> &response)
-    {
-        for (auto &c : request)
-            std::cout << c;
-        std::cout << std::endl;
-        std::copy(request.begin(), request.end(), response.begin());
-        return false;
-    }
-};
-
-void ecs::ConnectionSystem::update(float deltaTime, ecs::EntityAdmin &admin)
+ecs::ConnectionSystem::ConnectionSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
 {
-    net::Network<Functor> network(1234, std::make_shared<Functor>());
+}
+
+void ecs::ConnectionSystem::update(float deltaTime)
+{
+    startAccept();
+}
+
+void ecs::ConnectionSystem::startAccept()
+{
+    auto conn = ConnectionComponent(admin->network.ioContext);
+
+    admin->network.acceptor.async_accept(
+        conn.socket,
+        boost::bind(&ecs::ConnectionSystem::handleAccept, this, &conn, boost::asio::placeholders::error)
+    );
+}
+
+void ecs::ConnectionSystem::handleAccept(ConnectionComponent *conn,
+                                         const boost::system::error_code &err)
+{
+    auto &connPool = GetPool<ecs::ConnectionComponent>(admin);
+
+    if (!err)
+        connPool.move(std::move(*conn));
+    startAccept();
 }

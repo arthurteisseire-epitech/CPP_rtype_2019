@@ -11,8 +11,8 @@
 namespace ecs
 {
     template<typename T>
-    ObjectPool<T> &GetPool(EntityAdmin &admin)
+    ObjectPool<T> &GetPool(const std::shared_ptr<EntityAdmin> &admin)
     {
-        return std::get<ObjectPool<T>>(admin.pools);
+        return std::get<ObjectPool<T>>(admin->pools);
     }
 }

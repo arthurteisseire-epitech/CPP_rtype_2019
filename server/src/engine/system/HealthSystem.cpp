@@ -8,7 +8,11 @@
 #include "HealthSystem.hpp"
 #include "GetPool.hpp"
 
-void ecs::HealthSystem::update(float dt, EntityAdmin &admin)
+ecs::HealthSystem::HealthSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+{
+}
+
+void ecs::HealthSystem::update(float dt)
 {
     for (auto &c : GetPool<HealthComponent>(admin)) {
         if (c.life == 100)

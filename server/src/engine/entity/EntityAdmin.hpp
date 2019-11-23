@@ -10,17 +10,26 @@
 
 #include <unordered_map>
 #include <tuple>
+#include "ConnectionComponent.hpp"
 #include "TransformComponent.hpp"
 #include "ObjectPool.hpp"
 #include "HealthComponent.hpp"
+#include "NetworkComponent.hpp"
 
 namespace ecs
 {
     struct EntityAdmin {
+        EntityAdmin() :
+            network(1234)
+        {
+        }
+
         std::tuple<
             ObjectPool<HealthComponent>,
-            ObjectPool<TransformComponent>
+            ObjectPool<TransformComponent>,
+            ObjectPool<ConnectionComponent>
         > pools;
+        NetworkComponent network;
     };
 }
 

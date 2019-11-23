@@ -8,13 +8,19 @@
 #ifndef RTYPE_CONNECTIONSYSTEM_HPP
 #define RTYPE_CONNECTIONSYSTEM_HPP
 
+#include "ASystem.hpp"
 #include "EntityAdmin.hpp"
+#include "ConnectionComponent.hpp"
 
 namespace ecs
 {
-    class ConnectionSystem {
+    class ConnectionSystem : public ASystem {
     public:
-        static void update(float deltaTime, EntityAdmin &admin);
+        explicit ConnectionSystem(std::shared_ptr<EntityAdmin> admin);
+
+        void update(float deltaTime);
+        void startAccept();
+        void handleAccept(ConnectionComponent *conn, const boost::system::error_code &err);
     };
 }
 
