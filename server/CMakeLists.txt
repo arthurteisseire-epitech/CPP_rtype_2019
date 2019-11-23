@@ -3,9 +3,11 @@ set(SERVER_NAME r-type_server)
 project(${SERVER_NAME})
 
 include_directories(
-	src/engine/component
 	src/engine/entity
+	src/engine/component
+	src/engine/component/network
 	src/engine/system
+	src/engine/system/network
 	src/engine
 	src/network
 	src
