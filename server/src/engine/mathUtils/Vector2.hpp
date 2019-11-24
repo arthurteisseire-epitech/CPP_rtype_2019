@@ -12,10 +12,12 @@ namespace mut
 {
     template <typename T>
     struct Vector2 {
-        Vector2(T x_, T y_) : x(x_), y(y_) {}
+        Vector2(T x_ = 0, T y_ = 0) : x(x_), y(y_) {}
 
         Vector2 operator+(const Vector2 &v1) const;
         Vector2 operator-(const Vector2 &v1) const;
+        Vector2 operator+=(const Vector2 &v1);
+        Vector2 operator-=(const Vector2 &v1);
         bool operator==(const Vector2 &v1) const;
         bool operator!=(const Vector2 &v1) const;
 
@@ -45,6 +47,20 @@ namespace mut
     bool Vector2<T>::operator!=(const Vector2 &v1) const
     {
         return this->x != v1.x || this->y != v1.y;
+    }
+
+    template<typename T>
+    Vector2<T> Vector2<T>::operator+=(const Vector2 &v1)
+    {
+        *this = *this + v1;
+        return *this;
+    }
+
+    template<typename T>
+    Vector2<T> Vector2<T>::operator-=(const Vector2 &v1)
+    {
+        *this = *this - v1;
+        return *this;
     }
 
     using Vec2f = Vector2<float>;
