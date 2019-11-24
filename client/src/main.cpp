@@ -16,6 +16,7 @@ static sf::TcpSocket *connect()
 
     if (status != sf::Socket::Done)
         return nullptr;
+    socket->setBlocking(false);
     return socket;
 }
 
@@ -25,32 +26,28 @@ int display(sf::TcpSocket *socket)
     sf::RenderWindow window(sf::VideoMode(200, 200), *s);
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
-    sf::Packet packet;
+    std::size_t sent;
 
     while (window.isOpen()) {
-        sf::Event event;
+
+        sf::Event event{};
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                    packet << "Left";
-                    socket->send(packet);
+                    socket->send("left", 4, sent);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                    packet << "Right";
-                    socket->send(packet);
+                    socket->send("right", 5, sent);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                    packet << "Up";
-                    socket->send(packet);
+                    socket->send("up", 2, sent);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                    packet << "Down";
-                    socket->send(packet);
+                    socket->send("down", 4, sent);
                 }
             }
-            packet.clear();
         }
 
         window.clear();
@@ -58,6 +55,7 @@ int display(sf::TcpSocket *socket)
         window.display();
     }
 
+    //    delete socket;
     return 0;
 }
 

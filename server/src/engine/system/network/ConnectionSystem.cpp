@@ -36,6 +36,7 @@ void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
 {
     auto &connPool = GetPool<ecs::ConnectionComponent>(admin);
 
+    std::cout << "new connection !" << std::endl;
     if (err)
         std::cout << err << std::endl;
     else
@@ -66,6 +67,7 @@ void ecs::ConnectionSystem::handleRead(ecs::ConnectionComponent *conn, const boo
     const std::string down = "down";
 
     if (!err) {
+        std::cout << "readBuffer: '" << conn->readBuffer.data() << "'" << std::endl;
         conn->writeBuffer.fill(0);
         if (std::equal(exit.begin(), exit.end(), conn->readBuffer.begin()))
             close(conn);
@@ -80,6 +82,7 @@ void ecs::ConnectionSystem::handleRead(ecs::ConnectionComponent *conn, const boo
         else
             fill_buffer(conn->writeBuffer, "command not found\n");
         write(conn);
+        std::cout << conn->writeBuffer.data() << std::endl;
         startRead(conn);
     }
 }
@@ -95,8 +98,10 @@ void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)
     );
 }
 
-void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &)
+void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &err)
 {
+    if (err)
+        std::cout << "handle write: " << err << std::endl;
 }
 
 void ecs::ConnectionSystem::close(ConnectionComponent *conn)
