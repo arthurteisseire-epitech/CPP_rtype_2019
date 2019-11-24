@@ -15,6 +15,7 @@
 #include "ObjectPool.hpp"
 #include "HealthComponent.hpp"
 #include "NetworkComponent.hpp"
+#include "MoveTuple.hpp"
 
 namespace ecs
 {
@@ -27,6 +28,8 @@ namespace ecs
         std::tuple<
             ObjectPool<HealthComponent>,
             ObjectPool<TransformComponent>,
+            ObjectPool<DirectionComponent>,
+            ObjectPool<MoveTuple>,
             ObjectPool<ConnectionComponent>
         > pools;
         NetworkComponent network;

@@ -6,6 +6,7 @@ include_directories(
 	src/engine/entity
 	src/engine/component
 	src/engine/component/network
+	src/engine/component/tuple
 	src/engine/system
 	src/engine/system/network
 	src/engine/mathUtils
