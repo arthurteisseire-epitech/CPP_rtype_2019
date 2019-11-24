@@ -29,6 +29,7 @@ namespace ecs
         }
 
         void setDirection(const Direction &horizontal, const Direction &vertical);
+        void setDirection(const DirectionComponent::Direction &dir);
 
         mut::Vec2f dir;
     };
@@ -43,10 +44,23 @@ namespace ecs
             dir.x = -val;
         else if (horizontal == RIGHT)
             dir.x = val;
-        if (horizontal == UP)
+        if (vertical == UP)
             dir.y = val;
-        else if (horizontal == DOWN)
+        else if (vertical == DOWN)
             dir.y = -val;
+    }
+
+    void DirectionComponent::setDirection(const DirectionComponent::Direction &dir_enum)
+    {
+        dir = {0, 0};
+        if (dir_enum == LEFT)
+            dir.x = -1;
+        else if (dir_enum == RIGHT)
+            dir.x = 1;
+        else if (dir_enum == UP)
+            dir.y = 1;
+        else if (dir_enum == DOWN)
+            dir.y = -1;
     }
 }
 
