@@ -10,7 +10,7 @@
 #include "NetworkComponent.hpp"
 #include "ConnectionSystem.hpp"
 #include "ConnectionComponent.hpp"
-#include "GetPool.hpp"
+#include "Util.hpp"
 
 ecs::ConnectionSystem::ConnectionSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
 {
@@ -36,19 +36,27 @@ void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
 {
     auto &connPool = GetPool<ecs::ConnectionComponent>(admin);
 
-    std::cout << "new connection !" << std::endl;
-    if (err)
+    if (err) {
         std::cout << err << std::endl;
-    else
-        startRead(&connPool.move(std::move(connection.value())));
+    } else {
+        std::cout << "new connection !" << std::endl;
+        auto conn = &connPool.move(std::move(connection.value()));
+        startRead(conn);
+        createEntity(admin,
+            ecs::GetPool<ecs::InputTuple>(admin).create(
+                conn,
+                ecs::GetPool<ecs::DirectionComponent>(admin).create()
+            )
+        );
+    }
     startAccept();
 }
 
 void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
 {
-    conn->readBuffer.fill(0);
+    conn->tmpBuffer.fill(0);
     conn->socket.async_read_some(
-        boost::asio::buffer(conn->readBuffer),
+        boost::asio::buffer(conn->tmpBuffer),
         boost::bind(
             &ecs::ConnectionSystem::handleRead,
             this,
@@ -58,33 +66,37 @@ void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
     );
 }
 
-void ecs::ConnectionSystem::handleRead(ecs::ConnectionComponent *conn, const boost::system::error_code &err)
+void ecs::ConnectionSystem::handleRead(ConnectionComponent *conn, const boost::system::error_code &err)
 {
-    const std::string exit = "exit";
-    const std::string left = "left";
-    const std::string right = "right";
-    const std::string up = "up";
-    const std::string down = "down";
-
     if (!err) {
-        std::cout << "readBuffer: '" << conn->readBuffer.data() << "'" << std::endl;
-        conn->writeBuffer.fill(0);
-        if (std::equal(exit.begin(), exit.end(), conn->readBuffer.begin()))
-            close(conn);
-        else if (std::equal(left.begin(), left.end(), conn->readBuffer.begin()))
-            fill_buffer(conn->writeBuffer, "go left\n");
-        else if (std::equal(right.begin(), right.end(), conn->readBuffer.begin()))
-            fill_buffer(conn->writeBuffer, "go right\n");
-        else if (std::equal(up.begin(), up.end(), conn->readBuffer.begin()))
-            fill_buffer(conn->writeBuffer, "go up\n");
-        else if (std::equal(down.begin(), down.end(), conn->readBuffer.begin()))
-            fill_buffer(conn->writeBuffer, "go down\n");
-        else
-            fill_buffer(conn->writeBuffer, "command not found\n");
-        write(conn);
-        std::cout << conn->writeBuffer.data() << std::endl;
+        conn->readBuffers.push(conn->tmpBuffer);
         startRead(conn);
     }
+    //    const std::string exit = "exit";
+    //    const std::string left = "left";
+    //    const std::string right = "right";
+    //    const std::string up = "up";
+    //    const std::string down = "down";
+    //
+    //    if (!err) {
+    //        std::cout << "readBuffer: '" << conn->readBuffer.data() << "'" << std::endl;
+    //        conn->writeBuffer.fill(0);
+    //        if (std::equal(exit.begin(), exit.end(), conn->readBuffer.begin()))
+    //            close(conn);
+    //        else if (std::equal(left.begin(), left.end(), conn->readBuffer.begin()))
+    //            fill_buffer(conn->writeBuffer, "go left\n");
+    //        else if (std::equal(right.begin(), right.end(), conn->readBuffer.begin()))
+    //            fill_buffer(conn->writeBuffer, "go right\n");
+    //        else if (std::equal(up.begin(), up.end(), conn->readBuffer.begin()))
+    //            fill_buffer(conn->writeBuffer, "go up\n");
+    //        else if (std::equal(down.begin(), down.end(), conn->readBuffer.begin()))
+    //            fill_buffer(conn->writeBuffer, "go down\n");
+    //        else
+    //            fill_buffer(conn->writeBuffer, "command not found\n");
+    //        write(conn);
+    //        std::cout << conn->writeBuffer.data() << std::endl;
+    //        startRead(conn);
+    //    }
 }
 
 void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)

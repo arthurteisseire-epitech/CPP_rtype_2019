@@ -20,6 +20,7 @@ namespace ecs
             admin(std::move(admin))
         {
         }
+        virtual void update(float deltaTime) = 0;
 
     protected:
         std::shared_ptr<EntityAdmin> admin;

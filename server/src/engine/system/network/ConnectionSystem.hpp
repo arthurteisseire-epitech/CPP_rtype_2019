@@ -19,7 +19,7 @@ namespace ecs
     public:
         explicit ConnectionSystem(std::shared_ptr<EntityAdmin> admin);
 
-        void update(float deltaTime);
+        void update(float deltaTime) override;
         void startAccept();
         void handleAccept(const boost::system::error_code &err);
         void startRead(ConnectionComponent *conn);

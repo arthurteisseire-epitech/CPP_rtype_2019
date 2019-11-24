@@ -10,7 +10,7 @@
 #include "MoveSystem.hpp"
 #include "MoveTuple.hpp"
 #include "TransformComponent.hpp"
-#include "GetPool.hpp"
+#include "Util.hpp"
 
 TEST(System, move)
 {

@@ -29,7 +29,7 @@ namespace ecs
             return std::get<T *>(components);
         }
 
-        int getId() const
+        [[nodiscard]] int getId() const
         {
             return id;
         }

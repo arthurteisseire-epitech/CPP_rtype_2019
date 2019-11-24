@@ -6,18 +6,24 @@
 */
 
 #include <thread>
+#include "InputSystem.hpp"
 #include "ConnectionSystem.hpp"
-#include "GetPool.hpp"
 #include "EntityAdmin.hpp"
+#include "InputTuple.hpp"
 
 int main()
 {
     auto admin = std::make_shared<ecs::EntityAdmin>();
     ecs::ConnectionSystem connSystem(admin);
+    ecs::InputSystem inputSystem(admin);
 
     std::thread t([&]() {
         connSystem.update(0.16);
     });
+    while (true) {
+        inputSystem.update(0.16);
+        sleep(1);
+    }
     t.join();
     std::cout << "end" << std::endl;
 }
