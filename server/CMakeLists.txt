@@ -9,7 +9,6 @@ include_directories(
 	src/engine/system
 	src/engine/system/network
 	src/engine
-	src/network
 	src
 )
 
