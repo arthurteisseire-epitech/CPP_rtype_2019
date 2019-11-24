@@ -8,18 +8,46 @@
 #ifndef RTYPE_DIRECTIONCOMPONENT_HPP
 #define RTYPE_DIRECTIONCOMPONENT_HPP
 
+#include <string>
+#include <cmath>
 #include "Vector2.hpp"
 
 namespace ecs
 {
     struct DirectionComponent {
+        enum Direction {
+            NONE,
+            UP,
+            DOWN,
+            LEFT,
+            RIGHT
+        };
+
         explicit DirectionComponent(int x = 0, int y = 0) :
             dir(x, y)
         {
         }
 
+        void setDirection(const Direction &horizontal, const Direction &vertical);
+
         mut::Vec2f dir;
     };
+
+    void DirectionComponent::setDirection(const DirectionComponent::Direction &horizontal = NONE,
+                                          const DirectionComponent::Direction &vertical = NONE)
+    {
+        float val = horizontal != NONE && vertical != NONE ? M_SQRT2 : 1;
+
+        dir = {0, 0};
+        if (horizontal == LEFT)
+            dir.x = -val;
+        else if (horizontal == RIGHT)
+            dir.x = val;
+        if (horizontal == UP)
+            dir.y = val;
+        else if (horizontal == DOWN)
+            dir.y = -val;
+    }
 }
 
 #endif
