@@ -8,7 +8,6 @@
 #include "gtest/gtest.h"
 #include "DirectionComponent.hpp"
 #include "MoveSystem.hpp"
-#include "ObjectPool.hpp"
 #include "MoveTuple.hpp"
 #include "TransformComponent.hpp"
 #include "GetPool.hpp"
