@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <cstring>
 
 static sf::TcpSocket *connect()
 {
@@ -16,7 +17,6 @@ static sf::TcpSocket *connect()
 
     if (status != sf::Socket::Done)
         return nullptr;
-    socket->setBlocking(false);
     return socket;
 }
 
@@ -27,6 +27,13 @@ int display(sf::TcpSocket *socket)
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
     std::size_t sent;
+    std::vector<std::pair<sf::Keyboard::Key, std::string>> keys = {
+        {sf::Keyboard::Left, "left"},
+        {sf::Keyboard::Right, "right"},
+        {sf::Keyboard::Up, "up"},
+        {sf::Keyboard::Down, "down"}
+    };
+    char data[1024] = {0};
 
     while (window.isOpen()) {
 
@@ -35,17 +42,15 @@ int display(sf::TcpSocket *socket)
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed) {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                    socket->send("left", 4, sent);
-                }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                    socket->send("right", 5, sent);
-                }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                    socket->send("up", 2, sent);
-                }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                    socket->send("down", 4, sent);
+                for (auto &key : keys) {
+                    if (sf::Keyboard::isKeyPressed(key.first)) {
+                        socket->send(key.second.c_str(), key.second.length(), sent);
+                        memset(data, 0, sizeof(char));
+
+                        std::size_t received = 0;
+                        socket->receive(&data, sizeof(data), received);
+                        std::cout << data << std::endl;
+                    }
                 }
             }
         }
