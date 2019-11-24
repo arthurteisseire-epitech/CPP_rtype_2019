@@ -8,6 +8,7 @@ include_directories(
 	src/engine/component/network
 	src/engine/system
 	src/engine/system/network
+	src/engine/mathUtils
 	src/engine
 	src
 )

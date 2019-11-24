@@ -12,6 +12,7 @@ def get_cmake_options():
     cmake_options += '"'
     return cmake_options
 
+
 bash_cmd = 'mkdir -p build && cd build && conan install .. --build=missing && cmake .. ' + get_cmake_options() + ' && cmake --build .'
 
 print(bash_cmd)
