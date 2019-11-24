@@ -29,8 +29,6 @@ namespace ecs
         void close(ConnectionComponent *conn);
 
     private:
-        static void fill_buffer(std::array<char, 1024> &buffer, const std::string &s);
-
         std::optional<ConnectionComponent> connection;
     };
 }

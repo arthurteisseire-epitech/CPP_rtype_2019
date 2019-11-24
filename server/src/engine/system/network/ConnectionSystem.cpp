@@ -72,31 +72,6 @@ void ecs::ConnectionSystem::handleRead(ConnectionComponent *conn, const boost::s
         conn->readBuffers.push(conn->tmpBuffer);
         startRead(conn);
     }
-    //    const std::string exit = "exit";
-    //    const std::string left = "left";
-    //    const std::string right = "right";
-    //    const std::string up = "up";
-    //    const std::string down = "down";
-    //
-    //    if (!err) {
-    //        std::cout << "readBuffer: '" << conn->readBuffer.data() << "'" << std::endl;
-    //        conn->writeBuffer.fill(0);
-    //        if (std::equal(exit.begin(), exit.end(), conn->readBuffer.begin()))
-    //            close(conn);
-    //        else if (std::equal(left.begin(), left.end(), conn->readBuffer.begin()))
-    //            fill_buffer(conn->writeBuffer, "go left\n");
-    //        else if (std::equal(right.begin(), right.end(), conn->readBuffer.begin()))
-    //            fill_buffer(conn->writeBuffer, "go right\n");
-    //        else if (std::equal(up.begin(), up.end(), conn->readBuffer.begin()))
-    //            fill_buffer(conn->writeBuffer, "go up\n");
-    //        else if (std::equal(down.begin(), down.end(), conn->readBuffer.begin()))
-    //            fill_buffer(conn->writeBuffer, "go down\n");
-    //        else
-    //            fill_buffer(conn->writeBuffer, "command not found\n");
-    //        write(conn);
-    //        std::cout << conn->writeBuffer.data() << std::endl;
-    //        startRead(conn);
-    //    }
 }
 
 void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)
@@ -127,9 +102,4 @@ void ecs::ConnectionSystem::close(ConnectionComponent *conn)
     if (ec)
         std::cerr << "error in close: " << ec << std::endl;
     GetPool<ecs::ConnectionComponent>(admin).destroy(conn);
-}
-
-void ecs::ConnectionSystem::fill_buffer(std::array<char, 1024> &buffer, const std::string &s)
-{
-    std::copy(s.begin(), s.end(), buffer.begin());
 }
