@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include <mutex>
 
 namespace ecs
 {
@@ -27,6 +28,8 @@ namespace ecs
         template<typename ...Args>
         T *create(Args ...args)
         {
+            std::lock_guard<std::mutex> lock(mutex);
+
             if (pool.size() == pool.capacity())
                 reallocate();
             pool.emplace_back(args...);
@@ -35,6 +38,8 @@ namespace ecs
 
         T &move(T &&obj)
         {
+            std::lock_guard<std::mutex> lock(mutex);
+
             if (pool.size() == pool.capacity())
                 reallocate();
             pool.push_back(std::move(std::forward<T>(obj)));
@@ -43,6 +48,8 @@ namespace ecs
 
         void destroy(T *obj)
         {
+            std::lock_guard<std::mutex> lock(mutex);
+
             auto it = std::find_if(pool.begin(), pool.end(), [obj](const T &p) {
                 return obj == &p;
             });
@@ -64,10 +71,13 @@ namespace ecs
 
         void reallocate()
         {
+            std::lock_guard<std::mutex> lock(mutex);
+
             pool.reserve(pool.size() + padSize);
         }
 
         std::vector<T> pool;
+        std::mutex mutex;
         int padSize;
     };
 }
