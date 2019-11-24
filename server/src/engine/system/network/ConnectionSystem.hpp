@@ -24,11 +24,13 @@ namespace ecs
         void handleAccept(const boost::system::error_code &err);
         void startRead(ConnectionComponent *conn);
         void handleRead(ConnectionComponent *conn, const boost::system::error_code &err);
-        void write(ConnectionComponent *conn, const std::array<char, 1024> &response);
+        void write(ecs::ConnectionComponent *conn);
         static void handleWrite(const boost::system::error_code &err);
         void close(ConnectionComponent *conn);
 
     private:
+        static void fill_buffer(std::array<char, 1024> &buffer, const std::string &s);
+
         std::optional<ConnectionComponent> connection;
     };
 }

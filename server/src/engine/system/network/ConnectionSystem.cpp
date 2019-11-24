@@ -59,25 +59,40 @@ void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
 
 void ecs::ConnectionSystem::handleRead(ecs::ConnectionComponent *conn, const boost::system::error_code &err)
 {
+    const std::string exit = "exit";
+    const std::string left = "left";
+    const std::string right = "right";
+    const std::string up = "up";
+    const std::string down = "down";
+
     if (!err) {
-        write(conn, conn->readBuffer);
+        conn->writeBuffer.fill(0);
+        if (std::equal(exit.begin(), exit.end(), conn->readBuffer.begin()))
+            close(conn);
+        else if (std::equal(left.begin(), left.end(), conn->readBuffer.begin()))
+            fill_buffer(conn->writeBuffer, "go left\n");
+        else if (std::equal(right.begin(), right.end(), conn->readBuffer.begin()))
+            fill_buffer(conn->writeBuffer, "go right\n");
+        else if (std::equal(up.begin(), up.end(), conn->readBuffer.begin()))
+            fill_buffer(conn->writeBuffer, "go up\n");
+        else if (std::equal(down.begin(), down.end(), conn->readBuffer.begin()))
+            fill_buffer(conn->writeBuffer, "go down\n");
+        else
+            fill_buffer(conn->writeBuffer, "command not found\n");
+        write(conn);
         startRead(conn);
     }
 }
 
-void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn, const std::array<char, 1024> &response)
+void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)
 {
-    const std::string exit = "exit";
-
     conn->socket.async_write_some(
-        boost::asio::buffer(response),
+        boost::asio::buffer(conn->writeBuffer),
         boost::bind(
             &ecs::ConnectionSystem::handleWrite,
             boost::asio::placeholders::error
         )
     );
-    if (std::equal(exit.begin(), exit.end(), response.begin()))
-        close(conn);
 }
 
 void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &)
@@ -95,4 +110,9 @@ void ecs::ConnectionSystem::close(ConnectionComponent *conn)
     if (ec)
         std::cerr << "error in close: " << ec << std::endl;
     GetPool<ecs::ConnectionComponent>(admin).destroy(conn);
+}
+
+void ecs::ConnectionSystem::fill_buffer(std::array<char, 1024> &buffer, const std::string &s)
+{
+    std::copy(s.begin(), s.end(), buffer.begin());
 }

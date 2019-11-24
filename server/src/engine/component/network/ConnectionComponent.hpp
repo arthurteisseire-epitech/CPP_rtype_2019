@@ -21,6 +21,7 @@ namespace ecs
 
         boost::asio::ip::tcp::socket socket;
         std::array<char, 1024> readBuffer{};
+        std::array<char, 1024> writeBuffer{};
     };
 }
 
