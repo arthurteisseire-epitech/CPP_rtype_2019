@@ -59,22 +59,16 @@ void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
 
 void ecs::ConnectionSystem::handleRead(ecs::ConnectionComponent *conn, const boost::system::error_code &err)
 {
-    if (err) {
-        std::cout << err << std::endl;
-        return;
+    if (!err) {
+        write(conn, conn->readBuffer);
+        startRead(conn);
     }
-    conn->socket.async_write_some(
-        boost::asio::buffer(conn->readBuffer),
-        boost::bind(
-            &ecs::ConnectionSystem::handleWrite,
-            boost::asio::placeholders::error
-        )
-    );
-    startRead(conn);
 }
 
 void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn, const std::array<char, 1024> &response)
 {
+    const std::string exit = "exit";
+
     conn->socket.async_write_some(
         boost::asio::buffer(response),
         boost::bind(
@@ -82,10 +76,23 @@ void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn, const std::arr
             boost::asio::placeholders::error
         )
     );
+    if (std::equal(exit.begin(), exit.end(), response.begin()))
+        close(conn);
 }
 
-void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &err)
+void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &)
 {
-    if (err)
-        std::cerr << err << std::endl;
+}
+
+void ecs::ConnectionSystem::close(ConnectionComponent *conn)
+{
+    boost::system::error_code ec;
+
+    conn->socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    if (ec)
+        std::cerr << "error in shutdown: " << ec << std::endl;
+    conn->socket.close(ec);
+    if (ec)
+        std::cerr << "error in close: " << ec << std::endl;
+    GetPool<ecs::ConnectionComponent>(admin).destroy(conn);
 }
