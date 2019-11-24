@@ -33,11 +33,12 @@ namespace ecs
             return &pool.back();
         }
 
-        void move(T &&obj)
+        T &move(T &&obj)
         {
             if (pool.size() == pool.capacity())
                 reallocate();
             pool.push_back(std::move(std::forward<T>(obj)));
+            return pool.back();
         }
 
         void destroy(T *obj)

@@ -9,6 +9,7 @@
 #define RTYPE_CONNECTIONCOMPONENT_HPP
 
 #include <boost/asio/ip/tcp.hpp>
+#include <array>
 
 namespace ecs
 {
@@ -19,6 +20,7 @@ namespace ecs
         }
 
         boost::asio::ip::tcp::socket socket;
+        std::array<char, 1024> readBuffer{};
     };
 }
 
