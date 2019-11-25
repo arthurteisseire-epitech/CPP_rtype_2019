@@ -11,6 +11,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <array>
 #include <queue>
+#include <deque>
 
 namespace ecs
 {
@@ -22,8 +23,8 @@ namespace ecs
 
         boost::asio::ip::tcp::socket socket;
         std::queue<std::array<char, 1024>> readBuffers;
-        std::array<char, 1024> tmpBuffer{};
-        std::array<char, 1024> writeBuffer{};
+        std::array<char, 1024> tmpReadBuffer{};
+        std::deque<std::array<char, 1024>> writeBuffer{};
     };
 }
 

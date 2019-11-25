@@ -50,9 +50,9 @@ void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
 
 void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
 {
-    conn->tmpBuffer.fill(0);
+    conn->tmpReadBuffer.fill(0);
     conn->socket.async_read_some(
-        boost::asio::buffer(conn->tmpBuffer),
+        boost::asio::buffer(conn->tmpReadBuffer),
         boost::bind(
             &ecs::ConnectionSystem::handleRead,
             this,
@@ -65,27 +65,27 @@ void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
 void ecs::ConnectionSystem::handleRead(ConnectionComponent *conn, const boost::system::error_code &err)
 {
     if (!err) {
-        conn->readBuffers.push(conn->tmpBuffer);
+        conn->readBuffers.push(conn->tmpReadBuffer);
         startRead(conn);
     }
 }
 
-void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)
-{
-    conn->socket.async_write_some(
-        boost::asio::buffer(conn->writeBuffer),
-        boost::bind(
-            &ecs::ConnectionSystem::handleWrite,
-            boost::asio::placeholders::error
-        )
-    );
-}
-
-void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &err)
-{
-    if (err)
-        std::cout << "handle write: " << err << std::endl;
-}
+//void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)
+//{
+//    conn->socket.async_write_some(
+//        boost::asio::buffer(conn->writeBuffer),
+//        boost::bind(
+//            &ecs::ConnectionSystem::handleWrite,
+//            boost::asio::placeholders::error
+//        )
+//    );
+//}
+//
+//void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &err)
+//{
+//    if (err)
+//        std::cout << "handle write: " << err << std::endl;
+//}
 
 void ecs::ConnectionSystem::close(ConnectionComponent *conn)
 {
