@@ -5,6 +5,7 @@
 ** InputSystem.cpp
 */
 
+#include <NetworkUtil.hpp>
 #include "Util.hpp"
 #include "InputTuple.hpp"
 #include "InputSystem.hpp"
@@ -30,6 +31,7 @@ void ecs::InputSystem::update(float deltaTime)
                 auto key = e.second;
                 if (std::equal(s.begin(), s.end(), buffers.front().begin())) {
                     c.directionComponent->setDirection(key);
+                    NetworkUtil::send(c.connectionComponent, std::array<char, 1024>{"toto"});
                     std::cout << s << std::endl;
                 }
             }
