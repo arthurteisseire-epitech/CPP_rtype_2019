@@ -7,6 +7,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include "EntityFactory.hpp"
 #include "NetworkComponent.hpp"
 #include "ConnectionSystem.hpp"
 #include "ConnectionComponent.hpp"
@@ -42,14 +43,7 @@ void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
         std::cout << "new connection !" << std::endl;
         auto conn = &connPool.move(std::move(connection.value()));
         startRead(conn);
-
-        auto t = ecs::GetPool<ecs::TransformComponent>(admin).create();
-        auto d = ecs::GetPool<ecs::DirectionComponent>(admin).create();
-        createEntity(admin,
-            ecs::GetPool<ecs::InputTuple>(admin).create(conn, d),
-            ecs::GetPool<ecs::SendTuple>(admin).create(conn, t),
-            ecs::GetPool<ecs::MoveTuple>(admin).create(d, t)
-        );
+        EntityFactory::createPlayer(admin, conn);
     }
     startAccept();
 }
