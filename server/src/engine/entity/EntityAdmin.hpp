@@ -8,8 +8,8 @@
 #ifndef RTYPE_ENTITYADMIN_HPP
 #define RTYPE_ENTITYADMIN_HPP
 
-#include <unordered_map>
 #include <tuple>
+#include "SendTuple.hpp"
 #include "ConnectionComponent.hpp"
 #include "TransformComponent.hpp"
 #include "ObjectPool.hpp"
@@ -30,7 +30,9 @@ namespace ecs
         std::tuple<
             ObjectPool<ConnectionComponent>,
             ObjectPool<DirectionComponent>,
+            ObjectPool<TransformComponent>,
             ObjectPool<InputTuple>,
+            ObjectPool<SendTuple>,
             ObjectPool<MoveTuple>
         > pools;
         std::vector<std::unique_ptr<IEntity>> entities;

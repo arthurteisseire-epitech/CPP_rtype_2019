@@ -10,6 +10,9 @@ include_directories(
 	src/engine/system
 	src/engine/system/network
 	src/engine/mathUtils
+	src/engine/util/math
+	src/engine/util/network
+	src/engine/util
 	src/engine
 	src
 )
