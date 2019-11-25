@@ -14,14 +14,14 @@
 namespace ecs
 {
     struct InputTuple {
-        InputTuple(ConnectionComponent *connectionComponent, DirectionComponent *directionComponent) :
-            connectionComponent(connectionComponent),
-            directionComponent(directionComponent)
+        InputTuple(ConnectionComponent *connection, DirectionComponent *direction) :
+            connection(connection),
+            direction(direction)
         {
         }
 
-        ConnectionComponent *connectionComponent;
-        DirectionComponent *directionComponent;
+        ConnectionComponent *connection;
+        DirectionComponent *direction;
     };
 }
 

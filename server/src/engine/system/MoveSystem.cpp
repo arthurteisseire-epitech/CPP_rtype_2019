@@ -16,5 +16,5 @@ ecs::MoveSystem::MoveSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 void ecs::MoveSystem::update(float dt)
 {
     for (auto &moveComponent : GetPool<MoveTuple>(admin))
-        moveComponent.transform->vec += moveComponent.dir->dir;
+        moveComponent.transform->vec += moveComponent.direction->dir;
 }

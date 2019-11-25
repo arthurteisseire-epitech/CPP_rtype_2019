@@ -24,14 +24,14 @@ void ecs::InputSystem::update(float deltaTime)
     };
 
     for (auto &c : GetPool<InputTuple>(admin)) {
-        auto &buffers = c.connectionComponent->readBuffers;
+        auto &buffers = c.connection->readBuffers;
         while (!buffers.empty()) {
             for (auto &e : v) {
                 auto s = e.first;
                 auto key = e.second;
                 if (std::equal(s.begin(), s.end(), buffers.front().begin())) {
-                    c.directionComponent->setDirection(key);
-                    NetworkUtil::send(c.connectionComponent, std::array<char, 1024>{"toto"});
+                    c.direction->setDirection(key);
+                    NetworkUtil::send(c.connection, std::array<char, 1024>{"toto"});
                     std::cout << s << std::endl;
                 }
             }
