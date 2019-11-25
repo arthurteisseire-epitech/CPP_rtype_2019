@@ -6,7 +6,7 @@
 */
 
 #include "gtest/gtest.h"
-#include "Vector2.hpp"
+#include "math/Vector2.hpp"
 
 TEST(Vector, init)
 {
