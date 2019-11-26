@@ -21,7 +21,7 @@ namespace ecs
         }
 
         ConnectionComponent *connection;
-        TransformComponent *transform;
+        const TransformComponent *transform;
     };
 }
 
