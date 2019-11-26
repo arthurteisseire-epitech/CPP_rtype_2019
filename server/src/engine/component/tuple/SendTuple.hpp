@@ -14,7 +14,7 @@
 namespace ecs
 {
     struct SendTuple {
-        explicit SendTuple(ConnectionComponent *connection, TransformComponent *transform) :
+        SendTuple(ConnectionComponent *connection, TransformComponent *transform) :
             connection(connection),
             transform(transform)
         {

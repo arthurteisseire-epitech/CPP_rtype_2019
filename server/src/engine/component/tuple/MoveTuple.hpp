@@ -14,9 +14,13 @@
 namespace ecs
 {
     struct MoveTuple {
-        MoveTuple(DirectionComponent *dir, TransformComponent *transform) : dir(dir), transform(transform) {}
+        MoveTuple(DirectionComponent *direction, TransformComponent *transform) :
+            direction(direction),
+            transform(transform)
+        {
+        }
 
-        DirectionComponent *dir;
+        DirectionComponent *direction;
         TransformComponent *transform;
     };
 }

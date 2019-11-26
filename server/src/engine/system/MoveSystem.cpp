@@ -15,12 +15,12 @@ ecs::MoveSystem::MoveSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 
 void ecs::MoveSystem::update(float dt)
 {
-    for (auto &moveComponent : GetPool<MoveTuple>(admin)) {
-        if (moveComponent.dir->dir != mut::Vec2f({0, 0})) {
-            moveComponent.transform->vec += moveComponent.dir->dir;
+    for (auto &moveComponent : GetPool<MoveTuple>(admin))
+        if (moveComponent.direction->dir != mut::Vec2f({0, 0})) {
+            moveComponent.transform->vec += moveComponent.direction->dir;
             std::cout << "moving by " << moveComponent.dir->dir.x << ", " << moveComponent.dir->dir.y << std::endl;
             std::cout << "new pos: " << moveComponent.transform->vec.x << "," << moveComponent.transform->vec.y << std::endl;
-            moveComponent.dir->dir = {0, 0};
+            moveComponent.direction->dir = {0, 0};
         }
-    }
+
 }

@@ -18,7 +18,8 @@ namespace ecs
         static void send(ConnectionComponent *connection, const std::array<char, 1024> &buffer);
 
     private:
-        static void handleSend(const boost::system::error_code &err);
+        static void handleSend(ConnectionComponent *conn, const std::array<char, 1024> *buffer,
+                               const boost::system::error_code &err);
     };
 }
 

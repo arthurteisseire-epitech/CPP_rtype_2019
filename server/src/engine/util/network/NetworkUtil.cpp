@@ -12,16 +12,25 @@
 
 void ecs::NetworkUtil::send(ecs::ConnectionComponent *connection, const std::array<char, 1024> &buffer)
 {
-    std::copy(buffer.begin(), buffer.end(), connection->writeBuffer.begin());
+    auto &b = connection->writeBuffer.emplace_back(buffer);
+
     connection->socket.async_write_some(
-        boost::asio::buffer(connection->writeBuffer),
+        boost::asio::buffer(b),
         boost::bind(
             &ecs::NetworkUtil::handleSend,
+            connection,
+            &b,
             boost::asio::placeholders::error
         )
     );
 }
 
-void ecs::NetworkUtil::handleSend(const boost::system::error_code &err)
+void ecs::NetworkUtil::handleSend(ConnectionComponent *conn, const std::array<char, 1024> *buffer,
+                                  const boost::system::error_code &err)
 {
+    auto &q = conn->writeBuffer;
+
+    q.erase(std::remove_if(q.begin(), q.end(), [buffer] (const std::array<char, 1024> &b) {
+        return &b == buffer;
+    }), q.end());
 }

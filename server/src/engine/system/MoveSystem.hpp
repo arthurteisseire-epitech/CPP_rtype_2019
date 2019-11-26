@@ -16,7 +16,7 @@ namespace ecs
     public:
         explicit MoveSystem(std::shared_ptr<EntityAdmin> admin);
 
-        void update(float dt);
+        void update(float dt) override;
     };
 }
 
