@@ -28,7 +28,7 @@ int main()
         inputSystem.update(0.16);
         moveSystem.update(0.16);
         sendSystem.update(0.16);
-        sleep(1);
+        usleep(160000);
     }
     t.join();
     std::cout << "end" << std::endl;

@@ -32,29 +32,27 @@ namespace ecs
         {
             float val = horizontal != NONE && vertical != NONE ? M_SQRT2 : 1;
 
-            dir = {0, 0};
             if (horizontal == LEFT)
-                dir.x = -val;
+                dir.x -= val;
             else if (horizontal == RIGHT)
-                dir.x = val;
+                dir.x += val;
             if (vertical == UP)
-                dir.y = val;
+                dir.y -= val;
             else if (vertical == DOWN)
-                dir.y = -val;
+                dir.y += val;
             return *this;
         }
 
         DirectionComponent &setDirection(const DirectionComponent::Direction &dir_enum)
         {
-            dir = {0, 0};
             if (dir_enum == LEFT)
-                dir.x = -1;
+                dir.x -= 1;
             else if (dir_enum == RIGHT)
-                dir.x = 1;
+                dir.x += 1;
             else if (dir_enum == UP)
-                dir.y = 1;
+                dir.y -= 1;
             else if (dir_enum == DOWN)
-                dir.y = -1;
+                dir.y += 1;
             return *this;
         }
 

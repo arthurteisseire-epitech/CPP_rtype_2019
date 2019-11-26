@@ -7,6 +7,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <iostream>
 #include "NetworkUtil.hpp"
 
 void ecs::NetworkUtil::send(ecs::ConnectionComponent *connection, const std::array<char, 1024> &buffer)
