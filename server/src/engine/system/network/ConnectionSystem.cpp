@@ -70,23 +70,6 @@ void ecs::ConnectionSystem::handleRead(ConnectionComponent *conn, const boost::s
     }
 }
 
-//void ecs::ConnectionSystem::write(ecs::ConnectionComponent *conn)
-//{
-//    conn->socket.async_write_some(
-//        boost::asio::buffer(conn->writeBuffer),
-//        boost::bind(
-//            &ecs::ConnectionSystem::handleWrite,
-//            boost::asio::placeholders::error
-//        )
-//    );
-//}
-//
-//void ecs::ConnectionSystem::handleWrite(const boost::system::error_code &err)
-//{
-//    if (err)
-//        std::cout << "handle write: " << err << std::endl;
-//}
-
 void ecs::ConnectionSystem::close(ConnectionComponent *conn)
 {
     boost::system::error_code ec;
