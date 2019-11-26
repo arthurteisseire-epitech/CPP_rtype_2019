@@ -17,6 +17,7 @@ static sf::TcpSocket *connect()
 
     if (status != sf::Socket::Done)
         return nullptr;
+    socket->setBlocking(false);
     return socket;
 }
 
@@ -46,15 +47,23 @@ int display(sf::TcpSocket *socket)
                     if (sf::Keyboard::isKeyPressed(key.first)) {
                         socket->send(key.second.c_str(), key.second.length(), sent);
                         memset(data, 0, sizeof(char));
-
-                        std::size_t received = 0;
-                        socket->receive(&data, sizeof(data), received);
-                        std::cout << data << std::endl;
                     }
                 }
             }
         }
 
+        std::size_t received = 0;
+        if (socket->receive(&data, sizeof(data), received) != sf::Socket::NotReady && data[0] != 0) {
+            std::cout << "\"" << data << "\"" << std::endl;
+            size_t x_pos = std::string(data).find("x:");
+            size_t y_pos = std::string(data).find("y:");
+            if (x_pos != std::string::npos && y_pos != std::string::npos) {
+                x_pos += sizeof("x");
+                y_pos += sizeof("y");
+                shape.setPosition(std::stof(data + x_pos) * 10, std::stof(data + y_pos) * 10);
+                std::cout << "set position:" << std::stof(data + x_pos) << ", " << std::stof(data + y_pos) << std::endl;
+            }
+        }
         window.clear();
         window.draw(shape);
         window.display();
