@@ -71,8 +71,6 @@ namespace ecs
 
         void reallocate()
         {
-            std::lock_guard<std::mutex> lock(mutex);
-
             pool.reserve(pool.size() + padSize);
         }
 
