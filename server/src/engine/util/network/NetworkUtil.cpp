@@ -28,9 +28,9 @@ void ecs::NetworkUtil::send(ecs::ConnectionComponent *connection, const std::arr
 void ecs::NetworkUtil::handleSend(ConnectionComponent *conn, const std::array<char, 1024> *buffer,
                                   const boost::system::error_code &err)
 {
-    auto &q = conn->writeBuffer;
+/*    auto &q = conn->writeBuffer;
 
     q.erase(std::remove_if(q.begin(), q.end(), [buffer] (const std::array<char, 1024> &b) {
         return &b == buffer;
-    }), q.end());
+    }), q.end());*/
 }
