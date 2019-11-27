@@ -2,7 +2,10 @@ set(CLIENT_NAME r-type_client)
 
 project(${CLIENT_NAME})
 
-include_directories(src)
+include_directories(
+	src/Network
+	src
+)
 
 file(GLOB_RECURSE client_sources src/*.cpp src/*.hpp)
 list(FILTER client_sources EXCLUDE REGEX "src/main.cpp$")
