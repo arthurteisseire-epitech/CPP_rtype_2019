@@ -39,7 +39,7 @@ int display(game::INetwork *network)
     game::GameSprite gameSprite;
     sf::RenderWindow window(sf::VideoMode(200, 200), "r_type");
     sf::Sprite spaceShip = gameSprite.getSpriteOfType(game::GameSprite::SPACESHIP_NORMAL);
-    std::size_t sent;
+    sf::Sprite missile = gameSprite.getSpriteOfType(game::GameSprite::BASIC_MISSILE_LAUNCHED);
     char data[1024] = {0};
 
     while (window.isOpen()) {
@@ -59,6 +59,7 @@ int display(game::INetwork *network)
         }
         window.clear();
         window.draw(spaceShip);
+        window.draw(missile);
         window.display();
     }
     network->disconnect();

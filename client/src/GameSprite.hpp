@@ -10,6 +10,7 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Image.hpp>
 #include <functional>
 
 namespace game
@@ -19,8 +20,10 @@ namespace game
         GameSprite();
 
         enum BasicType {
-            SPACESHIP
+            SPACESHIP,
+            BASIC_MISSILE
         };
+
         enum Type {
             SPACESHIP_RIGHT_MOST,
             SPACESHIP_RIGHT,
@@ -32,18 +35,27 @@ namespace game
             SPACESHIP_NORMAL_REV,
             SPACESHIP_LEFT_REV,
             SPACESHIP_LEFT_MOST_REV,
+
+            BASIC_MISSILE_LAUNCH,
+            BASIC_MISSILE_LAUNCH_2,
+            BASIC_MISSILE_LAUNCHED,
+            BASIC_MISSILE_LAUNCHED_REV,
+            BASIC_MISSILE_LAUNCH_2_REV,
+            BASIC_MISSILE_LAUNCH_REV,
         };
 
         sf::Sprite getSpriteOfType(const Type &type);
         Type getType(const std::string &);
 
     private:
-        static sf::Texture loadTexture(const std::string &filename, const sf::Rect<int> &rect);
-        static std::unordered_map<std::string, Type> initTypes();
-        static std::unordered_map<BasicType, sf::Texture> initBasicTextures();
+        sf::Texture loadTexture(const std::string &filename, const sf::Rect<int> &rect);
+        std::unordered_map<std::string, Type> initTypes();
+        std::unordered_map<BasicType, sf::Texture> initBasicTextures();
+        std::unordered_map<std::string, sf::Image> initImages();
         std::unordered_map<Type, std::function<sf::Sprite()>> initSprites();
 
         const std::unordered_map<std::string, Type> strToType;
+        const std::unordered_map<std::string, sf::Image> images;
         const std::unordered_map<BasicType, sf::Texture> simpleTexture;
         const std::unordered_map<Type, std::function<sf::Sprite()>> typeSprite;
     };
