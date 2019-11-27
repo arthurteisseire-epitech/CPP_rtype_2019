@@ -22,7 +22,16 @@ namespace game
             SPACESHIP
         };
         enum Type {
-            SPACESHIP_NORMAL
+            SPACESHIP_RIGHT_MOST,
+            SPACESHIP_RIGHT,
+            SPACESHIP_NORMAL,
+            SPACESHIP_LEFT,
+            SPACESHIP_LEFT_MOST,
+            SPACESHIP_RIGHT_MOST_REV,
+            SPACESHIP_RIGHT_REV,
+            SPACESHIP_NORMAL_REV,
+            SPACESHIP_LEFT_REV,
+            SPACESHIP_LEFT_MOST_REV,
         };
 
         sf::Sprite getSpriteOfType(const Type &type);
