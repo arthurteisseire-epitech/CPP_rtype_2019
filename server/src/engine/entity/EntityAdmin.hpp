@@ -15,6 +15,8 @@
 #include "ObjectPool.hpp"
 #include "HealthComponent.hpp"
 #include "NetworkComponent.hpp"
+#include "TypeComponent.hpp"
+#include "IdComponent.hpp"
 #include "MoveTuple.hpp"
 #include "InputTuple.hpp"
 #include "IEntity.hpp"
@@ -31,6 +33,8 @@ namespace ecs
             ObjectPool<ConnectionComponent>,
             ObjectPool<DirectionComponent>,
             ObjectPool<TransformComponent>,
+            ObjectPool<TypeComponent>,
+            ObjectPool<IdComponent>,
             ObjectPool<InputTuple>,
             ObjectPool<SendTuple>,
             ObjectPool<MoveTuple>

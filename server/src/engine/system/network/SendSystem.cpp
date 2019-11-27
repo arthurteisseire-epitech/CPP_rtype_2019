@@ -18,7 +18,7 @@ void ecs::SendSystem::update(float deltaTime)
     std::array<char, 1024> buffer{};
 
     for (auto &t : GetPool<SendTuple>(admin)) {
-        auto s = "x:" + std::to_string(t.transform->vec.x) + ",y:" + std::to_string(t.transform->vec.y) + '\n';
+        auto s = std::to_string(t.id->id) + ";" + t.type->name + ":" + std::to_string(t.transform->vec.x) + "," + std::to_string(t.transform->vec.y) + '\n';
         buffer.fill(0);
         std::copy(s.begin(), s.end(), buffer.begin());
 

@@ -20,11 +20,15 @@ namespace game
         GameSprite();
 
         enum BasicType {
+            INVALID_BT,
+
             SPACESHIP,
             BASIC_MISSILE
         };
 
         enum Type {
+            INVALID_T,
+
             SPACESHIP_RIGHT_MOST,
             SPACESHIP_RIGHT,
             SPACESHIP_NORMAL,
@@ -45,6 +49,7 @@ namespace game
         };
 
         sf::Sprite getSpriteOfType(const Type &type);
+        sf::Sprite getSpriteOfType(const std::string &type);
         Type getType(const std::string &);
 
     private:

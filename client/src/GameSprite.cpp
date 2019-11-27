@@ -5,6 +5,7 @@
 ** Created by Arthamios
 */
 
+#include <iostream>
 #include "GameSprite.hpp"
 
 game::GameSprite::GameSprite() :
@@ -17,12 +18,23 @@ game::GameSprite::GameSprite() :
 
 game::GameSprite::Type game::GameSprite::getType(const std::string &str)
 {
-    return strToType.at(str);
+    auto it = strToType.find(str);
+
+    if (it == strToType.end()) {
+        std::cerr << "could not match \"" << str << "\" to a type" << std::endl;
+        return INVALID_T;
+    }
+    return it->second;
 }
 
 sf::Sprite game::GameSprite::getSpriteOfType(const game::GameSprite::Type &type)
 {
     return typeSprite.at(type)();
+}
+
+sf::Sprite game::GameSprite::getSpriteOfType(const std::string &type)
+{
+    return getSpriteOfType(getType(type));
 }
 
 sf::Texture game::GameSprite::loadTexture(const std::string &filename, const sf::Rect<int> &rect)
@@ -82,6 +94,12 @@ std::unordered_map<game::GameSprite::BasicType, sf::Texture> game::GameSprite::i
 std::unordered_map<game::GameSprite::Type, std::function<sf::Sprite()>> game::GameSprite::initSprites()
 {
     return {
+        {
+            INVALID_T,
+            [this] () -> sf::Sprite {
+                return sf::Sprite();
+            }
+        },
         {
             SPACESHIP_RIGHT_MOST,
             [this] () -> sf::Sprite {

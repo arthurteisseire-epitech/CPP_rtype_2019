@@ -34,33 +34,42 @@ void handle_events(game::INetwork *network, sf::RenderWindow &window)
     }
 }
 
+void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &window, const char *data,
+                              std::unordered_map<int, sf::Sprite> &toDraw)
+{
+    std::string dataStr(data);
+
+    size_t semiColonIdx = dataStr.find(';');
+    size_t dotIdx = dataStr.find(':');
+    size_t comaIdx = dataStr.find(',');
+    if (semiColonIdx != std::string::npos && dotIdx != std::string::npos && comaIdx != std::string::npos) {
+        int id = std::stoi(dataStr);
+        std::string typeStr = dataStr.substr(semiColonIdx + 1, dotIdx - semiColonIdx - 1);
+        auto it = toDraw.find(id);
+
+        if (it == toDraw.end())
+            toDraw.emplace(id, gameSprite.getSpriteOfType(typeStr));
+        toDraw.at(id).setPosition(std::stof(data + dotIdx + 1) * 10, std::stof(data + comaIdx + 1) * 10);
+    }
+}
+
 int display(game::INetwork *network)
 {
-    game::GameSprite gameSprite;
     sf::RenderWindow window(sf::VideoMode(200, 200), "r_type");
-    sf::Sprite spaceShip = gameSprite.getSpriteOfType(game::GameSprite::SPACESHIP_NORMAL);
-    sf::Sprite missile = gameSprite.getSpriteOfType(game::GameSprite::BASIC_MISSILE_LAUNCHED);
+    game::GameSprite gameSprite;
+    std::unordered_map<int, sf::Sprite> toDraw;
     char data[1024] = {0};
 
     while (window.isOpen()) {
         handle_events(network, window);
-
         std::size_t received = 0;
         if (network->receive(&data, sizeof(data), received)) {
-            std::cout << "\"" << data << "\"" << std::endl;
-            size_t x_pos = std::string(data).find("x:");
-            size_t y_pos = std::string(data).find("y:");
-            if (x_pos != std::string::npos && y_pos != std::string::npos) {
-                x_pos += sizeof("x");
-                y_pos += sizeof("y");
-                spaceShip.setPosition(std::stof(data + x_pos) * 10, std::stof(data + y_pos) * 10);
-                std::cout << "set position:" << std::stof(data + x_pos) << ", " << std::stof(data + y_pos) << std::endl;
-            }
+            window.clear();
+            handleServerInstructions(gameSprite, window, data, toDraw);
+            for (const auto &sprite : toDraw)
+                window.draw(sprite.second);
+            window.display();
         }
-        window.clear();
-        window.draw(spaceShip);
-        window.draw(missile);
-        window.display();
     }
     network->disconnect();
     std::cout << "client closed" << std::endl;
