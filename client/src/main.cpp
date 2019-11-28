@@ -42,15 +42,15 @@ void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &wi
     size_t semiColonIdx = dataStr.find(';');
     size_t dotIdx = dataStr.find(':');
     size_t comaIdx = dataStr.find(',');
-    if (semiColonIdx != std::string::npos && dotIdx != std::string::npos && comaIdx != std::string::npos) {
-        int id = std::stoi(dataStr);
-        std::string typeStr = dataStr.substr(semiColonIdx + 1, dotIdx - semiColonIdx - 1);
-        auto it = toDraw.find(id);
+    if (semiColonIdx == std::string::npos || dotIdx == std::string::npos || comaIdx == std::string::npos)
+        return;
 
-        if (it == toDraw.end())
-            toDraw.emplace(id, gameSprite.getSpriteOfType(typeStr));
-        toDraw.at(id).setPosition(std::stof(data + dotIdx + 1) * 10, std::stof(data + comaIdx + 1) * 10);
-    }
+    int id = std::stoi(dataStr);
+    std::string typeStr = dataStr.substr(semiColonIdx + 1, dotIdx - semiColonIdx - 1);
+
+    if (toDraw.find(id) == toDraw.end())
+        toDraw.emplace(id, gameSprite.getSpriteOfType(typeStr));
+    toDraw.at(id).setPosition(std::stof(data + dotIdx + 1) * 10, std::stof(data + comaIdx + 1) * 10);
 }
 
 int display(game::INetwork *network)
@@ -66,9 +66,11 @@ int display(game::INetwork *network)
         if (network->receive(&data, sizeof(data), received)) {
             window.clear();
             handleServerInstructions(gameSprite, window, data, toDraw);
-            for (const auto &sprite : toDraw)
-                window.draw(sprite.second);
-            window.display();
+            if (!toDraw.empty()) {
+                for (const auto &sprite : toDraw)
+                    window.draw(sprite.second);
+                window.display();
+            }
         }
     }
     network->disconnect();
