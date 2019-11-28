@@ -8,29 +8,35 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <iostream>
+#include "Util.hpp"
 #include "NetworkUtil.hpp"
 
-void ecs::NetworkUtil::send(ecs::ConnectionComponent *connection, const std::array<char, 1024> &buffer)
+void ecs::NetworkUtil::send(const std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx,
+                            const std::array<char, 1024> &buffer)
 {
-    auto &b = connection->writeBuffer.emplace_back(buffer);
+    auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+    auto &b = conn.writeBuffer.emplace_back(buffer);
 
-    connection->socket.async_write_some(
+    conn.socket.async_write_some(
         boost::asio::buffer(b),
         boost::bind(
             &ecs::NetworkUtil::handleSend,
-            connection,
+            admin,
+            connIdx,
             &b,
             boost::asio::placeholders::error
         )
     );
 }
 
-void ecs::NetworkUtil::handleSend(ConnectionComponent *conn, const std::array<char, 1024> *buffer,
+void ecs::NetworkUtil::handleSend(std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx,
+                                  const std::array<char, 1024> *buffer,
                                   const boost::system::error_code &err)
 {
-/*    auto &q = conn->writeBuffer;
-
-    q.erase(std::remove_if(q.begin(), q.end(), [buffer] (const std::array<char, 1024> &b) {
-        return &b == buffer;
-    }), q.end());*/
+//    auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+//    auto &q = conn.writeBuffer;
+//
+//    q.erase(std::remove_if(q.begin(), q.end(), [buffer](const std::array<char, 1024> &b) {
+//        return &b == buffer;
+//    }), q.end());
 }

@@ -15,7 +15,7 @@ namespace ecs
 {
     class EntityFactory {
     public:
-        static void createPlayer(std::shared_ptr<EntityAdmin> &admin, ConnectionComponent *connection);
+        static void createPlayer(std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx);
     };
 }
 
