@@ -8,20 +8,22 @@
 #ifndef RTYPE_MOVETUPLE_HPP
 #define RTYPE_MOVETUPLE_HPP
 
+#include "ObjectPool.hpp"
 #include "DirectionComponent.hpp"
 #include "TransformComponent.hpp"
 
 namespace ecs
 {
     struct MoveTuple {
-        MoveTuple(std::size_t directionIdx, std::size_t transformIdx) :
+        MoveTuple(ObjectPool<DirectionComponent>::index directionIdx,
+                  ObjectPool<TransformComponent>::index transformIdx) :
             directionIdx(directionIdx),
             transformIdx(transformIdx)
         {
         }
 
-        std::size_t directionIdx;
-        std::size_t transformIdx;
+        ObjectPool<DirectionComponent>::index directionIdx;
+        ObjectPool<TransformComponent>::index transformIdx;
     };
 }
 

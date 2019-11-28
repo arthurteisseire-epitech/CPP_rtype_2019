@@ -877,7 +877,7 @@ class GTEST_API_ UnitTestImpl {
   // Indicates whether RegisterParameterizedTests() has been called already.
   bool parameterized_tests_registered_;
 
-  // Index of the last death test suite registered.  Initially -1.
+  // index of the last death test suite registered.  Initially -1.
   int last_death_test_suite_;
 
   // This points to the TestSuite for the currently running test.  It

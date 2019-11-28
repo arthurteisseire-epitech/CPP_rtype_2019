@@ -8,20 +8,22 @@
 #ifndef RTYPE_INPUTTUPLE_HPP
 #define RTYPE_INPUTTUPLE_HPP
 
+#include "ObjectPool.hpp"
 #include "DirectionComponent.hpp"
 #include "ConnectionComponent.hpp"
 
 namespace ecs
 {
     struct InputTuple {
-        InputTuple(std::size_t connectionIdx, std::size_t directionIdx) :
+        InputTuple(ObjectPool<ConnectionComponent>::index connectionIdx,
+                   ObjectPool<DirectionComponent>::index directionIdx) :
             connectionIdx(connectionIdx),
             directionIdx(directionIdx)
         {
         }
 
-        std::size_t connectionIdx;
-        std::size_t directionIdx;
+        ObjectPool<ConnectionComponent>::index connectionIdx;
+        ObjectPool<DirectionComponent>::index directionIdx;
     };
 }
 

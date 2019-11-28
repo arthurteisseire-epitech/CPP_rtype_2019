@@ -16,11 +16,11 @@ namespace ecs
 {
     class NetworkUtil {
     public:
-        static void send(const std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx,
+        static void send(const std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index connIdx,
                          const std::array<char, 1024> &buffer);
 
     private:
-        static void handleSend(std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx,
+        static void handleSend(std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index connIdx,
                                const std::array<char, 1024> *buffer,
                                const boost::system::error_code &err);
     };

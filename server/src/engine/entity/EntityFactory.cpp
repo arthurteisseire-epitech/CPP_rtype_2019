@@ -10,7 +10,7 @@
 #include "SendTuple.hpp"
 #include "PlayerEntity.hpp"
 
-void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx)
+void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index idx)
 {
-    admin->entities.emplace_back(new PlayerEntity(admin, connIdx));
+    admin->entities.emplace_back(new PlayerEntity(admin, idx));
 }

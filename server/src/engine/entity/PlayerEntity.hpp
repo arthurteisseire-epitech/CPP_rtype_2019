@@ -16,19 +16,19 @@
 namespace ecs
 {
     struct PlayerEntity : public IEntity {
-        explicit PlayerEntity(const std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx)
+        explicit PlayerEntity(const std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index connIdx)
         {
             auto transformIdx = GetPool<TransformComponent>(admin).create();
             auto dirIdx = GetPool<DirectionComponent>(admin).create();
 
-            inputTupleIdx = GetPool<InputTuple>(admin).create(connIdx, transformIdx);
+            inputTupleIdx = GetPool<InputTuple>(admin).create(connIdx, dirIdx);
             moveTupleIdx = GetPool<MoveTuple>(admin).create(dirIdx, transformIdx);
             sendTupleIdx = GetPool<SendTuple>(admin).create(connIdx, transformIdx);
         }
 
-        std::size_t inputTupleIdx;
-        std::size_t moveTupleIdx;
-        std::size_t sendTupleIdx;
+        ObjectPool<InputTuple>::index inputTupleIdx;
+        ObjectPool<MoveTuple>::index moveTupleIdx;
+        ObjectPool<SendTuple>::index sendTupleIdx;
         //        std::size_t id;
     };
 }

@@ -22,11 +22,11 @@ namespace ecs
         void update(float deltaTime) override;
         void startAccept();
         void handleAccept(const boost::system::error_code &err);
-        void startRead(size_t connIdx);
-        void handleRead(size_t connIdx, const boost::system::error_code &err);
+        void startRead(ObjectPool<ConnectionComponent>::index connIdx);
+        void handleRead(ObjectPool<ConnectionComponent>::index connIdx, const boost::system::error_code &err);
         static void write(ecs::ConnectionComponent &conn);
         static void handleWrite(const boost::system::error_code &err);
-        void close(size_t connIdx);
+        void close(ObjectPool<ConnectionComponent>::index connIdx);
 
     private:
         std::optional<ConnectionComponent> connection;
