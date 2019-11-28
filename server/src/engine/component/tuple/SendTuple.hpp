@@ -14,14 +14,14 @@
 namespace ecs
 {
     struct SendTuple {
-        SendTuple(ConnectionComponent *connection, TransformComponent *transform) :
-            connection(connection),
-            transform(transform)
+        SendTuple(std::size_t connectionIdx, std::size_t transformIdx) :
+            connectionIdx(connectionIdx),
+            transformIdx(transformIdx)
         {
         }
 
-        ConnectionComponent *connection;
-        const TransformComponent *transform;
+        std::size_t connectionIdx;
+        std::size_t transformIdx;
     };
 }
 

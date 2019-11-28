@@ -22,16 +22,21 @@ void ecs::InputSystem::update(float deltaTime)
         {"up", DirectionComponent::UP},
         {"down", DirectionComponent::DOWN}
     };
+    auto &connPool = GetPool<ConnectionComponent>(admin);
+    auto &dirPool = GetPool<DirectionComponent>(admin);
 
     for (auto &c : GetPool<InputTuple>(admin)) {
-        auto &buffers = c.connection->readBuffers;
+        auto &conn = connPool.at(c.connectionIdx);
+        auto &dir = dirPool.at(c.directionIdx);
+        auto &buffers = conn.readBuffers;
+
         while (!buffers.empty()) {
             for (auto &e : v) {
                 auto s = e.first;
                 auto key = e.second;
                 if (std::equal(s.begin(), s.end(), buffers.front().begin())) {
-                    c.direction->setDirection(key);
-                    NetworkUtil::send(c.connection, std::array<char, 1024>{"toto"});
+                    dir.setDirection(key);
+                    NetworkUtil::send(admin, c.connectionIdx, std::array<char, 1024>{"toto"});
                     std::cout << s << std::endl;
                 }
             }

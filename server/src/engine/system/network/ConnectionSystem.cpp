@@ -41,44 +41,48 @@ void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
         std::cout << err << std::endl;
     } else {
         std::cout << "new connection !" << std::endl;
-        auto conn = &connPool.move(std::move(connection.value()));
-        startRead(conn);
-        EntityFactory::createPlayer(admin, conn);
+        std::size_t connIdx = connPool.move(std::move(connection.value()));
+        startRead(connIdx);
+        EntityFactory::createPlayer(admin, connIdx);
     }
     startAccept();
 }
 
-void ecs::ConnectionSystem::startRead(ecs::ConnectionComponent *conn)
+void ecs::ConnectionSystem::startRead(size_t connIdx)
 {
-    conn->tmpReadBuffer.fill(0);
-    conn->socket.async_read_some(
-        boost::asio::buffer(conn->tmpReadBuffer),
+    auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+
+    conn.tmpReadBuffer.fill(0);
+    conn.socket.async_read_some(
+        boost::asio::buffer(conn.tmpReadBuffer),
         boost::bind(
             &ecs::ConnectionSystem::handleRead,
             this,
-            conn,
+            connIdx,
             boost::asio::placeholders::error
         )
     );
 }
 
-void ecs::ConnectionSystem::handleRead(ConnectionComponent *conn, const boost::system::error_code &err)
+void ecs::ConnectionSystem::handleRead(size_t connIdx, const boost::system::error_code &err)
 {
     if (!err) {
-        conn->readBuffers.push(conn->tmpReadBuffer);
-        startRead(conn);
+        auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+        conn.readBuffers.push(conn.tmpReadBuffer);
+        startRead(connIdx);
     }
 }
 
-void ecs::ConnectionSystem::close(ConnectionComponent *conn)
+void ecs::ConnectionSystem::close(size_t connIdx)
 {
+    auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
     boost::system::error_code ec;
 
-    conn->socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    conn.socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
     if (ec)
         std::cerr << "error in shutdown: " << ec << std::endl;
-    conn->socket.close(ec);
+    conn.socket.close(ec);
     if (ec)
         std::cerr << "error in close: " << ec << std::endl;
-    GetPool<ecs::ConnectionComponent>(admin).destroy(conn);
+    GetPool<ecs::ConnectionComponent>(admin).destroy(connIdx);
 }
