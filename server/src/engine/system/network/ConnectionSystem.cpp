@@ -41,14 +41,14 @@ void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
         std::cout << err << std::endl;
     } else {
         std::cout << "new connection !" << std::endl;
-        std::size_t connIdx = connPool.move(std::move(connection.value()));
+        ObjectPool<ConnectionComponent>::index connIdx = connPool.move(std::move(connection.value()));
         startRead(connIdx);
         EntityFactory::createPlayer(admin, connIdx);
     }
     startAccept();
 }
 
-void ecs::ConnectionSystem::startRead(size_t connIdx)
+void ecs::ConnectionSystem::startRead(ObjectPool<ConnectionComponent>::index connIdx)
 {
     auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
 
@@ -64,7 +64,7 @@ void ecs::ConnectionSystem::startRead(size_t connIdx)
     );
 }
 
-void ecs::ConnectionSystem::handleRead(size_t connIdx, const boost::system::error_code &err)
+void ecs::ConnectionSystem::handleRead(ObjectPool<ConnectionComponent>::index connIdx, const boost::system::error_code &err)
 {
     if (!err) {
         auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
@@ -73,7 +73,7 @@ void ecs::ConnectionSystem::handleRead(size_t connIdx, const boost::system::erro
     }
 }
 
-void ecs::ConnectionSystem::close(size_t connIdx)
+void ecs::ConnectionSystem::close(ObjectPool<ConnectionComponent>::index connIdx)
 {
     auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
     boost::system::error_code ec;

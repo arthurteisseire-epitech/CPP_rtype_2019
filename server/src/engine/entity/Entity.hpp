@@ -17,16 +17,16 @@ namespace ecs
     template<typename ...Args>
     class Entity : public IEntity {
     public:
-        explicit Entity(Args *... args) :
-            components(args...)
+        explicit Entity(Args ... args) :
+            tuples(args...)
         {
             id = nextId();
         }
 
         template<typename T>
-        T *get()
+        T get()
         {
-            return std::get<T *>(components);
+            return std::get<T>(tuples);
         }
 
         [[nodiscard]] int getId() const
@@ -35,7 +35,7 @@ namespace ecs
         }
 
     private:
-        std::tuple<Args *...> components;
+        std::tuple<Args ...> tuples;
         int id;
     };
 }

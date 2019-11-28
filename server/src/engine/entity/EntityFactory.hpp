@@ -15,9 +15,9 @@ namespace ecs
 {
     class EntityFactory {
     public:
-        static void createPlayer(std::shared_ptr<EntityAdmin> &admin, ConnectionComponent *connection);
-        static void createBullet(std::shared_ptr<EntityAdmin> &admin, ConnectionComponent *connection,
-                                 TransformComponent *transform);
+        static void createPlayer(std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index connIdx);
+        static void createBullet(std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index connIdx,
+                                 ObjectPool<TransformComponent>::index transformIdx);
     private:
         static int id;
     };

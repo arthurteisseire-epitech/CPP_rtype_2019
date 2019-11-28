@@ -15,30 +15,35 @@
 
 int ecs::EntityFactory::id = 0;
 
-void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin, ConnectionComponent *connection)
+void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
+                                      ObjectPool<ConnectionComponent>::index connIdx)
 {
-    auto transform = GetPool<TransformComponent>(admin).create();
-    auto direction = GetPool<DirectionComponent>(admin).create();
-    auto type = GetPool<TypeComponent>(admin).create("spaceship_normal");
-    auto objId = GetPool<IdComponent>(admin).create(id++);
+    auto transformIdx = GetPool<TransformComponent>(admin).create();
+    auto dirIdx = GetPool<DirectionComponent>(admin).create();
+    auto typeIdx = GetPool<TypeComponent>(admin).create("spaceship_normal");
+    auto objIdIdx = GetPool<IdComponent>(admin).create(id++);
 
-    createEntity(admin,
-        GetPool<InputTuple>(admin).create(connection, transform, direction),
-        GetPool<SendRenderTuple>(admin).create(connection, transform, type, objId),
-        GetPool<MoveTuple>(admin).create(transform, direction)
+    admin->entities.emplace_back(
+        new Entity(admin,
+            GetPool<InputTuple>(admin).create(connIdx, transformIdx, dirIdx),
+            GetPool<MoveTuple>(admin).create(transformIdx, dirIdx),
+            GetPool<SendRenderTuple>(admin).create(connIdx, transformIdx, typeIdx, objIdIdx)
+        )
     );
 }
 
-void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin, ConnectionComponent *connection,
-                                      TransformComponent *transform)
+void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin, ObjectPool<ConnectionComponent>::index connectionIdx,
+                                      ObjectPool<TransformComponent>::index transformIdx)
 {
-    auto direction = GetPool<DirectionComponent>(admin).create();
-    auto type = GetPool<TypeComponent>(admin).create("basic_missile_launch");
-    auto objId = GetPool<IdComponent>(admin).create(id++);
+    auto directionIdx = GetPool<DirectionComponent>(admin).create();
+    auto typeIdx = GetPool<TypeComponent>(admin).create("basic_missile_launch");
+    auto objIdIdx = GetPool<IdComponent>(admin).create(id++);
 
-    direction->setDirection(DirectionComponent::RIGHT);
-    createEntity(admin,
-        GetPool<MoveTuple>(admin).create(transform, direction),
-        GetPool<SendRenderTuple>(admin).create(connection, transform, type, objId)
+    GetPool<DirectionComponent>(admin).at(directionIdx).setDirection(DirectionComponent::RIGHT);
+    admin->entities.emplace_back(
+        new Entity(admin,
+        GetPool<MoveTuple>(admin).create(transformIdx, directionIdx),
+        GetPool<SendRenderTuple>(admin).create(connectionIdx, transformIdx, typeIdx, objIdIdx)
+        )
     );
 }

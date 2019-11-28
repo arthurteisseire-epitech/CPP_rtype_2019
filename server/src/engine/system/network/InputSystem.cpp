@@ -25,8 +25,14 @@ const std::string ecs::InputSystem::space = "space";
 
 void ecs::InputSystem::update(float deltaTime)
 {
+    auto &connPool = GetPool<ConnectionComponent>(admin);
+    auto &dirPool = GetPool<DirectionComponent>(admin);
+
     for (auto &c : GetPool<InputTuple>(admin)) {
-        auto &buffers = c.connection->readBuffers;
+        auto &conn = connPool.at(c.connectionIdx);
+        auto &dir = dirPool.at(c.directionIdx);
+        auto &buffers = conn.readBuffers;
+
         while (!buffers.empty()) {
             handleInput(c, buffers);
             buffers.pop();
@@ -40,11 +46,13 @@ void ecs::InputSystem::handleInput(const ecs::InputTuple &c, std::queue<std::arr
         auto str = dir.first;
         auto dirComp = dir.second;
         if (std::equal(str.begin(), str.end(), buffers.front().begin()))
-            c.direction->setDirection(dirComp);
+            GetPool<DirectionComponent>(admin).at(c.directionIdx).setDirection(dirComp);
     }
     if (std::equal(space.begin(), space.end(), buffers.front().begin())) {
-        float xCp = c.transform->vec.x;
-        float yCp = c.transform->vec.y;
-        EntityFactory::createBullet(admin, c.connection, GetPool<TransformComponent>(admin).create(xCp, yCp));
+        auto &transform = GetPool<TransformComponent>(admin).at(c.transformIdx);
+        float xCp = transform.vec.x;
+        float yCp = transform.vec.y;
+
+        EntityFactory::createBullet(admin, c.connectionIdx, GetPool<TransformComponent>(admin).create(xCp, yCp));
     }
 }
