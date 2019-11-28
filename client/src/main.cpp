@@ -72,6 +72,7 @@ int display(game::INetwork *network)
         }
     }
     network->disconnect();
+    delete network;
     std::cout << "client closed" << std::endl;
     return 0;
 }
