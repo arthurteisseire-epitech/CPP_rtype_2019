@@ -10,15 +10,18 @@
 
 #include <string>
 #include "ConnectionComponent.hpp"
+#include "EntityAdmin.hpp"
 
 namespace ecs
 {
     class NetworkUtil {
     public:
-        static void send(ConnectionComponent *connection, const std::array<char, 1024> &buffer);
+        static void send(const std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx,
+                         const std::array<char, 1024> &buffer);
 
     private:
-        static void handleSend(ConnectionComponent *conn, const std::array<char, 1024> *buffer,
+        static void handleSend(std::shared_ptr<EntityAdmin> &admin, std::size_t connIdx,
+                               const std::array<char, 1024> *buffer,
                                const boost::system::error_code &err);
     };
 }
