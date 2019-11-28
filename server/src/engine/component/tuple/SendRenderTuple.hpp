@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** SendTuple.hpp
+** SendRenderTuple.hpp
 */
 
-#ifndef RTYPE_SENDTUPLE_HPP
-#define RTYPE_SENDTUPLE_HPP
+#ifndef RTYPE_SENDRENDERTUPLE_HPP
+#define RTYPE_SENDRENDERTUPLE_HPP
 
 #include "TransformComponent.hpp"
 #include "ConnectionComponent.hpp"
@@ -15,8 +15,8 @@
 
 namespace ecs
 {
-    struct SendTuple {
-        SendTuple(ConnectionComponent *connection, TransformComponent *transform, TypeComponent *type, IdComponent *id) :
+    struct SendRenderTuple {
+        SendRenderTuple(ConnectionComponent *connection, TransformComponent *transform, TypeComponent *type, IdComponent *id) :
             connection(connection),
             transform(transform),
             type(type),

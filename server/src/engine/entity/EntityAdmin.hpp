@@ -9,7 +9,7 @@
 #define RTYPE_ENTITYADMIN_HPP
 
 #include <tuple>
-#include "SendTuple.hpp"
+#include "SendRenderTuple.hpp"
 #include "ConnectionComponent.hpp"
 #include "TransformComponent.hpp"
 #include "ObjectPool.hpp"
@@ -36,7 +36,7 @@ namespace ecs
             ObjectPool<TypeComponent>,
             ObjectPool<IdComponent>,
             ObjectPool<InputTuple>,
-            ObjectPool<SendTuple>,
+            ObjectPool<SendRenderTuple>,
             ObjectPool<MoveTuple>
         > pools;
         std::vector<std::unique_ptr<IEntity>> entities;
