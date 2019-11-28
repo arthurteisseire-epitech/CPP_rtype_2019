@@ -23,8 +23,9 @@ namespace ecs
             RIGHT
         };
 
-        explicit DirectionComponent(int x = 0, int y = 0) :
-            dir(x, y)
+        explicit DirectionComponent(int x = 0, int y = 0, bool keepMovement = false) :
+            dir(x, y),
+            keepMovement(keepMovement)
         {
         }
 
@@ -56,7 +57,14 @@ namespace ecs
             return *this;
         }
 
+        DirectionComponent &setPermanentMovement(const bool &b)
+        {
+            keepMovement = b;
+            return *this;
+        }
+
         mut::Vec2f dir;
+        bool keepMovement;
     };
 }
 

@@ -39,7 +39,7 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin, Objec
     auto typeIdx = GetPool<TypeComponent>(admin).create("basic_missile_launch");
     auto objIdIdx = GetPool<IdComponent>(admin).create(id++);
 
-    GetPool<DirectionComponent>(admin).at(directionIdx).setDirection(DirectionComponent::RIGHT);
+    GetPool<DirectionComponent>(admin).at(directionIdx).setDirection(DirectionComponent::RIGHT).setPermanentMovement(true);
     admin->entities.emplace_back(
         new Entity(admin,
         GetPool<MoveTuple>(admin).create(transformIdx, directionIdx),

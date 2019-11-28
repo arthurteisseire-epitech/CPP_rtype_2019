@@ -26,7 +26,8 @@ void ecs::MoveSystem::update(float dt)
             transform.vec += dir.dir;
             std::cout << "moving by " << dir.dir.x << ", " << dir.dir.y << std::endl;
             std::cout << "new pos: " << transform.vec.x << "," << transform.vec.y << std::endl;
-            dir.dir = {0, 0};
+            if (!dir.keepMovement)
+                dir.dir = {0, 0};
         }
     }
 
