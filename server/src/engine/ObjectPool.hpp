@@ -11,12 +11,21 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include <mutex>
 
 namespace ecs
 {
     template<typename T>
     class ObjectPool {
     public:
+        struct index {
+            explicit index(std::size_t idx = 0) : idx(idx)
+            {
+            }
+
+            std::size_t idx;
+        };
+
         explicit ObjectPool(int padSize = 20) :
             padSize(padSize),
             pool()
@@ -25,21 +34,39 @@ namespace ecs
         }
 
         template<typename ...Args>
-        T *create(Args ...args)
+        index create(Args ...args)
         {
+            std::lock_guard<std::mutex> lock(mutex);
+
             if (pool.size() == pool.capacity())
                 reallocate();
             pool.emplace_back(args...);
-            return &pool.back();
+            return index(pool.size() - 1);
         }
 
-        void destroy(T *obj)
+        index move(T &&obj)
         {
-            auto it = std::find_if(pool.begin(), pool.end(), [obj](const T &p) {
-                return obj == &p;
-            });
-            std::iter_swap(it, std::prev(pool.end()));
+            std::lock_guard<std::mutex> lock(mutex);
+
+            if (pool.size() == pool.capacity())
+                reallocate();
+            pool.push_back(std::move(std::forward<T>(obj)));
+            return index(pool.size() - 1);
+        }
+
+        void destroy(index idx)
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+
+            std::iter_swap(pool.begin() + idx.idx, std::prev(pool.end()));
             pool.pop_back();
+        }
+
+        T &at(index idx)
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+
+            return pool.at(idx.idx);
         }
 
         typename std::vector<T>::iterator begin()
@@ -60,6 +87,7 @@ namespace ecs
         }
 
         std::vector<T> pool;
+        std::mutex mutex;
         int padSize;
     };
 }

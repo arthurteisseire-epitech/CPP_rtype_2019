@@ -5,23 +5,24 @@
 ** main.cpp
 */
 
-#include <iostream>
-#include "Network.hpp"
+#include <thread>
 #include "EntityAdmin.hpp"
-
-class Functor {
-public:
-    bool operator()(const std::array<char, BUFFER_SIZE> &request, std::array<char, BUFFER_SIZE> &response)
-    {
-        for (auto &c : request)
-            std::cout << c;
-        std::cout << std::endl;
-        std::copy(request.begin(), request.end(), response.begin());
-        return false;
-    }
-};
+#include "SystemUtil.hpp"
+#include "ConnectionSystem.hpp"
 
 int main()
 {
-    net::Network<Functor> network(1234, std::make_shared<Functor>());
+    auto admin = std::make_shared<ecs::EntityAdmin>();
+    ecs::ConnectionSystem connSystem(admin);
+    auto systems = ecs::SystemsUtil::Init(admin);
+
+    std::thread t([&]() {
+        connSystem.update(0.16);
+    });
+    while (true) {
+        ecs::SystemsUtil::Update(systems, 0.16);
+        usleep(160000);
+    }
+    t.join();
+    std::cout << "end" << std::endl;
 }

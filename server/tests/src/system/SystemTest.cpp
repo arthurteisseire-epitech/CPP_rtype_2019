@@ -6,28 +6,22 @@
 */
 
 #include "gtest/gtest.h"
-#include "ObjectPool.hpp"
-#include "HealthSystem.hpp"
-#include "TransformSystem.hpp"
+#include "DirectionComponent.hpp"
+#include "MoveSystem.hpp"
+#include "MoveTuple.hpp"
 #include "TransformComponent.hpp"
-#include "GetPool.hpp"
+#include "Util.hpp"
 
-TEST(System, updateHealth)
+TEST(System, move)
 {
-    ecs::EntityAdmin admin;
-    auto healthComponent = ecs::GetPool<ecs::HealthComponent>(admin).create(100);
+    auto admin = std::make_shared<ecs::EntityAdmin>();
+    auto transformComponent = ecs::GetPool<ecs::TransformComponent>(admin).create(20, 20);
+    auto directionComponent = ecs::GetPool<ecs::DirectionComponent>(admin).create();
+    auto moveTuple = ecs::GetPool<ecs::MoveTuple>(admin).create(directionComponent, transformComponent);
+    ecs::MoveSystem moveSystem(admin);
 
-    ecs::HealthSystem::update(0.16, admin);
-
-    EXPECT_EQ(healthComponent->life, 80);
-}
-
-TEST(System, updateTransform)
-{
-    ecs::EntityAdmin admin;
-    auto transformComponent = ecs::GetPool<ecs::TransformComponent>(admin).create();
-
-    ecs::TransformSystem::update(0.16, admin);
-
-    EXPECT_EQ(transformComponent->x, 2);
+    directionComponent->setDirection(ecs::DirectionComponent::DOWN);
+    ASSERT_EQ(transformComponent->vec, mut::Vec2f(20, 20));
+    moveSystem.update(0.16);
+    EXPECT_EQ(transformComponent->vec, mut::Vec2f(20, 19));
 }

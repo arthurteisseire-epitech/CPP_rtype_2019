@@ -8,19 +8,39 @@
 #ifndef RTYPE_ENTITYADMIN_HPP
 #define RTYPE_ENTITYADMIN_HPP
 
-#include <unordered_map>
 #include <tuple>
+#include "SendRenderTuple.hpp"
+#include "ConnectionComponent.hpp"
 #include "TransformComponent.hpp"
 #include "ObjectPool.hpp"
 #include "HealthComponent.hpp"
+#include "NetworkComponent.hpp"
+#include "TypeComponent.hpp"
+#include "IdComponent.hpp"
+#include "MoveTuple.hpp"
+#include "InputTuple.hpp"
+#include "IEntity.hpp"
 
 namespace ecs
 {
     struct EntityAdmin {
+        EntityAdmin() :
+            network(1234)
+        {
+        }
+
         std::tuple<
-            ObjectPool<HealthComponent>,
-            ObjectPool<TransformComponent>
+            ObjectPool<ConnectionComponent>,
+            ObjectPool<DirectionComponent>,
+            ObjectPool<TransformComponent>,
+            ObjectPool<TypeComponent>,
+            ObjectPool<IdComponent>,
+            ObjectPool<InputTuple>,
+            ObjectPool<SendRenderTuple>,
+            ObjectPool<MoveTuple>
         > pools;
+        std::vector<std::unique_ptr<IEntity>> entities;
+        NetworkComponent network;
     };
 }
 
