@@ -19,12 +19,6 @@ namespace ecs
     {
         return std::get<ObjectPool<T>>(admin->pools);
     }
-
-    template<typename ...Args>
-    void createEntity(const std::shared_ptr<EntityAdmin> &admin, Args *...args)
-    {
-        admin->entities.emplace_back(new Entity<Args ...>(args...));
-    }
 }
 
 #endif
