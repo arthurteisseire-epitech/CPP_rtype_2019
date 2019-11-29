@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** ConnectionComponent.hpp
+** CConnection.hpp
 */
 
-#ifndef RTYPE_CONNECTIONCOMPONENT_HPP
-#define RTYPE_CONNECTIONCOMPONENT_HPP
+#ifndef RTYPE_CCONNECTION_HPP
+#define RTYPE_CCONNECTION_HPP
 
 #include <boost/asio/ip/tcp.hpp>
 #include <array>
@@ -15,8 +15,8 @@
 
 namespace ecs
 {
-    struct ConnectionComponent {
-        explicit ConnectionComponent(boost::asio::io_context &ioContext) :
+    struct CConnection {
+        explicit CConnection(boost::asio::io_context &ioContext) :
             socket(ioContext)
         {
         }

@@ -8,9 +8,9 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include "EntityFactory.hpp"
-#include "NetworkComponent.hpp"
+#include "CNetwork.hpp"
 #include "ConnectionSystem.hpp"
-#include "ConnectionComponent.hpp"
+#include "CConnection.hpp"
 #include "Util.hpp"
 
 ecs::ConnectionSystem::ConnectionSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
@@ -25,7 +25,7 @@ void ecs::ConnectionSystem::update(float deltaTime)
 
 void ecs::ConnectionSystem::startAccept()
 {
-    connection = ConnectionComponent(admin->network.ioContext);
+    connection = CConnection(admin->network.ioContext);
 
     admin->network.acceptor.async_accept(
         connection.value().socket,
@@ -35,22 +35,22 @@ void ecs::ConnectionSystem::startAccept()
 
 void ecs::ConnectionSystem::handleAccept(const boost::system::error_code &err)
 {
-    auto &connPool = GetPool<ecs::ConnectionComponent>(admin);
+    auto &connPool = GetPool<ecs::CConnection>(admin);
 
     if (err) {
         std::cout << err << std::endl;
     } else {
         std::cout << "new connection !" << std::endl;
-        ObjectPool<ConnectionComponent>::index connIdx = connPool.move(std::move(connection.value()));
+        ObjectPool<CConnection>::index connIdx = connPool.move(std::move(connection.value()));
         startRead(connIdx);
         EntityFactory::createPlayer(admin, connIdx);
     }
     startAccept();
 }
 
-void ecs::ConnectionSystem::startRead(ObjectPool<ConnectionComponent>::index connIdx)
+void ecs::ConnectionSystem::startRead(ObjectPool<CConnection>::index connIdx)
 {
-    auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+    auto &conn = GetPool<CConnection>(admin).at(connIdx);
 
     conn.tmpReadBuffer.fill(0);
     conn.socket.async_read_some(
@@ -64,18 +64,18 @@ void ecs::ConnectionSystem::startRead(ObjectPool<ConnectionComponent>::index con
     );
 }
 
-void ecs::ConnectionSystem::handleRead(ObjectPool<ConnectionComponent>::index connIdx, const boost::system::error_code &err)
+void ecs::ConnectionSystem::handleRead(ObjectPool<CConnection>::index connIdx, const boost::system::error_code &err)
 {
     if (!err) {
-        auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+        auto &conn = GetPool<CConnection>(admin).at(connIdx);
         conn.readBuffers.push(conn.tmpReadBuffer);
         startRead(connIdx);
     }
 }
 
-void ecs::ConnectionSystem::close(ObjectPool<ConnectionComponent>::index connIdx)
+void ecs::ConnectionSystem::close(ObjectPool<CConnection>::index connIdx)
 {
-    auto &conn = GetPool<ConnectionComponent>(admin).at(connIdx);
+    auto &conn = GetPool<CConnection>(admin).at(connIdx);
     boost::system::error_code ec;
 
     conn.socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
@@ -84,5 +84,5 @@ void ecs::ConnectionSystem::close(ObjectPool<ConnectionComponent>::index connIdx
     conn.socket.close(ec);
     if (ec)
         std::cerr << "error in close: " << ec << std::endl;
-    GetPool<ecs::ConnectionComponent>(admin).destroy(connIdx);
+    GetPool<ecs::CConnection>(admin).destroy(connIdx);
 }

@@ -22,6 +22,12 @@ namespace ecs
         }
         virtual void update(float deltaTime) = 0;
 
+        template <class T, class Tuple>
+        T &get(Tuple &tuple)
+        {
+            return std::get<ObjectPool<T>>(admin->pools).at(std::get<typename ObjectPool<T>::index>(tuple));
+        }
+
     protected:
         std::shared_ptr<EntityAdmin> admin;
     };

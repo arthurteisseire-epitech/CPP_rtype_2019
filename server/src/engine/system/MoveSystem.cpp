@@ -15,20 +15,13 @@ ecs::MoveSystem::MoveSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 
 void ecs::MoveSystem::update(float dt)
 {
-    auto &transformPool = GetPool<TransformComponent>(admin);
-    auto &dirPool = GetPool<DirectionComponent>(admin);
-
-    for (auto &t : GetPool<MoveTuple>(admin)) {
-        auto &dir = dirPool.at(t.directionIdx);
-        auto &transform = transformPool.at(t.transformIdx);
-
-        if (dir.dir != mut::Vec2f({0, 0})) {
-            transform.vec += dir.dir;
-            std::cout << "moving by " << dir.dir.x << ", " << dir.dir.y << std::endl;
-            std::cout << "new pos: " << transform.vec.x << "," << transform.vec.y << std::endl;
-            if (!dir.keepMovement)
-                dir.dir = {0, 0};
+    ForEachMatching<MoveTuple>(admin, [this](MoveTuple &t) {
+        if (get<CDirection>(t).dir != mut::Vec2f({0, 0})) {
+            get<CTransform>(t).vec += get<CDirection>(t).dir;
+            std::cout << "moving by " << get<CDirection>(t).dir.x << ", " << get<CDirection>(t).dir.y << std::endl;
+            std::cout << "new pos: " << get<CTransform>(t).vec.x << "," << get<CTransform>(t).vec.y << std::endl;
+            if (!get<CDirection>(t).keepMovement)
+                get<CDirection>(t).dir = {0, 0};
         }
-    }
-
+    });
 }

@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** DirectionComponent.hpp
+** CDirection.hpp
 */
 
-#ifndef RTYPE_DIRECTIONCOMPONENT_HPP
-#define RTYPE_DIRECTIONCOMPONENT_HPP
+#ifndef RTYPE_CDIRECTION_HPP
+#define RTYPE_CDIRECTION_HPP
 
 #include <string>
 #include <cmath>
@@ -14,7 +14,7 @@
 
 namespace ecs
 {
-    struct DirectionComponent {
+    struct CDirection {
         enum Direction {
             NONE,
             UP,
@@ -23,13 +23,13 @@ namespace ecs
             RIGHT
         };
 
-        explicit DirectionComponent(int x = 0, int y = 0, bool keepMovement = false) :
+        explicit CDirection(int x = 0, int y = 0, bool keepMovement = false) :
             dir(x, y),
             keepMovement(keepMovement)
         {
         }
 
-        DirectionComponent &setDirection(const Direction &horizontal, const Direction &vertical)
+        CDirection &setDirection(const Direction &horizontal, const Direction &vertical)
         {
             float val = horizontal != NONE && vertical != NONE ? M_SQRT2 : 1;
 
@@ -44,7 +44,7 @@ namespace ecs
             return *this;
         }
 
-        DirectionComponent &setDirection(const DirectionComponent::Direction &dir_enum)
+        CDirection &setDirection(const CDirection::Direction &dir_enum)
         {
             if (dir_enum == LEFT)
                 dir.x -= 1;
@@ -57,7 +57,7 @@ namespace ecs
             return *this;
         }
 
-        DirectionComponent &setPermanentMovement(const bool &b)
+        CDirection &setPermanentMovement(const bool &b)
         {
             keepMovement = b;
             return *this;

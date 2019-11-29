@@ -24,6 +24,7 @@ namespace ecs
             }
 
             std::size_t idx;
+            using type = T;
         };
 
         explicit ObjectPool(int padSize = 20) :
