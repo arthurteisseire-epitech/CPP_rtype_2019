@@ -16,17 +16,15 @@ ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 void ecs::SendSystem::update(float deltaTime)
 {
     std::array<char, 1024> buffer{};
-    auto &transformPool = GetPool<TransformComponent>(admin);
-    auto &idPool = GetPool<IdComponent>(admin);
-    auto &typePool = GetPool<TypeComponent>(admin);
+    ForEachMatching<SendRenderTuple>(admin,
+        [&buffer, this]
+            (SendRenderTuple &tuple,
+             ConnectionComponent &conn, TransformComponent &transform, TypeComponent &type, IdComponent &id) {
 
-    for (auto &t : GetPool<SendRenderTuple>(admin)) {
-        auto &transform = transformPool.at(t.transformIdx);
-        auto &id = idPool.at(t.idIdx);
-        auto &type = typePool.at(t.typeIdx);
-        auto s = std::to_string(id.id) + ";" + type.name + ":" + std::to_string(transform.vec.x) + "," + std::to_string(transform.vec.y) + '\n';
-        buffer.fill(0);
-        std::copy(s.begin(), s.end(), buffer.begin());
-        NetworkUtil::send(admin, t.connectionIdx, buffer);
-    }
+            auto s = std::to_string(id.id) + ";" + type.name + ":" + std::to_string(transform.vec.x) + "," +
+                std::to_string(transform.vec.y) + '\n';
+            buffer.fill(0);
+            std::copy(s.begin(), s.end(), buffer.begin());
+            NetworkUtil::send(admin, GetIndex<ConnectionComponent>(tuple), buffer);
+        });
 }

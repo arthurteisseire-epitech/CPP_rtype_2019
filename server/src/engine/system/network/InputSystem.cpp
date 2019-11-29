@@ -25,34 +25,33 @@ const std::string ecs::InputSystem::space = "space";
 
 void ecs::InputSystem::update(float deltaTime)
 {
-    auto &connPool = GetPool<ConnectionComponent>(admin);
-    auto &dirPool = GetPool<DirectionComponent>(admin);
+    ForEachMatching<InputTuple>(admin,
+        [this](InputTuple &tuple, ConnectionComponent &conn, TransformComponent &transform, DirectionComponent &dir) {
+            auto &buffers = conn.readBuffers;
 
-    for (auto &c : GetPool<InputTuple>(admin)) {
-        auto &conn = connPool.at(c.connectionIdx);
-        auto &dir = dirPool.at(c.directionIdx);
-        auto &buffers = conn.readBuffers;
-
-        while (!buffers.empty()) {
-            handleInput(c, buffers);
-            buffers.pop();
+            while (!buffers.empty()) {
+                handleInput(tuple, conn, dir, transform);
+                buffers.pop();
+            }
         }
-    }
+    );
 }
 
-void ecs::InputSystem::handleInput(const ecs::InputTuple &c, std::queue<std::array<char, 1024>> &buffers)
+void ecs::InputSystem::handleInput(InputTuple &tuple, ConnectionComponent &conn, DirectionComponent &dir,
+                                   TransformComponent &transform)
 {
-    for (auto &dir : directions) {
-        auto str = dir.first;
-        auto dirComp = dir.second;
+    auto &buffers = conn.readBuffers;
+    for (auto &direction : directions) {
+        auto str = direction.first;
+        auto dirComp = direction.second;
         if (std::equal(str.begin(), str.end(), buffers.front().begin()))
-            GetPool<DirectionComponent>(admin).at(c.directionIdx).setDirection(dirComp);
+            dir.setDirection(dirComp);
     }
     if (std::equal(space.begin(), space.end(), buffers.front().begin())) {
-        auto &transform = GetPool<TransformComponent>(admin).at(c.transformIdx);
         float xCp = transform.vec.x;
         float yCp = transform.vec.y;
 
-        EntityFactory::createBullet(admin, c.connectionIdx, GetPool<TransformComponent>(admin).create(xCp, yCp));
+        EntityFactory::createBullet(admin, GetIndex<ConnectionComponent>(tuple),
+            GetPool<TransformComponent>(admin).create(xCp, yCp));
     }
 }

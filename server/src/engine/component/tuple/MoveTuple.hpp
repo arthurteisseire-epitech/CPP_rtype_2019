@@ -14,17 +14,11 @@
 
 namespace ecs
 {
-    struct MoveTuple {
-        MoveTuple(ObjectPool<TransformComponent>::index transformIdx,
-            ObjectPool<DirectionComponent>::index directionIdx) :
-            transformIdx(transformIdx),
-            directionIdx(directionIdx)
-        {
-        }
-
-        ObjectPool<TransformComponent>::index transformIdx;
-        ObjectPool<DirectionComponent>::index directionIdx;
-    };
+    using MoveTuple = std::tuple
+        <
+            ObjectPool<TransformComponent>::index,
+            ObjectPool<DirectionComponent>::index
+        >;
 }
 
 #endif

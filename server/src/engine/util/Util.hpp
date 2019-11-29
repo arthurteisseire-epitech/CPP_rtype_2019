@@ -19,6 +19,22 @@ namespace ecs
     {
         return std::get<ObjectPool<T>>(admin->pools);
     }
+
+    template<typename Tuple, typename Func>
+    void ForEachMatching(std::shared_ptr<EntityAdmin> &admin, Func f)
+    {
+        for (auto &t : GetPool<Tuple>(admin)) {
+            std::apply([&t, &f, &admin](auto... ts) {
+                f(t, GetPool<typename decltype(ts)::type>(admin).at(ts)...);
+            }, t);
+        }
+    }
+
+    template<typename T, typename Tuple>
+    typename ObjectPool<T>::index GetIndex(Tuple &t)
+    {
+        return std::get<typename ObjectPool<T>::index>(t);
+    }
 }
 
 #endif

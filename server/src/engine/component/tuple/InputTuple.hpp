@@ -14,21 +14,12 @@
 
 namespace ecs
 {
-    struct InputTuple {
-        InputTuple(ObjectPool<ConnectionComponent>::index connectionIdx,
-                   ObjectPool<TransformComponent>::index transformidx,
-                   ObjectPool<DirectionComponent>::index directionIdx
-                   ) :
-            connectionIdx(connectionIdx),
-            transformIdx(transformidx),
-            directionIdx(directionIdx)
-        {
-        }
-
-        ObjectPool<ConnectionComponent>::index connectionIdx;
-        ObjectPool<TransformComponent>::index transformIdx;
-        ObjectPool<DirectionComponent>::index directionIdx;
-    };
+    using InputTuple = std::tuple
+        <
+            ObjectPool<ConnectionComponent>::index,
+            ObjectPool<TransformComponent>::index,
+            ObjectPool<DirectionComponent>::index
+        >;
 }
 
 #endif

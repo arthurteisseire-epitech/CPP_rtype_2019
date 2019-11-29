@@ -16,24 +16,13 @@
 
 namespace ecs
 {
-    struct SendRenderTuple {
-        SendRenderTuple(ObjectPool<ConnectionComponent>::index connectionIdx,
-            ObjectPool<TransformComponent>::index transformIdx,
-            ObjectPool<TypeComponent>::index typeIdx,
-            ObjectPool<IdComponent>::index idIdx) :
-        connectionIdx(connectionIdx),
-        transformIdx(transformIdx),
-        typeIdx(typeIdx),
-        idIdx(idIdx)
-        {
-        }
-
-        ObjectPool<TransformComponent>::index transformIdx;
-        ObjectPool<ConnectionComponent>::index connectionIdx;
-        ObjectPool<TypeComponent>::index typeIdx;
-        ObjectPool<IdComponent>::index idIdx;
-    };
+    using SendRenderTuple = std::tuple
+        <
+            ObjectPool<ConnectionComponent>::index,
+            ObjectPool<TransformComponent>::index,
+            ObjectPool<TypeComponent>::index,
+            ObjectPool<IdComponent>::index
+        >;
 }
-
 
 #endif
