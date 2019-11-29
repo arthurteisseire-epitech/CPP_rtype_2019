@@ -5,6 +5,7 @@
 ** SendSystem.cpp
 */
 
+#include <boost/bind.hpp>
 #include "SendSystem.hpp"
 #include "NetworkUtil.hpp"
 #include "Util.hpp"
@@ -15,18 +16,16 @@ ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 
 void ecs::SendSystem::update(float deltaTime)
 {
-    std::array<char, 1024> buffer{};
-    auto &transformPool = GetPool<TransformComponent>(admin);
-    auto &idPool = GetPool<IdComponent>(admin);
-    auto &typePool = GetPool<TypeComponent>(admin);
+    ForEachMatching<SendRenderTuple>(admin, boost::bind(&ecs::SendSystem::updateTuple, this, _1));
+}
 
-    for (auto &t : GetPool<SendRenderTuple>(admin)) {
-        auto &transform = transformPool.at(t.transformIdx);
-        auto &id = idPool.at(t.idIdx);
-        auto &type = typePool.at(t.typeIdx);
-        auto s = std::to_string(id.id) + ";" + type.name + ":" + std::to_string(transform.vec.x) + "," + std::to_string(transform.vec.y) + '\n';
-        buffer.fill(0);
-        std::copy(s.begin(), s.end(), buffer.begin());
-        NetworkUtil::send(admin, t.connectionIdx, buffer);
-    }
+void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
+{
+    std::array<char, 1024> buffer{};
+
+    auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
+        std::to_string(get<CTransform>(t).vec.y) + '\n';
+    buffer.fill(0);
+    std::copy(s.begin(), s.end(), buffer.begin());
+    NetworkUtil::send(admin, GetIndex<CConnection>(t), buffer);
 }

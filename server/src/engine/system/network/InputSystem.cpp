@@ -15,44 +15,40 @@ ecs::InputSystem::InputSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std:
 {
 }
 
-const std::vector<std::pair<std::string, ecs::DirectionComponent::Direction>> ecs::InputSystem::directions = {
-    {"left", ecs::DirectionComponent::LEFT},
-    {"right", ecs::DirectionComponent::RIGHT},
-    {"up", ecs::DirectionComponent::UP},
-    {"down", ecs::DirectionComponent::DOWN}
+const std::vector<std::pair<std::string, ecs::CDirection::Direction>> ecs::InputSystem::directions = {
+    {"left", ecs::CDirection::LEFT},
+    {"right", ecs::CDirection::RIGHT},
+    {"up", ecs::CDirection::UP},
+    {"down", ecs::CDirection::DOWN}
 };
 const std::string ecs::InputSystem::space = "space";
 
 void ecs::InputSystem::update(float deltaTime)
 {
-    auto &connPool = GetPool<ConnectionComponent>(admin);
-    auto &dirPool = GetPool<DirectionComponent>(admin);
+    ForEachMatching<InputTuple>(admin,
+        [this](InputTuple &t) {
+            auto &buffers = get<CConnection>(t).readBuffers;
 
-    for (auto &c : GetPool<InputTuple>(admin)) {
-        auto &conn = connPool.at(c.connectionIdx);
-        auto &dir = dirPool.at(c.directionIdx);
-        auto &buffers = conn.readBuffers;
-
-        while (!buffers.empty()) {
-            handleInput(c, buffers);
-            buffers.pop();
-        }
-    }
+            while (!buffers.empty()) {
+                handleInput(t);
+                buffers.pop();
+            }
+        });
 }
 
-void ecs::InputSystem::handleInput(const ecs::InputTuple &c, std::queue<std::array<char, 1024>> &buffers)
+void ecs::InputSystem::handleInput(const ecs::InputTuple &t)
 {
-    for (auto &dir : directions) {
-        auto str = dir.first;
-        auto dirComp = dir.second;
-        if (std::equal(str.begin(), str.end(), buffers.front().begin()))
-            GetPool<DirectionComponent>(admin).at(c.directionIdx).setDirection(dirComp);
+    for (auto &direction : directions) {
+        auto str = direction.first;
+        auto dirComp = direction.second;
+        if (std::equal(str.begin(), str.end(), get<CConnection>(t).readBuffers.front().begin()))
+            get<CDirection>(t).setDirection(dirComp);
     }
-    if (std::equal(space.begin(), space.end(), buffers.front().begin())) {
-        auto &transform = GetPool<TransformComponent>(admin).at(c.transformIdx);
-        float xCp = transform.vec.x;
-        float yCp = transform.vec.y;
+    if (std::equal(space.begin(), space.end(), get<CConnection>(t).readBuffers.front().begin())) {
+        float xCp = get<CTransform>(t).vec.x;
+        float yCp = get<CTransform>(t).vec.y;
 
-        EntityFactory::createBullet(admin, c.connectionIdx, GetPool<TransformComponent>(admin).create(xCp, yCp));
+        EntityFactory::createBullet(admin, GetIndex<CConnection>(t),
+            GetPool<CTransform>(admin).create(xCp, yCp));
     }
 }
