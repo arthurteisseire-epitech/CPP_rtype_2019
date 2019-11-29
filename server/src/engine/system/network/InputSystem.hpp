@@ -18,9 +18,11 @@ namespace ecs
         void update(float deltaTime) override;
 
     private:
-        static const std::vector<std::pair<std::string, CDirection::Direction>> directions;
+        static const std::unordered_map<std::string, CDirection::Direction> directions;
         static const std::string space;
-        void handleInput(const ecs::InputTuple &t);
+        static const std::unordered_map<std::string, std::function<void((ecs::InputSystem &, ecs::InputTuple &))>> inputMap;
+
+        void handleInput(InputTuple &t);
     };
 }
 

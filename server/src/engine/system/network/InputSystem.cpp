@@ -15,15 +15,39 @@ ecs::InputSystem::InputSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std:
 {
 }
 
-const std::vector<std::pair<std::string, ecs::CDirection::Direction>> ecs::InputSystem::directions = {
+const std::unordered_map<std::string, ecs::CDirection::Direction> ecs::InputSystem::directions = {
     {"left", ecs::CDirection::LEFT},
     {"right", ecs::CDirection::RIGHT},
     {"up", ecs::CDirection::UP},
     {"down", ecs::CDirection::DOWN}
 };
 const std::string ecs::InputSystem::space = "space";
+const std::unordered_map<std::string, std::function<void(ecs::InputSystem &, ecs::InputTuple &)>> ecs::InputSystem::inputMap = {
+    {"left", [] (InputSystem &sys, InputTuple &t) {
+        sys.get<ecs::CDirection>(t).setDirection(CDirection::LEFT);
+    }},
+    {"right", [] (InputSystem &sys, InputTuple &t) {
+        sys.get<ecs::CDirection>(t).setDirection(CDirection::RIGHT);
+    }},
+    {"up", [] (InputSystem &sys, InputTuple &t) {
+        sys.get<ecs::CDirection>(t).setDirection(CDirection::UP);
+    }},
+    {"down", [] (InputSystem &sys, InputTuple &t) {
+        sys.get<ecs::CDirection>(t).setDirection(CDirection::DOWN);
+    }},
+    {"space", [] (InputSystem &sys, InputTuple &t) {
+        float xCp = sys.get<CTransform>(t).vec.x;
+        float yCp = sys.get<CTransform>(t).vec.y;
 
-void ecs::InputSystem::update(float deltaTime)
+        EntityFactory::createBullet(sys.admin, GetIndex<CConnection>(t),
+            GetPool<CTransform>(sys.admin).create(xCp, yCp));
+    }},
+    {"r", [] (InputSystem &sys, InputTuple &t) {
+        sys.get<ecs::CDirection>(t).setDirection(CDirection::LEFT);
+    }},
+};
+
+void ecs::InputSystem::update(float)
 {
     ForEachMatching<InputTuple>(admin,
         [this](InputTuple &t) {
@@ -36,19 +60,10 @@ void ecs::InputSystem::update(float deltaTime)
         });
 }
 
-void ecs::InputSystem::handleInput(const ecs::InputTuple &t)
+void ecs::InputSystem::handleInput(InputTuple &t)
 {
-    for (auto &direction : directions) {
-        auto str = direction.first;
-        auto dirComp = direction.second;
-        if (std::equal(str.begin(), str.end(), get<CConnection>(t).readBuffers.front().begin()))
-            get<CDirection>(t).setDirection(dirComp);
-    }
-    if (std::equal(space.begin(), space.end(), get<CConnection>(t).readBuffers.front().begin())) {
-        float xCp = get<CTransform>(t).vec.x;
-        float yCp = get<CTransform>(t).vec.y;
+    const auto &inputHandler = inputMap.find(get<CConnection>(t).readBuffers.front().begin());
 
-        EntityFactory::createBullet(admin, GetIndex<CConnection>(t),
-            GetPool<CTransform>(admin).create(xCp, yCp));
-    }
+    if (inputHandler != inputMap.end())
+        inputHandler->second(*this, t);
 }

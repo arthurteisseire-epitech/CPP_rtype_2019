@@ -18,7 +18,7 @@ void handle_events(game::INetwork *network, sf::RenderWindow &window)
     sf::Event event{};
     static const std::vector<std::pair<sf::Keyboard::Key, std::string>> keys = {{sf::Keyboard::Left, "left"},
         {sf::Keyboard::Right, "right"}, {sf::Keyboard::Up, "up"}, {sf::Keyboard::Down, "down"},
-        {sf::Keyboard::Space, "space"}};
+        {sf::Keyboard::Space, "space"}, {sf::Keyboard::R, "r"}};
 
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
