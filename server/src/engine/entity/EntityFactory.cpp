@@ -25,9 +25,9 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
 
     admin->entities.emplace_back(
         new Entity(admin,
-            GetPool<InputTuple>(admin).move(std::make_tuple(connIdx, transformIdx, dirIdx)),
-            GetPool<MoveTuple>(admin).move(std::make_tuple(transformIdx, dirIdx)),
-            GetPool<SendRenderTuple>(admin).move(std::make_tuple(connIdx, transformIdx, typeIdx, objIdIdx))
+            GetPool<InputTuple>(admin).create(connIdx, transformIdx, dirIdx),
+            GetPool<MoveTuple>(admin).create(transformIdx, dirIdx),
+            GetPool<SendRenderTuple>(admin).create(connIdx, transformIdx, typeIdx, objIdIdx)
         )
     );
 }
@@ -43,8 +43,8 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
     GetPool<CDirection>(admin).at(directionIdx).setDirection(CDirection::RIGHT);
     admin->entities.emplace_back(
         new Entity(admin,
-            GetPool<MoveTuple>(admin).move(std::make_tuple(transformIdx, directionIdx)),
-            GetPool<SendRenderTuple>(admin).move(std::make_tuple(connectionIdx, transformIdx, typeIdx, objIdIdx))
+            GetPool<MoveTuple>(admin).create(transformIdx, directionIdx),
+            GetPool<SendRenderTuple>(admin).create(connectionIdx, transformIdx, typeIdx, objIdIdx)
         )
     );
 }
