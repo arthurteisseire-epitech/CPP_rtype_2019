@@ -32,7 +32,7 @@ void handle_events(game::INetwork *network, sf::RenderWindow &window)
 }
 
 void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &window, const char *data,
-                              std::unordered_map<int, sf::Sprite> &toDraw)
+                              std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> &toDraw)
 {
     std::string dataStr(data);
 
@@ -44,17 +44,17 @@ void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &wi
 
     int id = std::stoi(dataStr);
     std::string typeStr = dataStr.substr(semiColonIdx + 1, dotIdx - semiColonIdx - 1);
-
-    if (toDraw.find(id) == toDraw.end())
-        toDraw.emplace(id, gameSprite.getSpriteOfType(typeStr));
-    toDraw.at(id).setPosition(std::stof(data + dotIdx + 1) * 10, std::stof(data + comaIdx + 1) * 10);
+    const auto &pair = toDraw.find(id);
+    if (pair == toDraw.end() || gameSprite.getType(typeStr) != pair->second.first)
+        toDraw[id] = std::make_pair(gameSprite.getType(typeStr), gameSprite.getSpriteOfType(typeStr));
+    toDraw.at(id).second.setPosition(std::stof(data + dotIdx + 1) * 10, std::stof(data + comaIdx + 1) * 10);
 }
 
 int display(game::INetwork *network)
 {
     sf::RenderWindow window(sf::VideoMode(200, 200), "r_type");
     game::GameSprite gameSprite;
-    std::unordered_map<int, sf::Sprite> toDraw;
+    std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> toDraw;
     char data[1024] = {0};
 
     window.setVerticalSyncEnabled(true);
@@ -66,7 +66,7 @@ int display(game::INetwork *network)
             handleServerInstructions(gameSprite, window, data, toDraw);
             if (!toDraw.empty()) {
                 for (const auto &sprite : toDraw)
-                    window.draw(sprite.second);
+                    window.draw(sprite.second.second);
                 window.display();
             }
         }
