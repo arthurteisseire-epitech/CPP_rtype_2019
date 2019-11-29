@@ -26,32 +26,29 @@ const std::string ecs::InputSystem::space = "space";
 void ecs::InputSystem::update(float deltaTime)
 {
     ForEachMatching<InputTuple>(admin,
-        [this](InputTuple &tuple, ConnectionComponent &conn, TransformComponent &transform, DirectionComponent &dir) {
-            auto &buffers = conn.readBuffers;
+        [this](InputTuple &t) {
+            auto &buffers = get<ConnectionComponent>(t).readBuffers;
 
             while (!buffers.empty()) {
-                handleInput(tuple, conn, dir, transform);
+                handleInput(t);
                 buffers.pop();
             }
-        }
-    );
+        });
 }
 
-void ecs::InputSystem::handleInput(InputTuple &tuple, ConnectionComponent &conn, DirectionComponent &dir,
-                                   TransformComponent &transform)
+void ecs::InputSystem::handleInput(const ecs::InputTuple &t)
 {
-    auto &buffers = conn.readBuffers;
     for (auto &direction : directions) {
         auto str = direction.first;
         auto dirComp = direction.second;
-        if (std::equal(str.begin(), str.end(), buffers.front().begin()))
-            dir.setDirection(dirComp);
+        if (std::equal(str.begin(), str.end(), get<ConnectionComponent>(t).readBuffers.front().begin()))
+            get<DirectionComponent>(t).setDirection(dirComp);
     }
-    if (std::equal(space.begin(), space.end(), buffers.front().begin())) {
-        float xCp = transform.vec.x;
-        float yCp = transform.vec.y;
+    if (std::equal(space.begin(), space.end(), get<ConnectionComponent>(t).readBuffers.front().begin())) {
+        float xCp = get<TransformComponent>(t).vec.x;
+        float yCp = get<TransformComponent>(t).vec.y;
 
-        EntityFactory::createBullet(admin, GetIndex<ConnectionComponent>(tuple),
+        EntityFactory::createBullet(admin, GetIndex<ConnectionComponent>(t),
             GetPool<TransformComponent>(admin).create(xCp, yCp));
     }
 }

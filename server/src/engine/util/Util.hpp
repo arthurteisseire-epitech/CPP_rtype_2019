@@ -23,11 +23,8 @@ namespace ecs
     template<typename Tuple, typename Func>
     void ForEachMatching(std::shared_ptr<EntityAdmin> &admin, Func f)
     {
-        for (auto &t : GetPool<Tuple>(admin)) {
-            std::apply([&t, &f, &admin](auto... ts) {
-                f(t, GetPool<typename decltype(ts)::type>(admin).at(ts)...);
-            }, t);
-        }
+        for (auto &t : GetPool<Tuple>(admin))
+            f(t);
     }
 
     template<typename T, typename Tuple>

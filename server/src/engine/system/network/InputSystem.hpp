@@ -20,8 +20,7 @@ namespace ecs
     private:
         static const std::vector<std::pair<std::string, DirectionComponent::Direction>> directions;
         static const std::string space;
-        void handleInput(InputTuple &tuple, ConnectionComponent &conn, DirectionComponent &dir,
-                         TransformComponent &transform);
+        void handleInput(const ecs::InputTuple &t);
     };
 }
 

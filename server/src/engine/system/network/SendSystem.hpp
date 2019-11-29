@@ -17,11 +17,7 @@ namespace ecs
         explicit SendSystem(std::shared_ptr<EntityAdmin> admin);
 
         void update(float deltaTime) override;
-        void updateTuple(SendRenderTuple &tuple,
-                         ConnectionComponent &conn,
-                         TransformComponent &transform,
-                         TypeComponent &type,
-                         IdComponent &id);
+        void updateTuple(SendRenderTuple &t);
     };
 }
 
