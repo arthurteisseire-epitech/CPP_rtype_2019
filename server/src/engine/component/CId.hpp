@@ -5,13 +5,13 @@
 ** Created by Arthamios
 */
 
-#ifndef RTYPE_IDCOMPONENT_HPP
-#define RTYPE_IDCOMPONENT_HPP
+#ifndef RTYPE_CID_HPP
+#define RTYPE_CID_HPP
 
 namespace ecs
 {
-    struct IdComponent {
-        IdComponent(int id) : id(id) {}
+    struct CId {
+        CId(int id) : id(id) {}
         int id;
     };
 }

@@ -9,16 +9,16 @@
 #define RTYPE_INPUTTUPLE_HPP
 
 #include "ObjectPool.hpp"
-#include "DirectionComponent.hpp"
-#include "ConnectionComponent.hpp"
+#include "CDirection.hpp"
+#include "CConnection.hpp"
 
 namespace ecs
 {
     using InputTuple = std::tuple
         <
-            ObjectPool<ConnectionComponent>::index,
-            ObjectPool<TransformComponent>::index,
-            ObjectPool<DirectionComponent>::index
+            ObjectPool<CConnection>::index,
+            ObjectPool<CTransform>::index,
+            ObjectPool<CDirection>::index
         >;
 }
 

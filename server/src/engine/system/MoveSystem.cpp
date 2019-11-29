@@ -16,11 +16,11 @@ ecs::MoveSystem::MoveSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 void ecs::MoveSystem::update(float dt)
 {
     ForEachMatching<MoveTuple>(admin, [this](MoveTuple &t) {
-        if (get<DirectionComponent>(t).dir != mut::Vec2f({0, 0})) {
-            get<TransformComponent>(t).vec += get<DirectionComponent>(t).dir;
-            std::cout << "moving by " << get<DirectionComponent>(t).dir.x << ", " << get<DirectionComponent>(t).dir.y << std::endl;
-            std::cout << "new pos: " << get<TransformComponent>(t).vec.x << "," << get<TransformComponent>(t).vec.y << std::endl;
-            get<DirectionComponent>(t).dir = {0, 0};
+        if (get<CDirection>(t).dir != mut::Vec2f({0, 0})) {
+            get<CTransform>(t).vec += get<CDirection>(t).dir;
+            std::cout << "moving by " << get<CDirection>(t).dir.x << ", " << get<CDirection>(t).dir.y << std::endl;
+            std::cout << "new pos: " << get<CTransform>(t).vec.x << "," << get<CTransform>(t).vec.y << std::endl;
+            get<CDirection>(t).dir = {0, 0};
         }
     });
 }

@@ -9,15 +9,15 @@
 #define RTYPE_MOVETUPLE_HPP
 
 #include "ObjectPool.hpp"
-#include "DirectionComponent.hpp"
-#include "TransformComponent.hpp"
+#include "CDirection.hpp"
+#include "CTransform.hpp"
 
 namespace ecs
 {
     using MoveTuple = std::tuple
         <
-            ObjectPool<TransformComponent>::index,
-            ObjectPool<DirectionComponent>::index
+            ObjectPool<CTransform>::index,
+            ObjectPool<CDirection>::index
         >;
 }
 

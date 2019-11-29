@@ -11,7 +11,7 @@
 #include <optional>
 #include "ASystem.hpp"
 #include "EntityAdmin.hpp"
-#include "ConnectionComponent.hpp"
+#include "CConnection.hpp"
 
 namespace ecs
 {
@@ -22,14 +22,14 @@ namespace ecs
         void update(float deltaTime) override;
         void startAccept();
         void handleAccept(const boost::system::error_code &err);
-        void startRead(ObjectPool<ConnectionComponent>::index connIdx);
-        void handleRead(ObjectPool<ConnectionComponent>::index connIdx, const boost::system::error_code &err);
-        static void write(ecs::ConnectionComponent &conn);
+        void startRead(ObjectPool<CConnection>::index connIdx);
+        void handleRead(ObjectPool<CConnection>::index connIdx, const boost::system::error_code &err);
+        static void write(ecs::CConnection &conn);
         static void handleWrite(const boost::system::error_code &err);
-        void close(ObjectPool<ConnectionComponent>::index connIdx);
+        void close(ObjectPool<CConnection>::index connIdx);
 
     private:
-        std::optional<ConnectionComponent> connection;
+        std::optional<CConnection> connection;
     };
 }
 

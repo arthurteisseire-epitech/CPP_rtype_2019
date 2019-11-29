@@ -7,11 +7,11 @@
 
 #include "gtest/gtest.h"
 #include "ObjectPool.hpp"
-#include "HealthComponent.hpp"
+#include "CHealth.hpp"
 
 TEST(ComponentPool, create)
 {
-    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
 
     auto p = healthComponentPool.create();
 
@@ -20,7 +20,7 @@ TEST(ComponentPool, create)
 
 TEST(ComponentPool, createWithArgs)
 {
-    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
 
     auto p = healthComponentPool.create(20);
 
@@ -29,7 +29,7 @@ TEST(ComponentPool, createWithArgs)
 
 TEST(ComponentPool, destroy)
 {
-    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
     auto p = healthComponentPool.create();
 
     healthComponentPool.destroy(p);
@@ -38,7 +38,7 @@ TEST(ComponentPool, destroy)
 
 TEST(ComponentPool, iterate)
 {
-    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
     int nbComponents = 3;
     int actualNbComponents = 0;
 
@@ -52,8 +52,8 @@ TEST(ComponentPool, iterate)
 
 TEST(ComponentPool, addExistingComponent)
 {
-    ecs::ObjectPool<ecs::HealthComponent> healthComponentPool;
-    auto p = ecs::HealthComponent();
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
+    auto p = ecs::CHealth();
 
     healthComponentPool.move(std::move(p));
 

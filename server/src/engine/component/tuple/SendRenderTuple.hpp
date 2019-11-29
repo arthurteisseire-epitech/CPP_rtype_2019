@@ -9,19 +9,19 @@
 #define RTYPE_SENDRENDERTUPLE_HPP
 
 #include "ObjectPool.hpp"
-#include "TransformComponent.hpp"
-#include "ConnectionComponent.hpp"
-#include "TypeComponent.hpp"
-#include "IdComponent.hpp"
+#include "CTransform.hpp"
+#include "CConnection.hpp"
+#include "CType.hpp"
+#include "CId.hpp"
 
 namespace ecs
 {
     using SendRenderTuple = std::tuple
         <
-            ObjectPool<ConnectionComponent>::index,
-            ObjectPool<TransformComponent>::index,
-            ObjectPool<TypeComponent>::index,
-            ObjectPool<IdComponent>::index
+            ObjectPool<CConnection>::index,
+            ObjectPool<CTransform>::index,
+            ObjectPool<CType>::index,
+            ObjectPool<CId>::index
         >;
 }
 

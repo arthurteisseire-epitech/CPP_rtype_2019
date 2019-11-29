@@ -15,11 +15,11 @@ ecs::InputSystem::InputSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std:
 {
 }
 
-const std::vector<std::pair<std::string, ecs::DirectionComponent::Direction>> ecs::InputSystem::directions = {
-    {"left", ecs::DirectionComponent::LEFT},
-    {"right", ecs::DirectionComponent::RIGHT},
-    {"up", ecs::DirectionComponent::UP},
-    {"down", ecs::DirectionComponent::DOWN}
+const std::vector<std::pair<std::string, ecs::CDirection::Direction>> ecs::InputSystem::directions = {
+    {"left", ecs::CDirection::LEFT},
+    {"right", ecs::CDirection::RIGHT},
+    {"up", ecs::CDirection::UP},
+    {"down", ecs::CDirection::DOWN}
 };
 const std::string ecs::InputSystem::space = "space";
 
@@ -27,7 +27,7 @@ void ecs::InputSystem::update(float deltaTime)
 {
     ForEachMatching<InputTuple>(admin,
         [this](InputTuple &t) {
-            auto &buffers = get<ConnectionComponent>(t).readBuffers;
+            auto &buffers = get<CConnection>(t).readBuffers;
 
             while (!buffers.empty()) {
                 handleInput(t);
@@ -41,14 +41,14 @@ void ecs::InputSystem::handleInput(const ecs::InputTuple &t)
     for (auto &direction : directions) {
         auto str = direction.first;
         auto dirComp = direction.second;
-        if (std::equal(str.begin(), str.end(), get<ConnectionComponent>(t).readBuffers.front().begin()))
-            get<DirectionComponent>(t).setDirection(dirComp);
+        if (std::equal(str.begin(), str.end(), get<CConnection>(t).readBuffers.front().begin()))
+            get<CDirection>(t).setDirection(dirComp);
     }
-    if (std::equal(space.begin(), space.end(), get<ConnectionComponent>(t).readBuffers.front().begin())) {
-        float xCp = get<TransformComponent>(t).vec.x;
-        float yCp = get<TransformComponent>(t).vec.y;
+    if (std::equal(space.begin(), space.end(), get<CConnection>(t).readBuffers.front().begin())) {
+        float xCp = get<CTransform>(t).vec.x;
+        float yCp = get<CTransform>(t).vec.y;
 
-        EntityFactory::createBullet(admin, GetIndex<ConnectionComponent>(t),
-            GetPool<TransformComponent>(admin).create(xCp, yCp));
+        EntityFactory::createBullet(admin, GetIndex<CConnection>(t),
+            GetPool<CTransform>(admin).create(xCp, yCp));
     }
 }

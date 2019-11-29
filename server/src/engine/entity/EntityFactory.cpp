@@ -7,8 +7,8 @@
 
 #include "EntityFactory.hpp"
 #include "Util.hpp"
-#include "TransformComponent.hpp"
-#include "DirectionComponent.hpp"
+#include "CTransform.hpp"
+#include "CDirection.hpp"
 #include "InputTuple.hpp"
 #include "SendRenderTuple.hpp"
 #include "MoveTuple.hpp"
@@ -16,12 +16,12 @@
 int ecs::EntityFactory::id = 0;
 
 void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
-                                      ObjectPool<ConnectionComponent>::index connIdx)
+                                      ObjectPool<CConnection>::index connIdx)
 {
-    auto transformIdx = GetPool<TransformComponent>(admin).create();
-    auto dirIdx = GetPool<DirectionComponent>(admin).create();
-    auto typeIdx = GetPool<TypeComponent>(admin).create("spaceship_normal");
-    auto objIdIdx = GetPool<IdComponent>(admin).create(id++);
+    auto transformIdx = GetPool<CTransform>(admin).create();
+    auto dirIdx = GetPool<CDirection>(admin).create();
+    auto typeIdx = GetPool<CType>(admin).create("spaceship_normal");
+    auto objIdIdx = GetPool<CId>(admin).create(id++);
 
     admin->entities.emplace_back(
         new Entity(admin,
@@ -33,14 +33,14 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
 }
 
 void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
-                                      ObjectPool<ConnectionComponent>::index connectionIdx,
-                                      ObjectPool<TransformComponent>::index transformIdx)
+                                      ObjectPool<CConnection>::index connectionIdx,
+                                      ObjectPool<CTransform>::index transformIdx)
 {
-    auto directionIdx = GetPool<DirectionComponent>(admin).create();
-    auto typeIdx = GetPool<TypeComponent>(admin).create("basic_missile_launch");
-    auto objIdIdx = GetPool<IdComponent>(admin).create(id++);
+    auto directionIdx = GetPool<CDirection>(admin).create();
+    auto typeIdx = GetPool<CType>(admin).create("basic_missile_launch");
+    auto objIdIdx = GetPool<CId>(admin).create(id++);
 
-    GetPool<DirectionComponent>(admin).at(directionIdx).setDirection(DirectionComponent::RIGHT);
+    GetPool<CDirection>(admin).at(directionIdx).setDirection(CDirection::RIGHT);
     admin->entities.emplace_back(
         new Entity(admin,
             GetPool<MoveTuple>(admin).move(std::make_tuple(transformIdx, directionIdx)),

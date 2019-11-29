@@ -23,9 +23,9 @@ void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
 {
     std::array<char, 1024> buffer{};
 
-    auto s = std::to_string(get<IdComponent>(t).id) + ";" + get<TypeComponent>(t).name + ":" + std::to_string(get<TransformComponent>(t).vec.x) + "," +
-        std::to_string(get<TransformComponent>(t).vec.y) + '\n';
+    auto s = std::to_string(get<CId>(t).id) + ";" + get<CType>(t).name + ":" + std::to_string(get<CTransform>(t).vec.x) + "," +
+        std::to_string(get<CTransform>(t).vec.y) + '\n';
     buffer.fill(0);
     std::copy(s.begin(), s.end(), buffer.begin());
-    NetworkUtil::send(admin, GetIndex<ConnectionComponent>(t), buffer);
+    NetworkUtil::send(admin, GetIndex<CConnection>(t), buffer);
 }

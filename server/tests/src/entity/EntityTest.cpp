@@ -8,20 +8,20 @@
 #include "ObjectPool.hpp"
 #include "gtest/gtest.h"
 #include "Entity.hpp"
-#include "HealthComponent.hpp"
-#include "TransformComponent.hpp"
+#include "CHealth.hpp"
+#include "CTransform.hpp"
 
 TEST(Entity, create)
 {
-    auto healthPool = ecs::ObjectPool<ecs::HealthComponent>();
-    auto transformPool = ecs::ObjectPool<ecs::TransformComponent>();
+    auto healthPool = ecs::ObjectPool<ecs::CHealth>();
+    auto transformPool = ecs::ObjectPool<ecs::CTransform>();
 
-    auto entity1 = std::make_unique<ecs::Entity<ecs::HealthComponent, ecs::TransformComponent>>(
+    auto entity1 = std::make_unique<ecs::Entity<ecs::CHealth, ecs::CTransform>>(
         healthPool.create(10),
         transformPool.create()
     );
 
-    auto entity2 = std::make_unique<ecs::Entity<ecs::HealthComponent>>(
+    auto entity2 = std::make_unique<ecs::Entity<ecs::CHealth>>(
         healthPool.create()
     );
 
@@ -30,15 +30,15 @@ TEST(Entity, create)
 
 TEST(Entity, getComponent)
 {
-    auto healthPool = ecs::ObjectPool<ecs::HealthComponent>();
-    auto transformPool = ecs::ObjectPool<ecs::TransformComponent>();
+    auto healthPool = ecs::ObjectPool<ecs::CHealth>();
+    auto transformPool = ecs::ObjectPool<ecs::CTransform>();
 
-    auto player = std::make_unique<ecs::Entity<ecs::HealthComponent, ecs::TransformComponent>>(
+    auto player = std::make_unique<ecs::Entity<ecs::CHealth, ecs::CTransform>>(
         healthPool.create(10),
         transformPool.create()
     );
 
-    auto healthComponent = player->get<ecs::HealthComponent>();
+    auto healthComponent = player->get<ecs::CHealth>();
 
     EXPECT_EQ(healthComponent->life, 10);
 }
