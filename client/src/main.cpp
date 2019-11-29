@@ -57,6 +57,7 @@ int display(game::INetwork *network)
     std::unordered_map<int, sf::Sprite> toDraw;
     char data[1024] = {0};
 
+    window.setVerticalSyncEnabled(true);
     while (window.isOpen()) {
         handle_events(network, window);
         std::size_t received = 0;

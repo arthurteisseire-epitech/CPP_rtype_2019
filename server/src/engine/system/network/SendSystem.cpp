@@ -23,7 +23,7 @@ void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
 {
     std::array<char, 1024> buffer{};
 
-    auto s = std::to_string(get<CId>(t).id) + ";" + get<CType>(t).name + ":" + std::to_string(get<CTransform>(t).vec.x) + "," +
+    auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
         std::to_string(get<CTransform>(t).vec.y) + '\n';
     buffer.fill(0);
     std::copy(s.begin(), s.end(), buffer.begin());
