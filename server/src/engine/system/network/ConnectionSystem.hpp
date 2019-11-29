@@ -24,8 +24,6 @@ namespace ecs
         void handleAccept(const boost::system::error_code &err);
         void startRead(ObjectPool<CConnection>::index connIdx);
         void handleRead(ObjectPool<CConnection>::index connIdx, const boost::system::error_code &err);
-        static void write(ecs::CConnection &conn);
-        static void handleWrite(const boost::system::error_code &err);
         void close(ObjectPool<CConnection>::index connIdx);
 
     private:
