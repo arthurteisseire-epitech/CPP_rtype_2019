@@ -22,12 +22,11 @@ ecs::UpdateTypeSystem::UpdateTypeSystem(std::shared_ptr<EntityAdmin> admin) : AS
 
 void ecs::UpdateTypeSystem::update(float)
 {
-    ForEachMatching<CType>(admin, [this](CType &t) {
+    ForEachMatching<CType>(admin, [this](CType &t)
+    {
         auto res = nextType.find(t.name);
-        if (res != nextType.end()) {
-            std::cout << "changing type of " << t.name << " to " << res->second << std::endl;
+        if (res != nextType.end())
             t.name = res->second;
-        }
     }
     );
 }

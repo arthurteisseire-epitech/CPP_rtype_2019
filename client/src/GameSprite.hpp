@@ -58,6 +58,7 @@ namespace game
         std::unordered_map<BasicType, sf::Texture> initBasicTextures();
         std::unordered_map<std::string, sf::Image> initImages();
         std::unordered_map<Type, std::function<sf::Sprite()>> initSprites();
+        std::function<sf::Sprite()> getSpriteConstructor(BasicType type, sf::Vector2i pos, sf::Vector2i size) const;
 
         const std::unordered_map<std::string, Type> strToType;
         const std::unordered_map<std::string, sf::Image> images;
