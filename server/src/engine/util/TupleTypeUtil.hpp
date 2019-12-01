@@ -9,8 +9,7 @@
 #define RTYPE_TUPLETYPEUTIL_HPP
 
 #include <tuple>
-#include "MoveTuple.hpp"
-#include "InputTuple.hpp"
+#include "TupleList.hpp"
 
 namespace ecs
 {
@@ -37,13 +36,6 @@ namespace ecs
                                                     >{}...);
         }, t);
     }
-
-    using TupleList = std::tuple
-        <
-            MoveTuple,
-            InputTuple,
-            SendRenderTuple
-        >;
 
     template<typename ...Args>
     using EntityTuples = decltype(getTuplesMatching<decltype(std::tuple<Args...>{})>(TupleList{}));
