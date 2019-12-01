@@ -38,21 +38,15 @@ namespace ecs
         }, t);
     }
 
-    // TODO -- Remove Tuples duplication
-    template<typename ...Args>
-    using EntityTuples = decltype(getTuplesMatching
+    using TupleList = std::tuple
         <
-            decltype(std::tuple<Args...>{}),
             MoveTuple,
             InputTuple,
             SendRenderTuple
-        >
-        (std::tuple
-            <
-                MoveTuple,
-                InputTuple,
-                SendRenderTuple
-            >{}));
+        >;
+
+    template<typename ...Args>
+    using EntityTuples = decltype(getTuplesMatching<decltype(std::tuple<Args...>{})>(TupleList{}));
 }
 
 #endif
