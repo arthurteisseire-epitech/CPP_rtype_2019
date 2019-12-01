@@ -11,6 +11,7 @@
 #include "SendRenderTuple.hpp"
 #include "MoveTuple.hpp"
 #include "InputTuple.hpp"
+#include "InputDirectionTuple.hpp"
 
 namespace ecs
 {
@@ -18,7 +19,9 @@ namespace ecs
         <
             MoveTuple,
             InputTuple,
-            SendRenderTuple
+            SendRenderTuple,
+            CreationBulletTuple,
+            InputDirectionTuple
         >;
 }
 
