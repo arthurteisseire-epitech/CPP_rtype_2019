@@ -43,7 +43,7 @@ const std::unordered_map<std::string, std::function<void(ecs::InputSystem &, ecs
             GetPool<CTransform>(sys.admin).create(xCp, yCp));
     }},
     {"r", [] (InputSystem &sys, InputTuple &t) {
-        sys.get<ecs::CDirection>(t).setDirection(CDirection::LEFT);
+        std::cout << "pressed r" << std::endl;
     }},
 };
 
@@ -62,8 +62,11 @@ void ecs::InputSystem::update(float)
 
 void ecs::InputSystem::handleInput(InputTuple &t)
 {
-    const auto &inputHandler = inputMap.find(get<CConnection>(t).readBuffers.front().begin());
+    const std::string input = get<CConnection>(t).readBuffers.front().begin();
+    const auto &inputHandler = inputMap.find(input);
 
     if (inputHandler != inputMap.end())
         inputHandler->second(*this, t);
+    else
+        std::cerr << "unknown command: " << input << std::endl;
 }
