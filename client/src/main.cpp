@@ -39,15 +39,37 @@ void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &wi
     size_t semiColonIdx = dataStr.find(';');
     size_t dotIdx = dataStr.find(':');
     size_t comaIdx = dataStr.find(',');
+
     if (semiColonIdx == std::string::npos || dotIdx == std::string::npos || comaIdx == std::string::npos)
         return;
 
     int id = std::stoi(dataStr);
     std::string typeStr = dataStr.substr(semiColonIdx + 1, dotIdx - semiColonIdx - 1);
     const auto &pair = toDraw.find(id);
+
+    std::cout << "received: " << dataStr << std::endl;
     if (pair == toDraw.end() || gameSprite.getType(typeStr) != pair->second.first)
         toDraw[id] = std::make_pair(gameSprite.getType(typeStr), gameSprite.getSpriteOfType(typeStr));
     toDraw.at(id).second.setPosition(std::stof(data + dotIdx + 1) * 10, std::stof(data + comaIdx + 1) * 10);
+}
+
+void updateWindow(sf::RenderWindow &window,
+                  const std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> &toDraw)
+{
+    window.clear();
+    if (!toDraw.empty()) {
+        std::cout << "drawing" << std::endl;
+        for (const auto &sprite : toDraw)
+            window.draw(sprite.second.second);
+        window.display();
+    }
+}
+
+void endGame(game::INetwork *network)
+{
+    network->disconnect();
+    delete network;
+    std::cout << "client closed" << std::endl;
 }
 
 int display(game::INetwork *network)
@@ -56,24 +78,20 @@ int display(game::INetwork *network)
     game::GameSprite gameSprite;
     std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> toDraw;
     char data[1024] = {0};
+    std::clock_t lastDrawTime = (double)std::clock() / CLOCKS_PER_SEC;
 
     window.setVerticalSyncEnabled(true);
     while (window.isOpen()) {
         handle_events(network, window);
         std::size_t received = 0;
-        if (network->receive(&data, sizeof(data), received)) {
-            window.clear();
+        if (network->receive(&data, sizeof(data), received))
             handleServerInstructions(gameSprite, window, data, toDraw);
-            if (!toDraw.empty()) {
-                for (const auto &sprite : toDraw)
-                    window.draw(sprite.second.second);
-                window.display();
-            }
+        if ((double)std::clock() / CLOCKS_PER_SEC - lastDrawTime >= 0.016) {
+            updateWindow(window, toDraw);
+            lastDrawTime = (double)std::clock() / CLOCKS_PER_SEC;
         }
     }
-    network->disconnect();
-    delete network;
-    std::cout << "client closed" << std::endl;
+    endGame(network);
     return 0;
 }
 
