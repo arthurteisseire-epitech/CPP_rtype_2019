@@ -24,29 +24,18 @@ void ecs::InputDirectionSystem::update(float dt)
     ForEachMatching<InputDirectionTuple>(admin, [this] (InputDirectionTuple &t) {
 
         auto &inputs = get<CInput>(t).inputs;
-        std::size_t i = updateDirection(t);
 
-        if (i == inputs.size())
+        auto it = std::find_if(inputs.begin(), inputs.end(), &isKeyADirection);
+        if (it != inputs.end()) {
+            get<CDirection>(t).setDirection(directions.at(*it));
+            inputs.erase(std::remove_if(inputs.begin(), inputs.end(), &isKeyADirection), inputs.end());
+        } else {
             get<CDirection>(t).setDirection(CDirection::NONE);
-
-        inputs.erase(std::remove_if(inputs.begin(), inputs.end(), [] (CInput::Key key) {
-            return directions.find(key) != directions.end();
-        }), inputs.end());
+        }
     });
 }
 
-std::size_t ecs::InputDirectionSystem::updateDirection(ecs::InputDirectionTuple &t)
+bool ecs::InputDirectionSystem::isKeyADirection(ecs::CInput::Key key)
 {
-    auto &inputs = get<CInput>(t).inputs;
-    std::size_t i;
-
-    for (i = 0; i < inputs.size(); ++i) {
-        for (auto p : ecs::InputDirectionSystem::directions) {
-            if (inputs.at(i) == p.first) {
-                get<CDirection>(t).setDirection(p.second);
-                return i;
-            }
-        }
-    }
-    return i;
+    return directions.find(key) != directions.end();
 }

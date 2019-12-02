@@ -19,7 +19,7 @@ namespace ecs
         void update(float dt) override;
 
     private:
-        std::size_t updateDirection(ecs::InputDirectionTuple &t);
+        static bool isKeyADirection(CInput::Key key);
         static const std::map<ecs::CInput::Key, ecs::CDirection::Direction> directions;
     };
 }
