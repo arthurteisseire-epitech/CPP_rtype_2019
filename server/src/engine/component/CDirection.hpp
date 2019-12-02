@@ -23,48 +23,28 @@ namespace ecs
             RIGHT
         };
 
-        explicit CDirection(int x = 0, int y = 0, bool keepMovement = false) :
-            dir(x, y),
-            keepMovement(keepMovement)
+        explicit CDirection(CDirection::Direction dir = NONE)
         {
+            setDirection(dir);
         }
 
-        CDirection &setDirection(const Direction &horizontal, const Direction &vertical)
-        {
-            float val = horizontal != NONE && vertical != NONE ? M_SQRT2 : 1;
-
-            if (horizontal == LEFT)
-                dir.x -= val;
-            else if (horizontal == RIGHT)
-                dir.x += val;
-            if (vertical == UP)
-                dir.y -= val;
-            else if (vertical == DOWN)
-                dir.y += val;
-            return *this;
-        }
-
-        CDirection &setDirection(const CDirection::Direction &dir_enum)
+        void setDirection(CDirection::Direction dir_enum)
         {
             if (dir_enum == LEFT)
-                dir.x -= 1;
+                dir.x = -1;
             else if (dir_enum == RIGHT)
-                dir.x += 1;
+                dir.x = 1;
             else if (dir_enum == UP)
-                dir.y -= 1;
+                dir.y = -1;
             else if (dir_enum == DOWN)
-                dir.y += 1;
-            return *this;
-        }
-
-        CDirection &setPermanentMovement(const bool &b)
-        {
-            keepMovement = b;
-            return *this;
+                dir.y = 1;
+            if (dir_enum == NONE) {
+                dir.x = 0;
+                dir.y = 0;
+            }
         }
 
         mut::Vec2f dir;
-        bool keepMovement;
     };
 }
 
