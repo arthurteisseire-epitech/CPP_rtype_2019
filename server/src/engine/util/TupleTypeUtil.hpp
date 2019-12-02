@@ -10,6 +10,9 @@
 
 #include <tuple>
 #include "TupleList.hpp"
+#include "ComponentList.hpp"
+#include <boost/fusion/algorithm/iteration/for_each.hpp>
+#include <boost/fusion/adapted/std_tuple.hpp>
 
 namespace ecs
 {
@@ -37,8 +40,30 @@ namespace ecs
         }, t);
     }
 
+    template <typename Tuple>
+    auto tupleToObjectPoolTuple()
+    {
+        return std::apply([] (auto ...ts) {
+            return make_tuple(ObjectPool<decltype(ts)>{}...);
+        }, Tuple{});
+    }
+
     template<typename ...Args>
     using EntityTuples = decltype(getTuplesMatching<decltype(std::tuple<Args...>{})>(TupleList{}));
+
+
+    template<typename Tuple>
+    struct rebindToPools;
+
+    template<typename ...T>
+    struct rebindToPools<std::tuple<T...>> {
+        using type = decltype(std::tuple<ObjectPool<T>...>{});
+    };
+
+    using TuplePools = rebindToPools<TupleList>::type;
+    using ComponentPools = rebindToPools<ComponentList>::type;
+
+    using Pools = decltype(std::tuple_cat(TuplePools{}, ComponentPools{}));
 }
 
 #endif

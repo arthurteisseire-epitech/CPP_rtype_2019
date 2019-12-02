@@ -9,6 +9,7 @@
 #define RTYPE_ENTITYADMIN_HPP
 
 #include <tuple>
+#include "TupleTypeUtil.hpp"
 #include "ObjectPool.hpp"
 #include "IEntity.hpp"
 
@@ -28,20 +29,7 @@ namespace ecs
         {
         }
 
-        std::tuple<
-            ObjectPool<CConnection>,
-            ObjectPool<CDirection>,
-            ObjectPool<CTransform>,
-            ObjectPool<CType>,
-            ObjectPool<CId>,
-            ObjectPool<CInput>,
-
-            ObjectPool<InputTuple>,
-            ObjectPool<SendRenderTuple>,
-            ObjectPool<MoveTuple>,
-            ObjectPool<CreationBulletTuple>,
-            ObjectPool<InputDirectionTuple>
-        > pools{};
+        Pools pools{};
         std::vector<std::unique_ptr<IEntity>> entities;
         CNetwork network;
     };
