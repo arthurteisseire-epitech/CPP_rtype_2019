@@ -13,8 +13,7 @@
 #include <SFML/Graphics/Image.hpp>
 #include <functional>
 
-namespace game
-{
+namespace Client {
     class GameSprite {
     public:
         GameSprite();

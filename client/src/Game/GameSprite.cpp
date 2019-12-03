@@ -8,7 +8,7 @@
 #include <iostream>
 #include "GameSprite.hpp"
 
-game::GameSprite::GameSprite() :
+Client::GameSprite::GameSprite() :
     strToType(initTypes()),
     images(initImages()),
     simpleTexture(initBasicTextures()),
@@ -16,7 +16,7 @@ game::GameSprite::GameSprite() :
 {
 }
 
-game::GameSprite::Type game::GameSprite::getType(const std::string &str)
+Client::GameSprite::Type Client::GameSprite::getType(const std::string &str)
 {
     auto it = strToType.find(str);
 
@@ -27,17 +27,17 @@ game::GameSprite::Type game::GameSprite::getType(const std::string &str)
     return it->second;
 }
 
-sf::Sprite game::GameSprite::getSpriteOfType(const game::GameSprite::Type &type)
+sf::Sprite Client::GameSprite::getSpriteOfType(const Client::GameSprite::Type &type)
 {
     return typeSprite.at(type)();
 }
 
-sf::Sprite game::GameSprite::getSpriteOfType(const std::string &type)
+sf::Sprite Client::GameSprite::getSpriteOfType(const std::string &type)
 {
     return getSpriteOfType(getType(type));
 }
 
-sf::Texture game::GameSprite::loadTexture(const std::string &filename, const sf::Rect<int> &rect)
+sf::Texture Client::GameSprite::loadTexture(const std::string &filename, const sf::Rect<int> &rect)
 {
     sf::Texture texture;
 
@@ -45,7 +45,7 @@ sf::Texture game::GameSprite::loadTexture(const std::string &filename, const sf:
     return texture;
 }
 
-std::unordered_map<std::string, game::GameSprite::Type> game::GameSprite::initTypes()
+std::unordered_map<std::string, Client::GameSprite::Type> Client::GameSprite::initTypes()
 {
     return {
         {"spaceship_right_most", SPACESHIP_RIGHT_MOST},
@@ -68,7 +68,7 @@ std::unordered_map<std::string, game::GameSprite::Type> game::GameSprite::initTy
     };
 }
 
-std::unordered_map<std::string, sf::Image> game::GameSprite::initImages()
+std::unordered_map<std::string, sf::Image> Client::GameSprite::initImages()
 {
     return {
         {
@@ -77,7 +77,7 @@ std::unordered_map<std::string, sf::Image> game::GameSprite::initImages()
     };
 }
 
-std::unordered_map<game::GameSprite::BasicType, sf::Texture> game::GameSprite::initBasicTextures()
+std::unordered_map<Client::GameSprite::BasicType, sf::Texture> Client::GameSprite::initBasicTextures()
 {
     return {
         {
@@ -91,7 +91,7 @@ std::unordered_map<game::GameSprite::BasicType, sf::Texture> game::GameSprite::i
     };
 }
 
-std::unordered_map<game::GameSprite::Type, std::function<sf::Sprite()>> game::GameSprite::initSprites()
+std::unordered_map<Client::GameSprite::Type, std::function<sf::Sprite()>> Client::GameSprite::initSprites()
 {
     return {
         {
