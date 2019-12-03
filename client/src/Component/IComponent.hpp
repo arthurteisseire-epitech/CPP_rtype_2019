@@ -16,9 +16,9 @@ namespace Client {
     class IComponent {
     public:
         virtual ~IComponent() = default;
-        virtual void place(const sf::Vector2f &position) = 0;
-        virtual bool event(Client::Network &network, const Client::KeyBind &keyBind, const sf::Event &event, const sf::Clock &clock) = 0;
-        virtual void render(sf::RenderWindow &window) = 0;
+        virtual void place(const sf::Vector2<float> &position) = 0;
+        virtual bool event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event) = 0;
+        virtual void render(Client::Network &network, sf::RenderWindow &window) = 0;
     };
 }
 

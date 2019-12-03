@@ -15,12 +15,12 @@ Client::Button::Button(uint32_t id, const std::string &texturePath) : _id(id)
     _sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, textureSize.x, textureSize.y / 3));
 }
 
-void Client::Button::place(const sf::Vector2f &position)
+void Client::Button::place(const sf::Vector2<float> &position)
 {
     _sprite.setPosition(position);
 }
 
-bool Client::Button::event(Client::Network &network, const Client::KeyBind &keyBind, const sf::Event &event, const sf::Clock &clock)
+bool Client::Button::event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event)
 {
     sf::Vector2<int> mousePos(sf::Mouse::getPosition());
     sf::Vector2<float> buttonPos(_sprite.getPosition());
@@ -43,7 +43,7 @@ bool Client::Button::event(Client::Network &network, const Client::KeyBind &keyB
     return clicked;
 }
 
-void Client::Button::render(sf::RenderWindow &window)
+void Client::Button::render(Client::Network &network, sf::RenderWindow &window)
 {
     window.draw(_sprite);
 }

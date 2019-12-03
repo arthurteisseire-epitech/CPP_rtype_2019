@@ -18,7 +18,7 @@ Client::KeyBind::KeyBind() : _bind()
     _bind[sf::Keyboard::Key::Escape] = sf::Keyboard::Key::Escape;
 }
 
-void Client::KeyBind::rebind(const sf::Keyboard::Key &bind, const sf::Keyboard::Key &action)
+void Client::KeyBind::rebind(const sf::Keyboard::Key bind, const sf::Keyboard::Key action)
 {
     for (auto &pair : _bind) {
         if (pair.second == action) {
@@ -29,12 +29,12 @@ void Client::KeyBind::rebind(const sf::Keyboard::Key &bind, const sf::Keyboard::
     _bind[bind] = action;
 }
 
-sf::Keyboard::Key Client::KeyBind::getAction(const sf::Keyboard::Key &bind) const
+sf::Keyboard::Key Client::KeyBind::getAction(const sf::Keyboard::Key bind)
 {
     return _bind[bind];
 }
 
-void Client::KeyBind::isBinded(const sf::Keyboard::Key &bind) const
+bool Client::KeyBind::isBound(const sf::Keyboard::Key bind)
 {
     return _bind.find(bind) != _bind.end();
 }

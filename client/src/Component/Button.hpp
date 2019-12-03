@@ -15,9 +15,9 @@ namespace Client {
     public:
         Button(uint32_t id, const std::string &texturePath);
         ~Button() override = default;
-        void place(const sf::Vector2f &position) override;
-        bool event(Client::Network &network, const Client::KeyBind &keyBind, const sf::Event &event, const sf::Clock &clock) override;
-        void render(sf::RenderWindow &window) override;
+        void place(const sf::Vector2<float> &position) override;
+        bool event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event) override;
+        void render(Client::Network &network, sf::RenderWindow &window) override;
     private:
         uint32_t _id;
         sf::Sprite _sprite;

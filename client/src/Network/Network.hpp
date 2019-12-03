@@ -9,6 +9,7 @@
 #define RTYPE_NETWORK_HPP
 
 #include <SFML/Network.hpp>
+#include <string>
 #include <vector>
 #include "INetwork.hpp"
 #include "Packet.hpp"
@@ -18,13 +19,19 @@ namespace Client {
     public:
         Network(const std::string &ip, const uint16_t &port);
         ~Network() override;
-        void send(const void *data, const std::size_t &size) override;
-        std::pair<std::string, uint16_t> receive(void *data, const std::size_t &size, std::size_t &received) override;
+        void send(const void *data, const uint64_t &size) override;
+        void send(const Client::RawPacket *packet) override;
+        std::pair<std::string, uint16_t> receive(void *data, const uint64_t &size, uint64_t &received) override;
+        Client::Packet findReceived(const uint32_t &id);
     private:
+        void receiver();
         sf::UdpSocket _socket;
         sf::IpAddress _ip;
         uint16_t _port;
-        std::vector<Client::Packet> _buffer;
+        bool _active;
+        sf::Thread _receiver;
+        std::vector<Client::RawPacket> _buffer;
+        sf::Mutex _mutex;
     };
 }
 
