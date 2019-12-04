@@ -11,17 +11,16 @@
 #include <SFML/Network.hpp>
 #include <string>
 #include <vector>
-#include "INetwork.hpp"
 #include "Packet.hpp"
 
 namespace Client {
-    class Network : public INetwork {
+    class Network {
     public:
         Network(const std::string &ip, const uint16_t &port);
-        ~Network() override;
-        void send(const void *data, const uint64_t &size) override;
-        void send(const Client::RawPacket *packet) override;
-        std::pair<std::string, uint16_t> receive(void *data, const uint64_t &size, uint64_t &received) override;
+        ~Network();
+        void send(const void *data, const uint64_t &size);
+        void send(const Client::RawPacket *packet);
+        std::pair<std::string, uint16_t> receive(void *data, const uint64_t &size, uint64_t &received);
         Client::Packet findReceived(const uint32_t &id);
     private:
         void receiver();

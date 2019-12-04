@@ -8,6 +8,7 @@
 #ifndef RTYPE_PACKET_HPP
 #define RTYPE_PACKET_HPP
 
+#define MAGIC_NB 9360624
 #define DEFAULT_ID 0
 
 #include <cstdint>

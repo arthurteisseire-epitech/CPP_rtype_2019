@@ -13,13 +13,18 @@
 namespace Client {
     class Ship : public IComponent {
     public:
-        Ship(uint32_t id, const std::string &texturePath, bool controlled = true);
+        Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled = true);
         ~Ship() override = default;
-        void place(const sf::Vector2<float> &position) override;
+        void adjust(Client::Window &window) override;
+        void place(const sf::Vector2<float> &ratio, Client::Window &window) override;
         bool event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event) override;
-        void render(Client::Network &network, sf::RenderWindow &window) override;
+        void update(Client::Network &network, Client::Window &window) override;
+        void render(Client::Window &window, uint8_t layer) override;
     private:
+        void adjust(const sf::Vector2<float> &scale) override;
+        void place(const sf::Vector2<float> &position) override;
         uint32_t _id;
+        uint8_t _layer;
         bool _controlled;
         sf::Sprite _sprite;
     };

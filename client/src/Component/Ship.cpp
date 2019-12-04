@@ -8,7 +8,7 @@
 #include <iostream>
 #include "Ship.hpp"
 
-Client::Ship::Ship(uint32_t id, const std::string &texturePath, bool controlled) : _id(id), _controlled(controlled)
+Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) : _id(id), _layer(layer), _controlled(controlled)
 {
     sf::Texture texture;
     texture.loadFromFile(texturePath);
@@ -19,9 +19,32 @@ Client::Ship::Ship(uint32_t id, const std::string &texturePath, bool controlled)
     _sprite = sf::Sprite(texture, textureRect);
 }
 
-void Client::Ship::place(const sf::Vector2<float> &position)
+void Client::Ship::adjust(Client::Window &window)
 {
-    _sprite.setPosition(position);
+    sf::Vector2<float> renderRatio(window.getRenderRatio());
+    float referenceRatio = std::max(renderRatio.x, renderRatio.y);
+    this->adjust(sf::Vector2<float>(referenceRatio, referenceRatio));
+}
+
+void Client::Ship::place(const sf::Vector2<float> &ratio, Client::Window &window)
+{
+    sf::Vector2<float> spriteScale(_sprite.getScale());
+    sf::Vector2<uint32_t> textureSize(_sprite.getTexture()->getSize());
+    sf::Vector2<float> spriteSize(float(textureSize.x) * spriteScale.x, float(textureSize.y) / 3. * spriteScale.y);
+    sf::Vector2<float> winSize(window.getSize());
+    sf::Vector2<float> renderRatio(window.getRenderRatio());
+    sf::Vector2<float> newPosition(winSize.x * ratio.x,winSize.y * ratio.y);
+    if (renderRatio.x > renderRatio.y) {
+        newPosition.x -= (spriteSize.x + (renderRatio.x - renderRatio.y)) / 2;
+        newPosition.y -= spriteSize.y / 2;
+    } else if (renderRatio.y > renderRatio.x) {
+        newPosition.x -= spriteSize.x / 2;
+        newPosition.y -= (spriteSize.y + (renderRatio.y - renderRatio.x)) / 2;
+    } else {
+        newPosition.x -= spriteSize.x / 2;
+        newPosition.y -= spriteSize.y / 2;
+    }
+    this->place(newPosition);
 }
 
 bool Client::Ship::event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event)
@@ -53,20 +76,36 @@ bool Client::Ship::event(Client::Network &network, Client::KeyBind &keyBind, con
     return false;
 }
 
-void Client::Ship::render(Client::Network &network, sf::RenderWindow &window)
+void Client::Ship::update(Client::Network &network, Client::Window &window)
 {
+    this->adjust(window);
+    sf::Vector2<float> newPosition;
     try {
         Client::Packet packet(network.findReceived(_id));
-        sf::Vector2<float> newPosition(_sprite.getPosition());
-        this->place(newPosition);
-        sf::Rect<int> spriteRect(_sprite.getTextureRect());
-        float moveRatio(float(window.getSize().y) / (_sprite.getPosition().y - newPosition.y));
-        if (moveRatio < 0) { //Ship is going downward
-            spriteRect.left = (2 - (moveRatio < 0.01) - (moveRatio < 0.02)) * spriteRect.width;
-        } else { //Ship is going upward
-            spriteRect.left = (2 + (moveRatio > 0.01) + (moveRatio > 0.02)) * spriteRect.width;
-        }
-        _sprite.setTextureRect(spriteRect);
-    } catch (std::runtime_error &packetNotFound) {}
-    window.draw(_sprite);
+        newPosition = {0, 0};
+    } catch (std::runtime_error &packetNotFound) {
+        return;
+    }
+    this->place(newPosition, window);
+    sf::Rect<int> spriteRect(_sprite.getTextureRect());
+    float moveRatio(window.getSize().y / _sprite.getPosition().y - newPosition.y);
+    spriteRect.left = (2 + (moveRatio > 0.01) + (moveRatio > 0.02) - (moveRatio < 0.01) - (moveRatio < 0.02)) * spriteRect.width;
+    _sprite.setTextureRect(spriteRect);
+}
+
+void Client::Ship::render(Client::Window &window, uint8_t layer)
+{
+    if (layer == _layer) {
+        window.draw(_sprite);
+    }
+}
+
+void Client::Ship::adjust(const sf::Vector2<float> &scale)
+{
+    _sprite.setScale(scale);
+}
+
+void Client::Ship::place(const sf::Vector2<float> &position)
+{
+    _sprite.setPosition(position);
 }

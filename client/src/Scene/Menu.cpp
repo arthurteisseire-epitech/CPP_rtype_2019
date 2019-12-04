@@ -15,10 +15,15 @@ Client::Menu::~Menu()
 {
 }
 
-void Client::Menu::getEvent(class Client::IScene *& self, class Client::INetwork & network, sf::RenderWindow & window)
+void Client::Menu::event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network)
 {
 }
 
-void Client::Menu::update(class Client::IScene *& self, class Client::INetwork & network, sf::RenderWindow & window)
+void Client::Menu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
 {
+}
+
+void Client::Menu::render(Client::Window &window)
+{
+
 }

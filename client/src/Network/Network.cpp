@@ -56,12 +56,12 @@ Client::Packet Client::Network::findReceived(const uint32_t &id)
 
 void Client::Network::receiver()
 {
+    Client::RawPacket packet;
     while (_active) {
-        Client::RawPacket packet;
         uint64_t received = 0;
         do {
-            this->receive(&packet, sizeof(Client::RawPacket), received);
-        } while (!received);
+            this->receive(&packet, sizeof(packet), received);
+        } while (!received || packet.magic != MAGIC_NB);
         _mutex.lock();
         _buffer.push_back(packet);
         _mutex.unlock();

@@ -8,15 +8,18 @@
 #ifndef RTYPE_ISCENE_HPP
 #define RTYPE_ISCENE_HPP
 
-#include "Network/INetwork.hpp"
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
+#include "Game/KeyBind.hpp"
+#include "Game/Window.hpp"
+#include "Network/Network.hpp"
 
 namespace Client {
     class IScene {
     public:
         virtual ~IScene() = default;
-        virtual void getEvent(IScene *&self, INetwork &network, sf::RenderWindow &window) = 0;
-        virtual void update(IScene *&self, INetwork &network, sf::RenderWindow &window) = 0;
+        virtual void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network) = 0;
+        virtual void update(Client::IScene *&self, Client::Network &network, Client::Window &window) = 0;
+        virtual void render(Client::Window &window) = 0;
     };
 }
 

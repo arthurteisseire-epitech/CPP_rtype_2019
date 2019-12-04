@@ -11,10 +11,10 @@
 #include "IComponent.hpp"
 
 namespace Client {
-    class Button : public IComponent {
+    class Image : public IComponent {
     public:
-        Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
-        ~Button() override = default;
+        Image(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
+        ~Image() override = default;
         void adjust(Client::Window &window) override;
         void place(const sf::Vector2<float> &ratio, Client::Window &window) override;
         bool event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event) override;

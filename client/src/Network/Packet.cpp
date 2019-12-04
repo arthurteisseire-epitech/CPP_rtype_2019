@@ -10,14 +10,14 @@
 
 Client::Packet::Packet(const uint32_t &id) : _packet(new Client::RawPacket)
 {
-    _packet->magic = 9360624;
+    _packet->magic = MAGIC_NB;
     memset(_packet->payload, 0, 256);
     _packet->id = id;
 }
 
 Client::Packet::Packet(const std::string &payload, const uint32_t &id) : _packet(new Client::RawPacket)
 {
-    _packet->magic = 9360624;
+    _packet->magic = MAGIC_NB;
     memset(_packet->payload, 0, 256);
     this->setPayload(payload);
     _packet->id = id;
