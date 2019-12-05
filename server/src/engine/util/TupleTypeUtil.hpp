@@ -24,14 +24,14 @@ namespace ecs
     struct has_types;
 
     template<typename ...T, typename Tuple>
-    struct has_types<std::tuple<T...>, Tuple> : std::conjunction<has_type<T, Tuple>...> {};
+    struct has_types<std::tuple<T...>, Tuple> : std::conjunction<has_type<std::remove_const_t<T>, Tuple>...> {};
 
     // TODO -- Template recursion seems to be a better way to achieve this
     template<typename IdxTuple, typename ...Ts>
     auto getTuplesMatching(const std::tuple<Ts...> &t)
     {
         return std::apply([](Ts...) {
-            return std::tuple_cat(std::conditional_t<(has_types<Ts, IdxTuple>::value),
+            return std::tuple_cat(std::conditional_t<has_types<Ts, IdxTuple>::value,
                                                      std::tuple<typename ObjectPool<Ts>::index>,
                                                      std::tuple<>
                                                     >{}...);

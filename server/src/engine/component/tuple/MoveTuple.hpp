@@ -17,7 +17,7 @@ namespace ecs
     using MoveTuple = std::tuple
         <
             ObjectPool<CTransform>::index,
-            ObjectPool<CDirection>::index
+            const ObjectPool<CDirection>::index
         >;
 }
 

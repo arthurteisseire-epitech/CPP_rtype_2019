@@ -18,10 +18,10 @@ namespace ecs
 {
     using SendRenderTuple = std::tuple
         <
-            ObjectPool<CConnection>::index,
-            ObjectPool<CTransform>::index,
-            ObjectPool<CType>::index,
-            ObjectPool<CId>::index
+            const ObjectPool<CConnection>::index,
+            const ObjectPool<CTransform>::index,
+            const ObjectPool<CType>::index,
+            const ObjectPool<CId>::index
         >;
 }
 
