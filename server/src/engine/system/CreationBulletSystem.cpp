@@ -20,7 +20,7 @@ void ecs::CreationBulletSystem::update(float deltaTime)
 
         auto &inputs = get<CInput>(t).inputs;
 
-        if (std::find(inputs.begin(), inputs.end(), CInput::SPACE) != inputs.end()) {
+        if (std::any_of(inputs.begin(), inputs.end(), isSpace)) {
             EntityFactory::createBullet(admin,
                                         GetIndex<CConnection>(t),
                                         GetPool<CTransform>(admin).create(get<CTransform>(t).vec.x,
@@ -29,4 +29,9 @@ void ecs::CreationBulletSystem::update(float deltaTime)
             );
         }
     });
+}
+
+bool ecs::CreationBulletSystem::isSpace(CInput::Key input)
+{
+    return input == CInput::SPACE;
 }
