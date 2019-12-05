@@ -7,7 +7,7 @@
 
 #include <boost/bind.hpp>
 #include "SendSystem.hpp"
-#include "Sender.hpp"
+#include "NetworkSender.hpp"
 #include "Util.hpp"
 
 ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
@@ -26,5 +26,5 @@ void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
     auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
         std::to_string(get<CTransform>(t).vec.y) + '\n';
     std::copy(s.begin(), s.end(), buffer.begin());
-    new Sender(admin, GetIndex<CConnection>(t), buffer);
+    NetworkSender::send(admin, GetIndex<CConnection>(t), buffer);
 }
