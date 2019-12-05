@@ -24,7 +24,6 @@ namespace ecs
 
         const boost::asio::ip::udp::endpoint endpoint;
         std::queue<std::array<char, 1024>> readBuffers;
-        std::deque<std::array<char, 1024>> writeBuffer{};
     };
 }
 
