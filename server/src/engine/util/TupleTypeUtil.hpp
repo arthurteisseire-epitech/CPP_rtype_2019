@@ -40,14 +40,6 @@ namespace ecs
         }, t);
     }
 
-    template <typename Tuple>
-    auto tupleToObjectPoolTuple()
-    {
-        return std::apply([] (auto ...ts) {
-            return make_tuple(ObjectPool<decltype(ts)>{}...);
-        }, Tuple{});
-    }
-
     template<typename ...Args>
     using EntityTuples = decltype(getTuplesMatching<decltype(std::tuple<Args...>{})>(TupleList{}));
 
