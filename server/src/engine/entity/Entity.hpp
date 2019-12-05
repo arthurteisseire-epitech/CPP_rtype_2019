@@ -21,8 +21,7 @@ namespace ecs
     public:
         explicit Entity(std::shared_ptr<EntityAdmin> &admin, Args... args) :
             components(args...),
-            tuples(createTuples(admin)),
-            id(nextId())
+            tuples(createTuples(admin))
         {
         }
 
@@ -47,15 +46,9 @@ namespace ecs
             return std::get<T>(tuples);
         }
 
-        [[nodiscard]] int getId() const
-        {
-            return id;
-        }
-
     private:
         std::tuple<Args...> components;
         EntityTuples<Args...> tuples;
-        int id;
     };
 }
 

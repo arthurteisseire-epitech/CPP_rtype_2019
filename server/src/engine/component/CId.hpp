@@ -11,8 +11,8 @@
 namespace ecs
 {
     struct CId {
-        CId(int id) : id(id) {}
-        int id;
+        explicit CId(unsigned int id) : id(id) {}
+        unsigned int id;
     };
 }
 
