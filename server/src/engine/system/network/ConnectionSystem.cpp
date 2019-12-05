@@ -26,7 +26,9 @@ void ecs::ConnectionSystem::update(float)
         });
 
         if (it == connPool.end()) {
-            EntityFactory::createPlayer(admin, connPool.create(p.first));
+            auto connIdx = connPool.create(p.first);
+            EntityFactory::createPlayer(admin, connIdx);
+            GetPool<CConnection>(admin).at(connIdx).readBuffers.push(p.second);
         } else {
             it->readBuffers.push(p.second);
         }
