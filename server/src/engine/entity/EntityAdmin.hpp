@@ -25,13 +25,15 @@ namespace ecs
 {
     struct EntityAdmin {
         EntityAdmin() :
-            network(1234)
+            network(1234),
+            current_id(0)
         {
         }
 
         Pools pools{};
         std::vector<std::unique_ptr<IEntity>> entities;
         CNetwork network;
+        unsigned int current_id;
     };
 }
 

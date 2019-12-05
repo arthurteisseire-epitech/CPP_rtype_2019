@@ -10,10 +10,9 @@
 
 namespace ecs
 {
-    static int nextId()
+    static auto nextId(std::shared_ptr<EntityAdmin> &admin)
     {
-        static int id = 0;
-        return ++id;
+        return ++admin->current_id;
     }
 }
 
