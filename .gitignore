@@ -9,6 +9,7 @@ Makefile
 *.gcno
 *.gcda
 *.gcov
+__pycache__
 units
 coverage
 client_tests_run

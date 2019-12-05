@@ -16,8 +16,9 @@ void ecs::NetworkUtil::send(const std::shared_ptr<EntityAdmin> &admin, ObjectPoo
     auto &conn = GetPool<CConnection>(admin).at(connIdx);
     auto &b = conn.writeBuffer.emplace_back(buffer);
 
-    conn.socket.async_write_some(
+    admin->network.socket.async_send_to(
         boost::asio::buffer(b),
+        conn.endpoint,
         boost::bind(
             &ecs::NetworkUtil::handleSend,
             admin,

@@ -35,7 +35,7 @@ namespace ecs
         }
 
         template<typename ...Args>
-        index create(Args ...args)
+        index create(Args&& ...args)
         {
             std::lock_guard<std::mutex> lock(mutex);
 

@@ -8,22 +8,22 @@
 #ifndef RTYPE_CCONNECTION_HPP
 #define RTYPE_CCONNECTION_HPP
 
-#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <array>
 #include <queue>
 #include <deque>
+#include <utility>
 
 namespace ecs
 {
     struct CConnection {
-        explicit CConnection(boost::asio::io_context &ioContext) :
-            socket(ioContext)
+        explicit CConnection(boost::asio::ip::udp::endpoint endpoint) :
+            endpoint(std::move(endpoint))
         {
         }
 
-        boost::asio::ip::tcp::socket socket;
+        const boost::asio::ip::udp::endpoint endpoint;
         std::queue<std::array<char, 1024>> readBuffers;
-        std::array<char, 1024> tmpReadBuffer{};
         std::deque<std::array<char, 1024>> writeBuffer{};
     };
 }
