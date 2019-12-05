@@ -9,7 +9,8 @@
 #include "CInput.hpp"
 #include "InputTuple.hpp"
 
-ecs::InputSystem::InputSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::InputSystem::InputSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
@@ -25,16 +26,18 @@ void ecs::InputSystem::update(float deltaTime)
 {
     ForEachMatching<InputTuple>(admin, [this](InputTuple &t) {
 
-            auto &buffers = get<CConnection>(t).readBuffers;
+        auto &buffers = get<CConnection>(t).readBuffers;
 
-            while (!buffers.empty()) {
-                std::string s(std::begin(buffers.front()), std::end(buffers.front()));
-                s.erase(std::remove_if(s.begin(), s.end(), iscntrl), s.end());
+        get<CInput>(t).inputs.clear();
+        get<CInput>(t).inputs.reserve(buffers.size());
+        while (!buffers.empty()) {
+            std::string s(std::begin(buffers.front()), std::end(buffers.front()));
+            s.erase(std::remove_if(s.begin(), s.end(), iscntrl), s.end());
 
-                auto it = directions.find(s);
-                if (it != directions.end())
-                    get<CInput>(t).inputs.push_back(it->second);
-                buffers.pop();
-            }
-        });
+            auto it = directions.find(s);
+            if (it != directions.end())
+                get<CInput>(t).inputs.push_back(it->second);
+            buffers.pop();
+        }
+    });
 }

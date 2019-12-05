@@ -23,15 +23,13 @@ void ecs::InputDirectionSystem::update(float dt)
 {
     ForEachMatching<InputDirectionTuple>(admin, [this] (InputDirectionTuple &t) {
 
+        auto dir = CDirection::NONE;
         auto &inputs = get<CInput>(t).inputs;
 
         auto it = std::find_if(inputs.begin(), inputs.end(), &isKeyADirection);
-        if (it != inputs.end()) {
-            get<CDirection>(t).setDirection(directions.at(*it));
-            inputs.erase(std::remove_if(inputs.begin(), inputs.end(), &isKeyADirection), inputs.end());
-        } else {
-            get<CDirection>(t).setDirection(CDirection::NONE);
-        }
+        if (it != inputs.end())
+            dir = directions.at(*it);
+        get<CDirection>(t).setDirection(dir);
     });
 }
 

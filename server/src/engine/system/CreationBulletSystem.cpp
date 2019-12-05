@@ -27,6 +27,5 @@ void ecs::CreationBulletSystem::update(float deltaTime)
                 );
             }
         }
-        inputs.erase(std::remove(inputs.begin(), inputs.end(), CInput::SPACE), inputs.end());
     });
 }
