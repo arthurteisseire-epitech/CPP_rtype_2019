@@ -25,7 +25,7 @@ namespace ecs
 
     private:
         boost::asio::ip::udp::endpoint endpoint;
-        std::array<char, 1024> readBuffer;
+        Buffer readBuffer;
     };
 }
 

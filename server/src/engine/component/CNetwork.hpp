@@ -11,6 +11,7 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <queue>
+#include "Buffer.hpp"
 
 namespace ecs
 {
@@ -23,7 +24,7 @@ namespace ecs
 
         boost::asio::io_context ioContext;
         boost::asio::ip::udp::socket socket;
-        std::queue<std::pair<boost::asio::ip::udp::endpoint, std::array<char, 1024>>> readBuffers;
+        std::queue<std::pair<boost::asio::ip::udp::endpoint, Buffer>> readBuffers;
     };
 }
 

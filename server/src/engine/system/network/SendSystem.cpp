@@ -21,7 +21,7 @@ void ecs::SendSystem::update(float deltaTime)
 
 void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
 {
-    std::array<char, 1024> buffer{};
+    Buffer buffer{};
 
     auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
         std::to_string(get<CTransform>(t).vec.y) + '\n';

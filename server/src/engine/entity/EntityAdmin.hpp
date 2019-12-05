@@ -9,7 +9,7 @@
 #define RTYPE_ENTITYADMIN_HPP
 
 #include <tuple>
-#include "TupleTypeUtil.hpp"
+#include "Types.hpp"
 #include "ObjectPool.hpp"
 #include "IEntity.hpp"
 
