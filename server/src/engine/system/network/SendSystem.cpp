@@ -16,10 +16,10 @@ ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::m
 
 void ecs::SendSystem::update(float deltaTime)
 {
-    ForEachMatching<SendRenderTuple>(admin, boost::bind(&ecs::SendSystem::updateTuple, this, _1));
+    ForEachMatching<SendTuple>(admin, boost::bind(&ecs::SendSystem::updateTuple, this, _1));
 }
 
-void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
+void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
     Buffer buffer{};
 

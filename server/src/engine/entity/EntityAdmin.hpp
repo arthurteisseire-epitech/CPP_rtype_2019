@@ -16,12 +16,6 @@
 
 #include "CNetwork.hpp"
 
-#include "CreationBulletTuple.hpp"
-#include "SendRenderTuple.hpp"
-#include "MoveTuple.hpp"
-#include "InputTuple.hpp"
-#include "InputDirectionTuple.hpp"
-
 namespace ecs
 {
     struct EntityAdmin {
