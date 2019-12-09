@@ -2,21 +2,31 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** Menu.cpp
+** MainMenu.cpp
 */
 
-#include <iostream>
 #include "Ship.hpp"
 
-Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) : _id(id), _layer(layer), _controlled(controlled)
+Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) : _id(id), _layer(layer), _controlled(controlled), _position(0, 0), _texture(new sf::Texture())
 {
-    sf::Texture texture;
-    texture.loadFromFile(texturePath);
-    sf::Vector2<int> textureSize(texture.getSize());
+    if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
+        throw std::runtime_error("Cannot load texture: " + texturePath);
+    }
+    sf::Vector2<int> textureSize(_texture->getSize());
     sf::Rect<int> textureRect(2, controlled ? 0 : 1 + id % 4, textureSize.x / 5, textureSize.y / 5);
     textureRect.left *= textureRect.width;
     textureRect.top *= textureRect.height;
-    _sprite = sf::Sprite(texture, textureRect);
+    _sprite = sf::Sprite(*_texture, textureRect);
+}
+
+Client::Ship::~Ship()
+{
+    delete _texture;
+}
+
+void Client::Ship::move(const sf::Vector2<float> &position)
+{
+    _position = position;
 }
 
 void Client::Ship::adjust(Client::Window &window)
@@ -26,14 +36,14 @@ void Client::Ship::adjust(Client::Window &window)
     this->adjust(sf::Vector2<float>(referenceRatio, referenceRatio));
 }
 
-void Client::Ship::place(const sf::Vector2<float> &ratio, Client::Window &window)
+void Client::Ship::place(Client::Window &window)
 {
     sf::Vector2<float> spriteScale(_sprite.getScale());
-    sf::Vector2<uint32_t> textureSize(_sprite.getTexture()->getSize());
-    sf::Vector2<float> spriteSize(float(textureSize.x) * spriteScale.x, float(textureSize.y) / 3. * spriteScale.y);
+    sf::Rect<int> textureSize(_sprite.getTextureRect());
+    sf::Vector2<float> spriteSize(float(textureSize.width) * spriteScale.x, float(textureSize.height) * spriteScale.y);
     sf::Vector2<float> winSize(window.getSize());
     sf::Vector2<float> renderRatio(window.getRenderRatio());
-    sf::Vector2<float> newPosition(winSize.x * ratio.x,winSize.y * ratio.y);
+    sf::Vector2<float> newPosition(winSize.x * _position.x, winSize.y * _position.y);
     if (renderRatio.x > renderRatio.y) {
         newPosition.x -= (spriteSize.x + (renderRatio.x - renderRatio.y)) / 2;
         newPosition.y -= spriteSize.y / 2;
@@ -47,7 +57,7 @@ void Client::Ship::place(const sf::Vector2<float> &ratio, Client::Window &window
     this->place(newPosition);
 }
 
-bool Client::Ship::event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event)
+bool Client::Ship::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     if (_controlled && event.type == sf::Event::KeyPressed && keyBind.isBound(event.key.code)) {
         Client::Packet packet(_id);
@@ -79,16 +89,15 @@ bool Client::Ship::event(Client::Network &network, Client::KeyBind &keyBind, con
 void Client::Ship::update(Client::Network &network, Client::Window &window)
 {
     this->adjust(window);
-    sf::Vector2<float> newPosition;
     try {
         Client::Packet packet(network.findReceived(_id));
-        newPosition = {0, 0};
+        _position = {0, 0};
     } catch (std::runtime_error &packetNotFound) {
         return;
     }
-    this->place(newPosition, window);
+    this->place(window);
     sf::Rect<int> spriteRect(_sprite.getTextureRect());
-    float moveRatio(window.getSize().y / _sprite.getPosition().y - newPosition.y);
+    float moveRatio(window.getSize().y / _sprite.getPosition().y - _position.y);
     spriteRect.left = (2 + (moveRatio > 0.01) + (moveRatio > 0.02) - (moveRatio < 0.01) - (moveRatio < 0.02)) * spriteRect.width;
     _sprite.setTextureRect(spriteRect);
 }

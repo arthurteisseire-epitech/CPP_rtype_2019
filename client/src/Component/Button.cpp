@@ -2,34 +2,45 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** Menu.cpp
+** MainMenu.cpp
 */
 
 #include "Button.hpp"
 
-Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) : _id(id), _layer(layer), _position(position)
+Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) : _id(id), _layer(layer), _position(position), _texture(new sf::Texture())
 {
-    sf::Texture texture;
-    texture.loadFromFile(texturePath);
-    sf::Vector2<uint32_t> textureSize(texture.getSize());
-    _sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, textureSize.x, textureSize.y / 3));
+    if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
+        throw std::runtime_error("Cannot load texture: " + texturePath);
+    }
+    sf::Vector2<int> textureSize(_texture->getSize());
+    _sprite = sf::Sprite(*_texture, {0, 0, textureSize.x, textureSize.y / 3});
+}
+
+Client::Button::~Button()
+{
+    delete _texture;
+}
+
+void Client::Button::move(const sf::Vector2<float> &position)
+{
+    _position = position;
 }
 
 void Client::Button::adjust(Client::Window &window)
 {
     sf::Vector2<float> renderRatio(window.getRenderRatio());
     float referenceRatio = std::max(renderRatio.x, renderRatio.y);
-    this->adjust(sf::Vector2<float>(referenceRatio, referenceRatio));
+    this->adjust({referenceRatio, referenceRatio});
 }
 
-void Client::Button::place(const sf::Vector2<float> &ratio, Client::Window &window)
+void Client::Button::place(Client::Window &window)
 {
     sf::Vector2<float> spriteScale(_sprite.getScale());
-    sf::Vector2<uint32_t> textureSize(_sprite.getTexture()->getSize());
-    sf::Vector2<float> spriteSize(float(textureSize.x) * spriteScale.x, float(textureSize.y) / 3. * spriteScale.y);
+    sf::Rect<int> textureSize(_sprite.getTextureRect());
+    sf::Vector2<float> spriteSize(float(textureSize.width) * spriteScale.x, float(textureSize.height) * spriteScale.y);
     sf::Vector2<float> winSize(window.getSize());
     sf::Vector2<float> renderRatio(window.getRenderRatio());
-    sf::Vector2<float> newPosition(winSize.x * ratio.x,winSize.y * ratio.y);
+    sf::Vector2<float> newPosition(winSize.x * _position.x, winSize.y * _position.y);
     if (renderRatio.x > renderRatio.y) {
         newPosition.x -= (spriteSize.x + (renderRatio.x - renderRatio.y)) / 2;
         newPosition.y -= spriteSize.y / 2;
@@ -43,14 +54,15 @@ void Client::Button::place(const sf::Vector2<float> &ratio, Client::Window &wind
     this->place(newPosition);
 }
 
-bool Client::Button::event(Client::Network &network, Client::KeyBind &keyBind, const sf::Event &event)
+bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     sf::Vector2<int> mousePos(sf::Mouse::getPosition());
-    sf::Vector2<float> buttonPos(_sprite.getPosition());
-    sf::Rect<int> buttonRect(_sprite.getTextureRect());
+    sf::Vector2<int> buttonPos(_sprite.getPosition());
+    sf::Vector2<int> textureSize(_texture->getSize());
+    sf::Rect<int> buttonRect(0, 0, textureSize.x, textureSize.y / 3);
     bool clicked(false);
 
-    if (buttonRect.contains(mousePos.x - buttonPos.x, mousePos.y - buttonPos.y)) {
+    if (buttonRect.contains(mousePos - buttonPos)) {
         buttonRect.top = buttonRect.height;
         if (event.type == sf::Event::MouseButtonPressed ||
             (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)) {
@@ -69,7 +81,7 @@ bool Client::Button::event(Client::Network &network, Client::KeyBind &keyBind, c
 void Client::Button::update(Client::Network &network, Client::Window &window)
 {
     this->adjust(window);
-    this->place(_position, window);
+    this->place(window);
 }
 
 void Client::Button::render(Client::Window &window, uint8_t layer)

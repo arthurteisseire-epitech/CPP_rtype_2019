@@ -15,7 +15,7 @@ Client::Game::~Game()
 {
 }
 
-void Client::Game::event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network)
+void Client::Game::event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
 }
 

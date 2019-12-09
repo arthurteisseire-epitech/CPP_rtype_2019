@@ -15,7 +15,7 @@ namespace Client {
     public:
         Game();
         ~Game() override;
-        void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network) override;
+        void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::IScene *&self, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
     private:
