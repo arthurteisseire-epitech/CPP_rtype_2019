@@ -54,7 +54,7 @@ namespace ecs
         }
 
         template<typename ...Args>
-        typename std::vector<std::pair<MEMORY, T>>::iterator emplaceOnFreeSpace(Args &&...args)
+        auto emplaceOnFreeSpace(Args &&...args)
         {
             auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
                 return pair.first == AVAILABLE;
