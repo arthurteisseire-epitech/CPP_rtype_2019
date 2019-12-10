@@ -49,19 +49,8 @@ namespace ecs
                     return index(it - pool.begin());
                 reallocate();
             }
-            pool.push_back({UNAVAILABLE, T(args...)});
+            pool.push_back(newElement(args...));
             return index(pool.size() - 1);
-        }
-
-        template<typename ...Args>
-        auto emplaceOnFreeSpace(Args &&...args)
-        {
-            auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
-                return pair.first == AVAILABLE;
-            });
-            if (it != pool.end())
-                *it = {UNAVAILABLE, T(args...)};
-            return it;
         }
 
         void destroy(index idx)
@@ -89,6 +78,22 @@ namespace ecs
         }
 
     private:
+        template<typename ...Args>
+        auto emplaceOnFreeSpace(Args &&...args)
+        {
+            auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
+                return pair.first == AVAILABLE;
+            });
+            if (it != pool.end())
+                *it = newElement(args...);
+            return it;
+        }
+
+        template<typename ...Args>
+        std::pair<MEMORY, T> newElement(Args&& ...args)
+        {
+            return {UNAVAILABLE, T(args...)};
+        }
 
         void reallocate()
         {
