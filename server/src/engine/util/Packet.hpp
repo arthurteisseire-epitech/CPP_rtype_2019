@@ -2,20 +2,20 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** Buffer.hpp
+** Packet.hpp
 */
 
-#ifndef RTYPE_BUFFER_HPP
-#define RTYPE_BUFFER_HPP
+#ifndef RTYPE_PACKET_HPP
+#define RTYPE_PACKET_HPP
 
 #include <array>
 
 namespace ecs
 {
-    struct Buffer {
+    struct Packet {
         uint32_t magic = 9360624;
         std::array<uint8_t, 256> data{};
-        uint32_t id{};
+        uint32_t entityId{};
     };
 }
 

@@ -13,7 +13,7 @@
 #include <queue>
 #include <deque>
 #include <utility>
-#include "Buffer.hpp"
+#include "Packet.hpp"
 
 namespace ecs
 {
@@ -24,7 +24,7 @@ namespace ecs
         }
 
         boost::asio::ip::udp::endpoint endpoint;
-        std::queue<Buffer> readBuffers{};
+        std::queue<Packet> readBuffers{};
     };
 }
 

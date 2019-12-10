@@ -10,13 +10,13 @@
 #include "Util.hpp"
 
 void ecs::NetworkSender::send(const std::shared_ptr<EntityAdmin> &admin, ecs::ObjectPool<ecs::CConnection>::index connIdx,
-                              const Buffer &buffer)
+                              const Packet &buffer)
 {
     new NetworkSender(admin, connIdx, buffer);
 }
 
 ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, ecs::ObjectPool<ecs::CConnection>::index connIdx,
-                                  const Buffer &buffer) :
+                                  const Packet &buffer) :
     writeBuffer(buffer)
 {
     admin->network.socket.async_send_to(
