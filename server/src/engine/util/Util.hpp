@@ -24,7 +24,7 @@ namespace ecs
     void ForEachMatching(std::shared_ptr<EntityAdmin> &admin, Func f)
     {
         for (auto &t : GetPool<Tuple>(admin))
-            f(t);
+            f(t.second);
     }
 
     template<typename T, typename Tuple>

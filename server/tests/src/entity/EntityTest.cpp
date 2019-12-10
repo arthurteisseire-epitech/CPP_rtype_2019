@@ -5,40 +5,33 @@
 ** EntityTest.cpp
 */
 
-#include "ObjectPool.hpp"
 #include "gtest/gtest.h"
+#include "ObjectPool.hpp"
 #include "Entity.hpp"
-#include "CHealth.hpp"
-#include "CTransform.hpp"
+#include "EntityFactory.hpp"
 
-TEST(Entity, create)
+using namespace ecs;
+
+TEST(Entity, destroy)
 {
-    auto healthPool = ecs::ObjectPool<ecs::CHealth>();
-    auto transformPool = ecs::ObjectPool<ecs::CTransform>();
+    auto admin = std::make_shared<EntityAdmin>();
+    EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
 
-    auto entity1 = std::make_unique<ecs::Entity<ecs::CHealth, ecs::CTransform>>(
-        healthPool.create(10),
-        transformPool.create()
-    );
+    admin->entities.at(0)->destroy(admin);
 
-    auto entity2 = std::make_unique<ecs::Entity<ecs::CHealth>>(
-        healthPool.create()
-    );
-
-    EXPECT_EQ(entity2->getId(), entity1->getId() + 1);
+    EXPECT_EQ(GetPool<CConnection>(admin).begin(), GetPool<CConnection>(admin).end());
 }
 
-TEST(Entity, getComponent)
+TEST(Entity, destroy2)
 {
-    auto healthPool = ecs::ObjectPool<ecs::CHealth>();
-    auto transformPool = ecs::ObjectPool<ecs::CTransform>();
+    auto admin = std::make_shared<EntityAdmin>();
 
-    auto player = std::make_unique<ecs::Entity<ecs::CHealth, ecs::CTransform>>(
-        healthPool.create(10),
-        transformPool.create()
-    );
+    for (int i = 0; i < 3; ++i) {
+        EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
+        GetPool<CTransform>(admin).at(ObjectPool<CTransform>::index(i)).vec.x = i;
+    }
 
-    auto healthComponent = player->get<ecs::CHealth>();
+    admin->entities.at(0)->destroy(admin);
 
-    EXPECT_EQ(healthComponent->life, 10);
+    EXPECT_EQ(GetPool<CConnection>(admin).begin(), GetPool<CConnection>(admin).end());
 }

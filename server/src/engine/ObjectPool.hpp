@@ -41,7 +41,7 @@ namespace ecs
 
             if (pool.size() == pool.capacity())
                 reallocate();
-            pool.emplace_back(args...);
+            pool.push_back({false, T(args...)});
             return index(pool.size() - 1);
         }
 
@@ -51,7 +51,7 @@ namespace ecs
 
             if (pool.size() == pool.capacity())
                 reallocate();
-            pool.push_back(std::move(std::forward<T>(obj)));
+            pool.push_back(std::move(std::forward<std::pair<bool, T>>({false, obj})));
             return index(pool.size() - 1);
         }
 
@@ -59,23 +59,22 @@ namespace ecs
         {
             std::lock_guard<std::mutex> lock(mutex);
 
-            std::iter_swap(pool.begin() + idx.idx, std::prev(pool.end()));
-            pool.pop_back();
+            pool.at(idx.idx).first = true;
         }
 
         T &at(index idx)
         {
             std::lock_guard<std::mutex> lock(mutex);
 
-            return pool.at(idx.idx);
+            return pool.at(idx.idx).second;
         }
 
-        typename std::vector<T>::iterator begin()
+        auto begin()
         {
             return pool.begin();
         }
 
-        typename std::vector<T>::iterator end()
+        auto end()
         {
             return pool.end();
         }
@@ -87,7 +86,7 @@ namespace ecs
             pool.reserve(pool.size() + padSize);
         }
 
-        std::vector<T> pool;
+        std::vector<std::pair<bool, T>> pool;
         std::mutex mutex;
         int padSize;
     };
