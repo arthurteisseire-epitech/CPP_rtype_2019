@@ -18,6 +18,8 @@ namespace ecs
     template<typename T>
     class ObjectPool {
     public:
+        enum MEMORY {AVAILABLE, UNAVAILABLE};
+
         struct index {
             explicit index(std::size_t idx = 0) :
                 idx(idx)
@@ -39,20 +41,27 @@ namespace ecs
         index create(Args &&...args)
         {
             std::lock_guard<std::mutex> lock(mutex);
+            typename std::vector<std::pair<MEMORY, T>>::iterator it;
 
-            if (pool.size() == pool.capacity())
+            if (pool.size() == pool.capacity()) {
+                it = emplaceOnFreeSpace(args...);
+                if (it != pool.end())
+                    return index(it - pool.begin());
                 reallocate();
+            }
+            pool.push_back({UNAVAILABLE, T(args...)});
+            return index(pool.size() - 1);
+        }
 
+        template<typename ...Args>
+        typename std::vector<std::pair<MEMORY, T>>::iterator emplaceOnFreeSpace(Args &&...args)
+        {
             auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
                 return pair.first == AVAILABLE;
             });
-            if (it == pool.end()) {
-                pool.push_back({UNAVAILABLE, T(args...)});
-                return index(pool.size() - 1);
-            } else {
+            if (it != pool.end())
                 *it = {UNAVAILABLE, T(args...)};
-                return index(it - pool.begin());
-            }
+            return it;
         }
 
         index move(T &&obj)
@@ -64,7 +73,6 @@ namespace ecs
             pool.push_back(std::move(std::forward<std::pair<MEMORY, T>>({UNAVAILABLE, obj})));
             return index(pool.size() - 1);
         }
-
         void destroy(index idx)
         {
             std::lock_guard<std::mutex> lock(mutex);
@@ -88,8 +96,6 @@ namespace ecs
         {
             return pool.end();
         }
-
-        enum MEMORY {AVAILABLE, UNAVAILABLE};
 
     private:
 

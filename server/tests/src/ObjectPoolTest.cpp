@@ -29,12 +29,25 @@ TEST(ComponentPool, createWithArgs)
 
 TEST(ComponentPool, destroy)
 {
-    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
-    auto p = healthComponentPool.create();
-
-    healthComponentPool.destroy(p);
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool(10);
+    auto p1 = healthComponentPool.create();
     auto p2 = healthComponentPool.create();
-    EXPECT_EQ(p.idx, p2.idx);
+
+    healthComponentPool.destroy(p1);
+
+    EXPECT_EQ(p1.idx + 1, p2.idx);
+}
+
+
+TEST(ComponentPool, destroyWithOnePadSize)
+{
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool(1);
+    auto p1 = healthComponentPool.create();
+
+    healthComponentPool.destroy(p1);
+
+    auto p2 = healthComponentPool.create();
+    EXPECT_EQ(p1.idx, p2.idx);
 }
 
 TEST(ComponentPool, iterate)
