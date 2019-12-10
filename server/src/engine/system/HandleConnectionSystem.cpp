@@ -5,7 +5,6 @@
 ** HandleConnectionSystem.cpp
 */
 
-#include <any>
 #include "NetworkSender.hpp"
 #include "HandleConnectionSystem.hpp"
 

@@ -17,7 +17,7 @@ ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) :
 
 void ecs::SendSystem::update(float deltaTime)
 {
-    ForEachMatching<SendTuple>(admin, boost::bind(&ecs::SendSystem::updateTuple, this, _1));
+    ForEachMatching<SendTuple>(admin, std::bind(&ecs::SendSystem::updateTuple, this, std::placeholders::_1));
 }
 
 void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
