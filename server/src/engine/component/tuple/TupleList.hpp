@@ -10,7 +10,7 @@
 
 #include "MoveTuple.hpp"
 #include "InputTuple.hpp"
-#include "SendRenderTuple.hpp"
+#include "SendTuple.hpp"
 #include "CreationBulletTuple.hpp"
 #include "InputDirectionTuple.hpp"
 
@@ -20,7 +20,7 @@ namespace ecs
         <
             MoveTuple,
             InputTuple,
-            SendRenderTuple,
+            SendTuple,
             CreationBulletTuple,
             InputDirectionTuple
         >;

@@ -11,7 +11,7 @@
 #include <tuple>
 #include "Util.hpp"
 #include "IEntity.hpp"
-#include "TupleTypeUtil.hpp"
+#include "Types.hpp"
 #include "Id.hpp"
 
 namespace ecs
@@ -20,11 +20,14 @@ namespace ecs
     class Entity : public IEntity {
     public:
         explicit Entity(std::shared_ptr<EntityAdmin> &admin, Args... args) :
-            components(args...)
+            components(args...),
+            tuples(createTuples(admin))
         {
-            id = nextId();
+        }
 
-            tuples = std::apply([&](auto ...tupleIdx) {
+        auto createTuples(std::shared_ptr<EntityAdmin> &admin)
+        {
+            return std::apply([&](auto ...tupleIdx) {
                 return std::make_tuple(createTuple<typename decltype(tupleIdx)::type>(admin)...);
             }, tuples);
         }
@@ -43,15 +46,9 @@ namespace ecs
             return std::get<T>(tuples);
         }
 
-        [[nodiscard]] int getId() const
-        {
-            return id;
-        }
-
     private:
         std::tuple<Args...> components;
         EntityTuples<Args...> tuples;
-        int id;
     };
 }
 

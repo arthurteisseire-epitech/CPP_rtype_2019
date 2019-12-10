@@ -11,14 +11,16 @@
 #include "MoveSystem.hpp"
 #include "UpdateTypeSystem.hpp"
 #include "CreationBulletSystem.hpp"
+#include "ConnectionSystem.hpp"
 #include "InputDirectionSystem.hpp"
 
 std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_ptr<EntityAdmin> &admin)
 {
     std::unique_ptr<ASystem> init[] = {
         std::make_unique<CreationBulletSystem>(admin),
-        std::make_unique<UpdateTypeSystem>(admin),
+        std::make_unique<ConnectionSystem>(admin),
         std::make_unique<InputSystem>(admin),
+        std::make_unique<UpdateTypeSystem>(admin),
         std::make_unique<InputDirectionSystem>(admin),
         std::make_unique<MoveSystem>(admin),
         std::make_unique<SendSystem>(admin)

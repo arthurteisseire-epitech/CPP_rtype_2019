@@ -15,8 +15,6 @@
 #include "CType.hpp"
 #include "CId.hpp"
 
-int ecs::EntityFactory::id = 0;
-
 void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
                                       ObjectPool<CConnection>::index connIdx)
 {
@@ -27,7 +25,7 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
             GetPool<CInput>(admin).create(),
             GetPool<CDirection>(admin).create(),
             GetPool<CType>(admin).create("spaceship_normal"),
-            GetPool<CId>(admin).create(id++)
+            GetPool<CId>(admin).create(nextId(admin))
         )
     );
 }
@@ -40,7 +38,7 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
     admin->entities.emplace_back(
         new Entity(admin,
             GetPool<CType>(admin).create("basic_missile_launch"),
-            GetPool<CId>(admin).create(id++),
+            GetPool<CId>(admin).create(nextId(admin)),
             connectionIdx,
             transformIdx,
             directionIdx

@@ -15,7 +15,7 @@ TEST(ComponentPool, create)
 
     auto p = healthComponentPool.create();
 
-    ASSERT_TRUE(p != nullptr);
+    EXPECT_EQ(p.idx, 0);
 }
 
 TEST(ComponentPool, createWithArgs)
@@ -24,7 +24,7 @@ TEST(ComponentPool, createWithArgs)
 
     auto p = healthComponentPool.create(20);
 
-    ASSERT_TRUE(p->life == 20);
+    EXPECT_TRUE(healthComponentPool.at(p).life == 20);
 }
 
 TEST(ComponentPool, destroy)
@@ -33,7 +33,8 @@ TEST(ComponentPool, destroy)
     auto p = healthComponentPool.create();
 
     healthComponentPool.destroy(p);
-    ASSERT_EQ(p, healthComponentPool.create());
+    auto p2 = healthComponentPool.create();
+    EXPECT_EQ(p.idx, p2.idx);
 }
 
 TEST(ComponentPool, iterate)
