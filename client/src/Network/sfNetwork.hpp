@@ -22,7 +22,9 @@ namespace game
         bool receive(void *data, const std::size_t &size, std::size_t &received) override;
 
     private:
-        sf::TcpSocket socket;
+        sf::UdpSocket socket;
+        sf::IpAddress _IP;
+        unsigned short _port;
     };
 }
 

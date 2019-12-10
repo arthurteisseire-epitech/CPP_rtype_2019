@@ -36,6 +36,7 @@ void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &wi
 {
     std::string dataStr(data);
 
+    std::cout << dataStr << std::endl;
     size_t semiColonIdx = dataStr.find(';');
     size_t dotIdx = dataStr.find(':');
     size_t comaIdx = dataStr.find(',');
@@ -58,7 +59,6 @@ void updateWindow(sf::RenderWindow &window,
 {
     window.clear();
     if (!toDraw.empty()) {
-        std::cout << "drawing" << std::endl;
         for (const auto &sprite : toDraw)
             window.draw(sprite.second.second);
         window.display();
