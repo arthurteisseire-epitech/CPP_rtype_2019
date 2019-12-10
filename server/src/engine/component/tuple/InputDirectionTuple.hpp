@@ -18,7 +18,7 @@ namespace ecs
     using InputDirectionTuple = std::tuple
         <
             ObjectPool<CDirection>::index,
-            const ObjectPool<CInput>::index
+            ObjectPool<CInput>::index
         >;
 }
 

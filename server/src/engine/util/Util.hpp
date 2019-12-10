@@ -24,7 +24,8 @@ namespace ecs
     void ForEachMatching(std::shared_ptr<EntityAdmin> &admin, Func f)
     {
         for (auto &t : GetPool<Tuple>(admin))
-            f(t.second);
+            if (t.first == ObjectPool<Tuple>::UNAVAILABLE)
+                f(t.second);
     }
 
     template<typename T, typename Tuple>

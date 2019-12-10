@@ -23,7 +23,7 @@ namespace ecs
         {
         }
 
-        const boost::asio::ip::udp::endpoint endpoint;
+        boost::asio::ip::udp::endpoint endpoint;
         std::queue<Buffer> readBuffers{};
     };
 }

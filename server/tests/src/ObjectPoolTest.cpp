@@ -33,7 +33,8 @@ TEST(ComponentPool, destroy)
     auto p = healthComponentPool.create();
 
     healthComponentPool.destroy(p);
-    EXPECT_EQ(p.idx, healthComponentPool.create().idx);
+    auto p2 = healthComponentPool.create();
+    EXPECT_EQ(p.idx, p2.idx);
 }
 
 TEST(ComponentPool, iterate)

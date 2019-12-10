@@ -19,7 +19,8 @@ namespace ecs
     class ObjectPool {
     public:
         struct index {
-            explicit index(std::size_t idx = 0) : idx(idx)
+            explicit index(std::size_t idx = 0) :
+                idx(idx)
             {
             }
 
@@ -35,14 +36,23 @@ namespace ecs
         }
 
         template<typename ...Args>
-        index create(Args&& ...args)
+        index create(Args &&...args)
         {
             std::lock_guard<std::mutex> lock(mutex);
 
             if (pool.size() == pool.capacity())
                 reallocate();
-            pool.push_back({false, T(args...)});
-            return index(pool.size() - 1);
+
+            auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
+                return pair.first == AVAILABLE;
+            });
+            if (it == pool.end()) {
+                pool.push_back({UNAVAILABLE, T(args...)});
+                return index(pool.size() - 1);
+            } else {
+                *it = {UNAVAILABLE, T(args...)};
+                return index(it - pool.begin());
+            }
         }
 
         index move(T &&obj)
@@ -51,7 +61,7 @@ namespace ecs
 
             if (pool.size() == pool.capacity())
                 reallocate();
-            pool.push_back(std::move(std::forward<std::pair<bool, T>>({false, obj})));
+            pool.push_back(std::move(std::forward<std::pair<MEMORY, T>>({UNAVAILABLE, obj})));
             return index(pool.size() - 1);
         }
 
@@ -59,7 +69,7 @@ namespace ecs
         {
             std::lock_guard<std::mutex> lock(mutex);
 
-            pool.at(idx.idx).first = true;
+            pool.at(idx.idx).first = AVAILABLE;
         }
 
         T &at(index idx)
@@ -79,6 +89,8 @@ namespace ecs
             return pool.end();
         }
 
+        enum MEMORY {AVAILABLE, UNAVAILABLE};
+
     private:
 
         void reallocate()
@@ -86,7 +98,7 @@ namespace ecs
             pool.reserve(pool.size() + padSize);
         }
 
-        std::vector<std::pair<bool, T>> pool;
+        std::vector<std::pair<MEMORY, T>> pool;
         std::mutex mutex;
         int padSize;
     };

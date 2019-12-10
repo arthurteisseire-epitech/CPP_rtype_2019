@@ -18,10 +18,10 @@ namespace ecs
 {
     using SendTuple = std::tuple
         <
-            const ObjectPool<CConnection>::index,
-            const ObjectPool<CTransform>::index,
-            const ObjectPool<CType>::index,
-            const ObjectPool<CId>::index
+            ObjectPool<CConnection>::index,
+            ObjectPool<CTransform>::index,
+            ObjectPool<CType>::index,
+            ObjectPool<CId>::index
         >;
 }
 
