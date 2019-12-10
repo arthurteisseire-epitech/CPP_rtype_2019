@@ -10,7 +10,8 @@
 #include "NetworkSender.hpp"
 #include "Util.hpp"
 
-ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
@@ -23,8 +24,10 @@ void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
     Buffer buffer{};
 
-    auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
+    buffer.id = get<CId>(t).id;
+    auto s = get<CType>(t).name + ':' +
+        std::to_string(get<CTransform>(t).vec.x) + ',' +
         std::to_string(get<CTransform>(t).vec.y) + '\n';
-    std::copy(s.begin(), s.end(), buffer.begin());
+    std::copy(s.begin(), s.end(), buffer.data.begin());
     NetworkSender::send(admin, GetIndex<CConnection>(t), buffer);
 }

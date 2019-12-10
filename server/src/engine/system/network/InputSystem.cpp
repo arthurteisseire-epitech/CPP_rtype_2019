@@ -31,7 +31,7 @@ void ecs::InputSystem::update(float deltaTime)
         get<CInput>(t).inputs.clear();
         get<CInput>(t).inputs.reserve(buffers.size());
         while (!buffers.empty()) {
-            std::string s(std::begin(buffers.front()), std::end(buffers.front()));
+            std::string s(std::begin(buffers.front().data), std::end(buffers.front().data));
             s.erase(std::remove_if(s.begin(), s.end(), iscntrl), s.end());
 
             auto it = directions.find(s);

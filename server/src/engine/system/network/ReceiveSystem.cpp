@@ -25,7 +25,7 @@ void ecs::ReceiveSystem::update(float)
 void ecs::ReceiveSystem::startReceive()
 {
     admin->network.socket.async_receive_from(
-        boost::asio::buffer(readBuffer),
+        boost::asio::buffer(&readBuffer, sizeof(readBuffer)),
         endpoint,
         boost::bind(
             &ecs::ReceiveSystem::handleReceive,

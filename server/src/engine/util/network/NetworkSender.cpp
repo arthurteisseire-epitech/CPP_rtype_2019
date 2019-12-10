@@ -20,7 +20,7 @@ ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, ecs
     writeBuffer(buffer)
 {
     admin->network.socket.async_send_to(
-        boost::asio::buffer(writeBuffer),
+        boost::asio::buffer(&writeBuffer, sizeof(writeBuffer)),
         GetPool<CConnection>(admin).at(connIdx).endpoint,
         boost::bind(&ecs::NetworkSender::handleSend, this)
     );

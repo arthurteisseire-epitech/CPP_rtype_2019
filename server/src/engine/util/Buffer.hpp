@@ -12,7 +12,11 @@
 
 namespace ecs
 {
-    typedef std::array<char, 1024> Buffer;
+    struct Buffer {
+        uint32_t magic = 9360624;
+        std::array<uint8_t, 256> data{};
+        uint32_t id{};
+    };
 }
 
 #endif
