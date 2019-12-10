@@ -8,7 +8,7 @@
 #include "Game/KeyBind.hpp"
 #include "Game/Window.hpp"
 #include "Network/Network.hpp"
-#include "Scene/MainMenu.hpp"
+#include "Scene/Menu/MainMenu.hpp"
 
 int main(int ac, char **av)
 {

@@ -12,7 +12,7 @@
 #include <vector>
 #include "Component/Button.hpp"
 #include "Component/Image.hpp"
-#include "IScene.hpp"
+#include "Scene/IScene.hpp"
 
 namespace Client {
     class OptionsMenu : public IScene {
@@ -27,7 +27,7 @@ namespace Client {
         void vsync(Client::Window &window);
         void back(Client::Window &window);
         Client::IScene *_prev;
-        std::vector<Client::Image *> _images;
+        std::vector<Client::IComponent *> _components;
         std::vector<std::pair<Client::Button *, void (Client::OptionsMenu::*)(Client::Window &)>> _buttons;
         sf::Clock _clock;
         float _quitRefTime;

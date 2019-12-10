@@ -7,7 +7,8 @@
 
 #include "Ship.hpp"
 
-Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) : _id(id), _layer(layer), _controlled(controlled), _position(0, 0), _texture(new sf::Texture())
+Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) :
+    _id(id), _layer(layer), _controlled(controlled), _position(0, 0), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("Cannot load texture: " + texturePath);
