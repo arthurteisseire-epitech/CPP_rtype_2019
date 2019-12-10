@@ -11,7 +11,7 @@
 #include "CConnection.hpp"
 #include "CTransform.hpp"
 #include "CDirection.hpp"
-#include "CInput.hpp"
+#include "CCommand.hpp"
 #include "CType.hpp"
 #include "CId.hpp"
 
@@ -22,7 +22,7 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
         new Entity(admin,
             connIdx,
             GetPool<CTransform>(admin).create(),
-            GetPool<CInput>(admin).create(),
+            GetPool<CCommand>(admin).create(),
             GetPool<CDirection>(admin).create(),
             GetPool<CType>(admin).create("spaceship_normal"),
             GetPool<CId>(admin).create(nextId(admin))

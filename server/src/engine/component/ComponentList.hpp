@@ -12,7 +12,7 @@
 #include "CConnection.hpp"
 #include "CDirection.hpp"
 #include "CId.hpp"
-#include "CInput.hpp"
+#include "CCommand.hpp"
 #include "CTransform.hpp"
 #include "CType.hpp"
 
@@ -23,7 +23,7 @@ namespace ecs
             CConnection,
             CDirection,
             CId,
-            CInput,
+            CCommand,
             CTransform,
             CType
         >;

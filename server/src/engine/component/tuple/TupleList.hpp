@@ -9,10 +9,10 @@
 #define RTYPE_TUPLELIST_HPP
 
 #include "MoveTuple.hpp"
-#include "InputTuple.hpp"
+#include "CommandTuple.hpp"
 #include "SendTuple.hpp"
 #include "CreationBulletTuple.hpp"
-#include "InputDirectionTuple.hpp"
+#include "CommandDirectionTuple.hpp"
 
 namespace ecs
 {

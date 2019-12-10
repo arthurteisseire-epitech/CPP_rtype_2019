@@ -2,26 +2,27 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** CInput.hpp
+** CCommand.hpp
 */
 
-#ifndef RTYPE_CINPUT_HPP
-#define RTYPE_CINPUT_HPP
+#ifndef RTYPE_CCOMMAND_HPP
+#define RTYPE_CCOMMAND_HPP
 
 #include <queue>
 
 namespace ecs
 {
-    struct CInput {
+    struct CCommand {
         enum Key {
             LEFT,
             RIGHT,
             UP,
             DOWN,
-            SPACE
+            SPACE,
+            CONNECT
         };
 
-        std::vector<Key> inputs;
+        std::vector<Key> commands;
     };
 }
 

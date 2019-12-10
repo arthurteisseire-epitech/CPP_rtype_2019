@@ -5,20 +5,20 @@
 ** InputDirectionTuple.hpp
 */
 
-#ifndef RTYPE_INPUTDIRECTIONTUPLE_HPP
-#define RTYPE_INPUTDIRECTIONTUPLE_HPP
+#ifndef RTYPE_COMMANDDIRECTIONTUPLE_HPP
+#define RTYPE_COMMANDDIRECTIONTUPLE_HPP
 
 #include <tuple>
 #include "ObjectPool.hpp"
 #include "CDirection.hpp"
-#include "CInput.hpp"
+#include "CCommand.hpp"
 
 namespace ecs
 {
     using InputDirectionTuple = std::tuple
         <
             ObjectPool<CDirection>::index,
-            ObjectPool<CInput>::index
+            ObjectPool<CCommand>::index
         >;
 }
 

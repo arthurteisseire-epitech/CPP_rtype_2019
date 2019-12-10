@@ -5,11 +5,11 @@
 ** InputTuple.hpp
 */
 
-#ifndef RTYPE_INPUTTUPLE_HPP
-#define RTYPE_INPUTTUPLE_HPP
+#ifndef RTYPE_COMMANDTUPLE_HPP
+#define RTYPE_COMMANDTUPLE_HPP
 
 #include "ObjectPool.hpp"
-#include "CInput.hpp"
+#include "CCommand.hpp"
 #include "CConnection.hpp"
 
 namespace ecs
@@ -17,7 +17,7 @@ namespace ecs
     using InputTuple = std::tuple
         <
             ObjectPool<CConnection>::index,
-            ObjectPool<CInput>::index
+            ObjectPool<CCommand>::index
         >;
 }
 
