@@ -5,6 +5,7 @@
 ** MainMenu.cpp
 */
 
+#include "CommonComponent.hpp"
 #include "Ship.hpp"
 
 Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) :
@@ -32,30 +33,12 @@ void Client::Ship::move(const sf::Vector2<float> &position)
 
 void Client::Ship::adjust(Client::Window &window)
 {
-    sf::Vector2<float> renderRatio(window.getRenderRatio());
-    float referenceRatio = std::max(renderRatio.x, renderRatio.y);
-    this->adjust(sf::Vector2<float>(referenceRatio, referenceRatio));
+    COMPONENT_ADJUST
 }
 
 void Client::Ship::place(Client::Window &window)
 {
-    sf::Vector2<float> spriteScale(_sprite.getScale());
-    sf::Rect<int> textureSize(_sprite.getTextureRect());
-    sf::Vector2<float> spriteSize(float(textureSize.width) * spriteScale.x, float(textureSize.height) * spriteScale.y);
-    sf::Vector2<float> winSize(window.getSize());
-    sf::Vector2<float> renderRatio(window.getRenderRatio());
-    sf::Vector2<float> newPosition(winSize.x * _position.x, winSize.y * _position.y);
-    if (renderRatio.x > renderRatio.y) {
-        newPosition.x -= (spriteSize.x + (renderRatio.x - renderRatio.y)) / 2;
-        newPosition.y -= spriteSize.y / 2;
-    } else if (renderRatio.y > renderRatio.x) {
-        newPosition.x -= spriteSize.x / 2;
-        newPosition.y -= (spriteSize.y + (renderRatio.y - renderRatio.x)) / 2;
-    } else {
-        newPosition.x -= spriteSize.x / 2;
-        newPosition.y -= spriteSize.y / 2;
-    }
-    this->place(newPosition);
+    COMPONENT_PLACE
 }
 
 bool Client::Ship::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)

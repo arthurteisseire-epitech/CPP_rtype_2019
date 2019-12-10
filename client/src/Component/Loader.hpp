@@ -2,19 +2,19 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** Fading.hpp
+** Loader.hpp
 */
 
-#ifndef RTYPE_FADING_HPP
-#define RTYPE_FADING_HPP
+#ifndef RTYPE_LOADER_HPP
+#define RTYPE_LOADER_HPP
 
 #include "IComponent.hpp"
 
 namespace Client {
-    class Fading : public IComponent {
+    class Loader : public IComponent {
     public:
-        Fading(uint32_t id, uint8_t layer, float duration, float delay = 0.f, bool invert = false);
-        ~Fading() override = default;
+        Loader(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
+        ~Loader() override = default;
         void move(const sf::Vector2<float> &position) override;
         void adjust(Client::Window &window) override;
         void place(Client::Window &window) override;
@@ -22,15 +22,14 @@ namespace Client {
         void update(Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
     private:
-        void adjust(const sf::Vector2<float> &size) override;
+        void adjust(const sf::Vector2<float> &scale) override;
         void place(const sf::Vector2<float> &position) override;
         uint32_t _id;
         uint8_t _layer;
-        float _duration;
-        float _delay;
-        bool _invert;
+        sf::Vector2<float> _position;
         sf::Clock _clock;
-        sf::RectangleShape _sprite;
+        sf::Texture *_texture;
+        sf::Sprite _sprite;
     };
 }
 

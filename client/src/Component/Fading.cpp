@@ -7,8 +7,8 @@
 
 #include "Fading.hpp"
 
-Client::Fading::Fading(uint32_t id, uint8_t layer, float duration, bool invert) :
-    _id(id), _layer(layer), _duration(duration), _invert(invert), _clock(), _sprite()
+Client::Fading::Fading(uint32_t id, uint8_t layer, float duration, float delay, bool invert) :
+    _id(id), _layer(layer), _duration(duration), _delay(delay), _invert(invert), _clock(), _sprite()
 {
     _sprite.setPosition(0.f, 0.f);
 }
@@ -33,8 +33,8 @@ bool Client::Fading::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
 
 void Client::Fading::update(Client::Network &network, Client::Window &window)
 {
-    float clockTime(_clock.getElapsedTime().asSeconds());
-    float progress(_invert ? std::max(_duration - clockTime, 0.f) : std::min(clockTime, _duration));
+    float clockTime(_clock.getElapsedTime().asSeconds() - _delay);
+    float progress(std::min(_invert ? std::max(_duration - clockTime, 0.f) : clockTime, _duration));
     _sprite.setFillColor({0, 0, 0, uint8_t(progress / _duration * 255)});
     this->adjust(window);
 }

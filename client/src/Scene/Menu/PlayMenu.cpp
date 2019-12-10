@@ -8,6 +8,7 @@
 #include <cmath>
 #include "CommonMenu.hpp"
 #include "MainMenu.hpp"
+#include "OnlineMenu.hpp"
 #include "PlayMenu.hpp"
 #include "Scene/Game.hpp"
 
@@ -18,12 +19,12 @@ static const std::vector<sf::Vector2<float>> buttonPosList({
 });
 
 Client::PlayMenu::PlayMenu(Client::IScene *prev) : _prev(prev), _components({
-    new Client::Image(0, 1, {-0.5f, 0.5f}, "Menu/MenuBgL.png"),
-    new Client::Image(1, 0, {0.5f, 0.5f}, "Menu/MenuBgR.png")
+    new Client::Image(1, 1, {-0.5f, 0.5f}, "Menu/MenuBgL.png"),
+    new Client::Image(2, 0, {0.5f, 0.5f}, "Menu/MenuBgR.png")
 }), _buttons({
-    {new Client::Button(2, 2, buttonPosList[0], "Menu/ButtonSolo.png"), &Client::PlayMenu::solo},
-    {new Client::Button(3, 2, buttonPosList[1], "Menu/ButtonOnline.png"), &Client::PlayMenu::online},
-    {new Client::Button(4, 2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::PlayMenu::back}
+    {new Client::Button(3, 2, buttonPosList[0], "Menu/ButtonSolo.png"), &Client::PlayMenu::solo},
+    {new Client::Button(4, 2, buttonPosList[1], "Menu/ButtonOnline.png"), &Client::PlayMenu::online},
+    {new Client::Button(5, 2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::PlayMenu::back}
 }), _clock(), _quitRefTime(-1), _next(nullptr)
 {
 }
@@ -50,15 +51,15 @@ void Client::PlayMenu::render(Client::Window &window)
 
 void Client::PlayMenu::solo(Client::Window &window)
 {
-    _next = new Client::Game(this);
-    _components.push_back(new Fading(5, 3, 0.5f));
+    _next = new Client::OnlineMenu(this);
+    _components.push_back(new Client::Fading(5, 3, 0.5f));
     _quitRefTime = _clock.getElapsedTime().asSeconds();
 }
 
 void Client::PlayMenu::online(Client::Window &window)
 {
-    _next = new Client::Game(this);
-    _components.push_back(new Fading(5, 3, 0.5f));
+    _next = new Client::OnlineMenu(this);
+    _components.push_back(new Client::Fading(5, 3, 0.5f));
     _quitRefTime = _clock.getElapsedTime().asSeconds();
 }
 

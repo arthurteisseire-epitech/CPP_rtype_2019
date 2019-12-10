@@ -6,6 +6,7 @@
 */
 
 #include "Button.hpp"
+#include "CommonComponent.hpp"
 
 Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
     _id(id), _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(nullptr)
@@ -44,30 +45,12 @@ void Client::Button::move(const sf::Vector2<float> &position)
 
 void Client::Button::adjust(Client::Window &window)
 {
-    sf::Vector2<float> renderRatio(window.getRenderRatio());
-    float referenceRatio = std::max(renderRatio.x, renderRatio.y);
-    this->adjust({referenceRatio, referenceRatio});
+    COMPONENT_ADJUST
 }
 
 void Client::Button::place(Client::Window &window)
 {
-    sf::Vector2<float> spriteScale(_sprite.getScale());
-    sf::Rect<int> textureSize(_sprite.getTextureRect());
-    sf::Vector2<float> spriteSize(float(textureSize.width) * spriteScale.x, float(textureSize.height) * spriteScale.y);
-    sf::Vector2<float> winSize(window.getSize());
-    sf::Vector2<float> renderRatio(window.getRenderRatio());
-    sf::Vector2<float> newPosition(winSize.x * _position.x, winSize.y * _position.y);
-    if (renderRatio.x > renderRatio.y) {
-        newPosition.x -= (spriteSize.x + (renderRatio.x - renderRatio.y)) / 2;
-        newPosition.y -= spriteSize.y / 2;
-    } else if (renderRatio.y > renderRatio.x) {
-        newPosition.x -= spriteSize.x / 2;
-        newPosition.y -= (spriteSize.y + (renderRatio.y - renderRatio.x)) / 2;
-    } else {
-        newPosition.x -= spriteSize.x / 2;
-        newPosition.y -= spriteSize.y / 2;
-    }
-    this->place(newPosition);
+    COMPONENT_PLACE
 }
 
 bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
