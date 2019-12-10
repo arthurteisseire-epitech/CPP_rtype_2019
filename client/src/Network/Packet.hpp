@@ -18,7 +18,7 @@
 namespace Client {
     struct RawPacket {
         uint32_t magic;
-        uint8_t payload[256];
+        std::array<uint8_t, 256> payload;
         uint32_t id;
     };
 
@@ -29,9 +29,8 @@ namespace Client {
         Packet(const RawPacket &rawPacket);
         ~Packet();
         RawPacket *getRaw() const;
-        uint8_t *getPayload() const;
+        [[nodiscard]] std::array<uint8_t, 256> &getPayload() const;
         uint32_t getId() const;
-        void setPayload(const void *addr, const uint32_t &size);
         void setPayload(const std::string &payload);
     private:
         RawPacket *_packet;

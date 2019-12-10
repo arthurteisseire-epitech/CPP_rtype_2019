@@ -6,7 +6,7 @@
 */
 
 #ifndef RTYPE_GAME_HPP
-#define RTYPE_Game_HPP
+#define RTYPE_GAME_HPP
 
 #include "IScene.hpp"
 

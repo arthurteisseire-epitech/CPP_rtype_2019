@@ -23,7 +23,7 @@ Client::OptionsMenu::OptionsMenu(const Client::Window &window, Client::IScene *p
     {new Client::Button(3, 2, buttonPosList[0], "Menu/ButtonWinOn.png", "Menu/ButtonWinOff.png", window.getFullscreen()), &Client::OptionsMenu::window},
     {new Client::Button(4, 2, buttonPosList[1], "Menu/ButtonVsyncOff.png", "Menu/ButtonVsyncOn.png", window.getVsync()), &Client::OptionsMenu::vsync},
     {new Client::Button(5, 2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::OptionsMenu::back}
-}), _clock(), _quitRefTime(-1), _next(nullptr)
+}), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }
 

@@ -27,6 +27,7 @@ namespace Client {
         std::vector<Client::IComponent *> _components;
         sf::Clock _clock;
         float _quitRefTime;
+        uint8_t _playerNb;
         Client::IScene *_next;
     };
 }

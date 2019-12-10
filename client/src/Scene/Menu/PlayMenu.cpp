@@ -25,7 +25,7 @@ Client::PlayMenu::PlayMenu(Client::IScene *prev) : _prev(prev), _components({
     {new Client::Button(3, 2, buttonPosList[0], "Menu/ButtonSolo.png"), &Client::PlayMenu::solo},
     {new Client::Button(4, 2, buttonPosList[1], "Menu/ButtonOnline.png"), &Client::PlayMenu::online},
     {new Client::Button(5, 2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::PlayMenu::back}
-}), _clock(), _quitRefTime(-1), _next(nullptr)
+}), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }
 
