@@ -45,3 +45,18 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
         )
     );
 }
+
+void ecs::EntityFactory::createMonster(std::shared_ptr<EntityAdmin> &admin,
+                                       ecs::ObjectPool<ecs::CTransform>::index transformIdx,
+                                       ecs::ObjectPool<ecs::CDirection>::index directionIdx)
+{
+    admin->entities.emplace_back(
+        new Entity(admin,
+            GetPool<CType>(admin).create("spaceship_normal_rev"),
+            GetPool<CId>(admin).create(nextId(admin)),
+            GetPool<CShootingAI>(admin).create(),
+            transformIdx,
+            directionIdx
+        )
+    );
+}

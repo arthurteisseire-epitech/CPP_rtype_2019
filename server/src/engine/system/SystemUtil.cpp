@@ -13,6 +13,7 @@
 #include "CreationBulletSystem.hpp"
 #include "ConnectionSystem.hpp"
 #include "InputDirectionSystem.hpp"
+#include "MonsterSpawningSystem.hpp"
 
 std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_ptr<EntityAdmin> &admin)
 {
@@ -22,6 +23,7 @@ std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_pt
         std::make_unique<InputSystem>(admin),
         std::make_unique<UpdateTypeSystem>(admin),
         std::make_unique<InputDirectionSystem>(admin),
+        std::make_unique<MonsterSpawningSystem>(admin),
         std::make_unique<MoveSystem>(admin),
         std::make_unique<SendSystem>(admin)
     };

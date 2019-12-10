@@ -15,6 +15,7 @@
 #include "CInput.hpp"
 #include "CTransform.hpp"
 #include "CType.hpp"
+#include "CShootingAI.hpp"
 
 namespace ecs
 {
@@ -25,7 +26,8 @@ namespace ecs
             CId,
             CInput,
             CTransform,
-            CType
+            CType,
+            CShootingAI
         >;
 }
 

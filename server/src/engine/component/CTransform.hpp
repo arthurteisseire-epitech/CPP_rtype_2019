@@ -17,6 +17,10 @@ namespace ecs
         {
         }
 
+        explicit CTransform(const mut::Vec2f &vec) : vec(vec)
+        {
+        }
+
         mut::Vec2f vec;
     };
 }
