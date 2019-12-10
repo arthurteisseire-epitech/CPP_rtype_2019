@@ -63,16 +63,3 @@ TEST(ComponentPool, iterate)
 
     EXPECT_EQ(actualNbComponents, nbComponents);
 }
-
-TEST(ComponentPool, addExistingComponent)
-{
-    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
-    auto p = ecs::CHealth();
-
-    healthComponentPool.move(std::move(p));
-
-    int count = 0;
-    for (auto &c : healthComponentPool)
-        ++count;
-    EXPECT_EQ(count, 1);
-}

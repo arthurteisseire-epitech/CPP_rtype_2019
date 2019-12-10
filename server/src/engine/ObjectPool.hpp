@@ -64,15 +64,6 @@ namespace ecs
             return it;
         }
 
-        index move(T &&obj)
-        {
-            std::lock_guard<std::mutex> lock(mutex);
-
-            if (pool.size() == pool.capacity())
-                reallocate();
-            pool.push_back(std::move(std::forward<std::pair<MEMORY, T>>({UNAVAILABLE, obj})));
-            return index(pool.size() - 1);
-        }
         void destroy(index idx)
         {
             std::lock_guard<std::mutex> lock(mutex);
