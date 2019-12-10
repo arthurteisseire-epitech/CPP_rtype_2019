@@ -22,12 +22,9 @@ void ecs::SendSystem::update(float deltaTime)
 
 void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
-    Packet packet;
-
-    packet.entityId = get<CId>(t).id;
     auto s = get<CType>(t).name + ':' +
         std::to_string(get<CTransform>(t).vec.x) + ',' +
         std::to_string(get<CTransform>(t).vec.y) + '\n';
-    std::copy(s.begin(), s.end(), packet.data.begin());
-    NetworkSender::send(admin, GetIndex<CConnection>(t), packet);
+
+    NetworkSender::send(admin, GetIndex<CConnection>(t), Packet(get<CId>(t).id, s));
 }

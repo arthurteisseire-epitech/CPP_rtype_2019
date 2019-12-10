@@ -13,8 +13,25 @@
 namespace ecs
 {
     struct Packet {
-        uint32_t magic = 9360624;
+        explicit Packet(uint32_t entityId = 0) :
+            entityId(entityId)
+        {
+        }
+
+        Packet(uint32_t entityId, const std::string &s) :
+            entityId(entityId)
+        {
+            std::copy(s.begin(), s.end(), data.begin());
+        }
+
+        [[nodiscard]] uint32_t getEntityId() const
+        {
+            return entityId;
+        }
+
+//        uint32_t magic = 9360624;
         std::array<uint8_t, 256> data{};
+    private:
         uint32_t entityId{};
     };
 }

@@ -13,16 +13,18 @@
 #include "SendTuple.hpp"
 #include "CreationBulletTuple.hpp"
 #include "CommandDirectionTuple.hpp"
+#include "HandleConnectionTuple.hpp"
 
 namespace ecs
 {
     using TupleList = std::tuple
         <
             MoveTuple,
-            InputTuple,
+            CommandTuple,
             SendTuple,
             CreationBulletTuple,
-            InputDirectionTuple
+            InputDirectionTuple,
+            HandleConnectionTuple
         >;
 }
 

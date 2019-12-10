@@ -14,7 +14,7 @@
 
 namespace ecs
 {
-    using InputTuple = std::tuple
+    using CommandTuple = std::tuple
         <
             ObjectPool<CConnection>::index,
             ObjectPool<CCommand>::index

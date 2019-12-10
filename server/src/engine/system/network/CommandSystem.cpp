@@ -25,7 +25,7 @@ const std::map<std::string, ecs::CCommand::Key> ecs::CommandSystem::directions =
 
 void ecs::CommandSystem::update(float deltaTime)
 {
-    ForEachMatching<InputTuple>(admin, [this](InputTuple &t) {
+    ForEachMatching<CommandTuple>(admin, [this](CommandTuple &t) {
 
         auto &buffers = get<CConnection>(t).readBuffers;
 
