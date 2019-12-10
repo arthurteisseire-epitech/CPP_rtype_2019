@@ -16,21 +16,22 @@ static const std::vector<sf::Vector2<float>> buttonPosList({
     {0.268f, 0.6f}
 });
 
-Client::MainMenu::MainMenu() : _sprites({
-    new Client::Image(0, 1, {0.5f, 0.5f}, "MenuBgL.png"),
+Client::MainMenu::MainMenu(Client::IScene *prev) : _prev(prev), _images({
+    new Client::Image(0, 1, {-0.5f, 0.5f}, "MenuBgL.png"),
     new Client::Image(1, 0, {0.5f, 0.5f}, "MenuBgR.png")
 }), _buttons({
     {new Client::Button(2, 2, buttonPosList[0], "ButtonPlay.png"), &Client::MainMenu::play},
     {new Client::Button(3, 2, buttonPosList[1], "ButtonOptions.png"), &Client::MainMenu::options},
     {new Client::Button(4, 2, buttonPosList[2], "ButtonQuit.png"), &Client::MainMenu::quit}
-}), _clock(), _quitRefTime(-1)
+}), _clock(), _quitRefTime(-1), _next(nullptr)
 {
 }
 
 Client::MainMenu::~MainMenu()
 {
-    for (auto &sprite : _sprites) {
-        delete sprite;
+    delete _prev;
+    for (auto &image : _images) {
+        delete image;
     }
     for (auto &button : _buttons) {
         delete button.first;
@@ -42,7 +43,7 @@ void Client::MainMenu::event(Client::IScene *&self, sf::Event &event, Client::Ke
     if (_quitRefTime < 0.f) {
         for (auto &button : _buttons) {
             if (button.first->event(event, keyBind, network, window)) {
-                (this->*button.second)(self);
+                (this->*button.second)(window);
             }
         }
     }
@@ -50,20 +51,41 @@ void Client::MainMenu::event(Client::IScene *&self, sf::Event &event, Client::Ke
 
 void Client::MainMenu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
 {
-    float quitTime = std::pow(_clock.getElapsedTime().asSeconds() - _quitRefTime, 3.f);
-    if (_quitRefTime >= 0.f) {
-        _sprites[0]->move({0.5f - quitTime, 0.5f});
+    float clockTime(_clock.getElapsedTime().asSeconds());
+    float spawnTime((clockTime - 0.5f) * 2.f);
+    if (spawnTime < 1.f) {
+        _images[0]->move({-0.5f + spawnTime, 0.5f});
+        uint8_t i = 0;
+        for (auto &button : _buttons) {
+            button.first->move({buttonPosList[i].x - 1.f + spawnTime, buttonPosList[i].y});
+            i++;
+        }
+    } else if (_quitRefTime > 0.f) {
+        float quitTime(std::pow((clockTime - _quitRefTime) * 2.f, 4.f));
+        _images[0]->move({0.5f - quitTime, 0.5f});
         uint8_t i = 0;
         for (auto &button : _buttons) {
             button.first->move({buttonPosList[i].x - quitTime, buttonPosList[i].y});
             i++;
         }
         if (quitTime > 0.5f) {
-            window.close();
+            if (_next) {
+                self = _next;
+                self->update(self, network, window);
+            } else {
+                window.close();
+            }
+        }
+    } else {
+        _images[0]->move({0.5f, 0.5f});
+        uint8_t i = 0;
+        for (auto &button : _buttons) {
+            button.first->move({buttonPosList[i].x, buttonPosList[i].y});
+            i++;
         }
     }
-    for (auto &sprite : _sprites) {
-        sprite->update(network, window);
+    for (auto &image : _images) {
+        image->update(network, window);
     }
     for (auto &button : _buttons) {
         button.first->update(network, window);
@@ -73,8 +95,8 @@ void Client::MainMenu::update(Client::IScene *&self, Client::Network &network, C
 void Client::MainMenu::render(Client::Window &window)
 {
     for (uint8_t layer = 0; layer < 255; layer++) {
-        for (auto &sprite : _sprites) {
-            sprite->render(window, layer);
+        for (auto &image : _images) {
+            image->render(window, layer);
         }
         for (auto &button : _buttons) {
             button.first->render(window, layer);
@@ -82,21 +104,19 @@ void Client::MainMenu::render(Client::Window &window)
     }
 }
 
-void Client::MainMenu::play(Client::IScene *&self)
+void Client::MainMenu::play(Client::Window &window)
 {
-    Client::IScene *currentScene = self;
-    self = new PlayMenu();
-    delete currentScene;
+    _next = new Client::PlayMenu(this);
+    this->quit(window);
 }
 
-void Client::MainMenu::options(Client::IScene *&self)
+void Client::MainMenu::options(Client::Window &window)
 {
-    Client::IScene *currentScene = self;
-    self = new OptionsMenu();
-    delete currentScene;
+    _next = new Client::OptionsMenu(window, this);
+    this->quit(window);
 }
 
-void Client::MainMenu::quit(Client::IScene *&self)
+void Client::MainMenu::quit(Client::Window &window)
 {
     _quitRefTime = _clock.getElapsedTime().asSeconds();
 }

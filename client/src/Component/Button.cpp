@@ -7,13 +7,29 @@
 
 #include "Button.hpp"
 
-Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) : _id(id), _layer(layer), _position(position), _texture(new sf::Texture())
+Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
+    _id(id), _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(nullptr)
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("Cannot load texture: " + texturePath);
     }
     sf::Vector2<int> textureSize(_texture->getSize());
     _sprite = sf::Sprite(*_texture, {0, 0, textureSize.x, textureSize.y / 3});
+}
+
+Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert) :
+    _id(id), _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(new sf::Texture())
+{
+    if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
+        throw std::runtime_error("Cannot load texture: " + texturePath);
+    } else if (!_textureAlt->loadFromFile(ASSETS_DIR + textureAltPath)) {
+        throw std::runtime_error("Cannot load texture: " + textureAltPath);
+    }
+    sf::Vector2<int> textureSize(_texture->getSize());
+    if (textureSize != sf::Vector2<int>(_textureAlt->getSize())) {
+        throw std::runtime_error(texturePath + " and " + textureAltPath + "are not the same size.");
+    }
+    _sprite = sf::Sprite(invert ? *_textureAlt : *_texture, {0, 0, textureSize.x, textureSize.y / 3});
 }
 
 Client::Button::~Button()
@@ -69,6 +85,7 @@ bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
             buttonRect.top += buttonRect.height;
         } else if (event.type == sf::Event::MouseButtonReleased ||
             (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)) {
+            this->invert();
             clicked = true;
         }
     } else {
@@ -99,4 +116,15 @@ void Client::Button::adjust(const sf::Vector2<float> &scale)
 void Client::Button::place(const sf::Vector2<float> &position)
 {
     _sprite.setPosition(position);
+}
+
+void Client::Button::invert()
+{
+    if (_textureAlt) {
+        if (_sprite.getTexture() == _texture) {
+            _sprite.setTexture(*_textureAlt);
+        } else {
+            _sprite.setTexture(*_texture);
+        }
+    }
 }

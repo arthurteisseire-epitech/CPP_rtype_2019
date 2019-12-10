@@ -17,19 +17,21 @@
 namespace Client {
     class MainMenu : public IScene {
     public:
-        MainMenu();
+        MainMenu(Client::IScene *prev = nullptr);
         ~MainMenu() override;
         void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::IScene *&self, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
     private:
-        void play(Client::IScene *&self);
-        void options(Client::IScene *&self);
-        void quit(Client::IScene *&self);
-        std::vector<Client::Image *> _sprites;
-        std::vector<std::pair<Client::Button *, void (Client::MainMenu::*)(Client::IScene *&)>> _buttons;
+        void play(Client::Window &window);
+        void options(Client::Window &window);
+        void quit(Client::Window &window);
+        Client::IScene *_prev;
+        std::vector<Client::Image *> _images;
+        std::vector<std::pair<Client::Button *, void (Client::MainMenu::*)(Client::Window &)>> _buttons;
         sf::Clock _clock;
         float _quitRefTime;
+        Client::IScene *_next;
     };
 }
 

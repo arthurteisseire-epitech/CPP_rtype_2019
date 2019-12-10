@@ -22,6 +22,9 @@ namespace Client {
         void switchFullscreen();
         void switchVsync();
         void setFramerate(const uint32_t framerate);
+        bool getFullscreen() const;
+        bool getVsync() const;
+        uint32_t getFramerate() const;
         sf::Vector2<uint32_t> getSize() const;
         sf::Vector2<float> getRenderRatio() const;
         bool pollEvent(sf::Event &event);

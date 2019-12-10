@@ -17,13 +17,15 @@
 namespace Client {
     class PlayMenu : public IScene {
     public:
-        PlayMenu();
+        PlayMenu(Client::IScene *prev = nullptr);
         ~PlayMenu() override;
         void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::IScene *&self, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
     private:
-        std::vector<Client::Image *> _sprites;
+        void back(Client::IScene *&self);
+        Client::IScene *_prev;
+        std::vector<Client::Image *> _images;
         std::vector<std::pair<Client::Button *, void (Client::PlayMenu::*)(Client::IScene *&)>> _buttons;
         sf::Clock _clock;
         float _quitRefTime;

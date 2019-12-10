@@ -8,7 +8,6 @@
 #include "Game/KeyBind.hpp"
 #include "Game/Window.hpp"
 #include "Network/Network.hpp"
-#include "Scene/Game.hpp"
 #include "Scene/MainMenu.hpp"
 
 int main(int ac, char **av)
@@ -27,5 +26,6 @@ int main(int ac, char **av)
         scene->render(window);
         window.display();
     }
+    delete scene;
     return 0;
 }

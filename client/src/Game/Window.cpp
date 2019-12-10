@@ -34,6 +34,21 @@ void Client::Window::setFramerate(const uint32_t framerate)
     _window.setFramerateLimit(_framerate);
 }
 
+bool Client::Window::getFullscreen() const
+{
+    return _fullscreen;
+}
+
+bool Client::Window::getVsync() const
+{
+    return _vsync;
+}
+
+uint32_t Client::Window::getFramerate() const
+{
+    return _framerate;
+}
+
 sf::Vector2<uint32_t> Client::Window::getSize() const
 {
     return _window.getSize();

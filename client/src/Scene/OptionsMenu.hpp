@@ -17,16 +17,21 @@
 namespace Client {
     class OptionsMenu : public IScene {
     public:
-        OptionsMenu();
+        OptionsMenu(const Client::Window &window, Client::IScene *prev = nullptr);
         ~OptionsMenu() override;
         void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::IScene *&self, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
     private:
-        std::vector<Client::Image *> _sprites;
-        std::vector<std::pair<Client::Button *, void (Client::OptionsMenu::*)(Client::IScene *&)>> _buttons;
+        void window(Client::Window &window);
+        void vsync(Client::Window &window);
+        void back(Client::Window &window);
+        Client::IScene *_prev;
+        std::vector<Client::Image *> _images;
+        std::vector<std::pair<Client::Button *, void (Client::OptionsMenu::*)(Client::Window &)>> _buttons;
         sf::Clock _clock;
         float _quitRefTime;
+        Client::IScene *_next;
     };
 }
 
