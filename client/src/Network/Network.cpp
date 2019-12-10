@@ -12,6 +12,7 @@ Client::Network::Network(const std::string &ip, const uint16_t &port) :
     _socket(), _ip(ip), _port(port), _active(true), _receiver(&Client::Network::receiver, this)
 {
     _socket.setBlocking(false);
+    this->send(Client::Packet("connect").getRaw());
     _receiver.launch();
 }
 
