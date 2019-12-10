@@ -37,6 +37,7 @@ void ecs::ReceiveSystem::startReceive()
 void ecs::ReceiveSystem::handleReceive(const boost::system::error_code &err)
 {
     if (!err) {
+        std::cout << '"' << readBuffer.data.data() << '"' << std::endl;
         admin->network.readBuffers.emplace(endpoint, readBuffer);
         startReceive();
     }

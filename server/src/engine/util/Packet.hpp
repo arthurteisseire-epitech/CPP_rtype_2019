@@ -21,6 +21,7 @@ namespace ecs
         Packet(uint32_t entityId, const std::string &s) :
             entityId(entityId)
         {
+            data.fill(0);
             std::copy(s.begin(), s.end(), data.begin());
         }
 
@@ -35,7 +36,7 @@ namespace ecs
             return entityId;
         }
 
-//        uint32_t magic = 9360624;
+        uint32_t magic = 9360624;
         std::array<uint8_t, 256> data{};
     private:
         uint32_t entityId{};

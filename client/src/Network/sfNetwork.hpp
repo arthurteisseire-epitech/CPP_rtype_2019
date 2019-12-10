@@ -18,7 +18,7 @@ namespace game
     public:
         bool connect(const std::string &IP, const unsigned &port) override;
         void disconnect() override;
-        void send(const void *data, const size_t &size, std::size_t &sent) override;
+        bool send(const void *data, const size_t &size, std::size_t &) override;
         bool receive(void *data, const std::size_t &size, std::size_t &received) override;
 
     private:

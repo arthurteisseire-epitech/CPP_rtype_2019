@@ -25,7 +25,7 @@ void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
     ForEachMatching<CConnection>(admin, [this, &t] (CConnection &conn) {
         auto s = get<CType>(t).name + ':' +
             std::to_string(get<CTransform>(t).vec.x) + ',' +
-            std::to_string(get<CTransform>(t).vec.y) + '\n';
+            std::to_string(get<CTransform>(t).vec.y);
 
         NetworkSender::send(admin, conn, Packet(get<CId>(t).id, s));
     });
