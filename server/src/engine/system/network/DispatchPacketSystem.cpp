@@ -2,18 +2,18 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** ConnectionSystem.cpp
+** DispatchPacketSystem.cpp
 */
 
 #include <utility>
-#include "ConnectionSystem.hpp"
+#include "DispatchPacketSystem.hpp"
 #include "EntityFactory.hpp"
 
-ecs::ConnectionSystem::ConnectionSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::DispatchPacketSystem::DispatchPacketSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
 {
 }
 
-void ecs::ConnectionSystem::update(float)
+void ecs::DispatchPacketSystem::update(float)
 {
     auto &buffers = admin->network.readBuffers;
 

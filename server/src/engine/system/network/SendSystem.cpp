@@ -10,21 +10,23 @@
 #include "NetworkSender.hpp"
 #include "Util.hpp"
 
-ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
 void ecs::SendSystem::update(float deltaTime)
 {
-    ForEachMatching<SendTuple>(admin, boost::bind(&ecs::SendSystem::updateTuple, this, _1));
+    ForEachMatching<SendTuple>(admin, std::bind(&ecs::SendSystem::updateTuple, this, std::placeholders::_1));
 }
 
 void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
-    Buffer buffer{};
+    ForEachMatching<CConnection>(admin, [this, &t] (CConnection &conn) {
+        auto s = get<CType>(t).name + ':' +
+            std::to_string(get<CTransform>(t).vec.x) + ',' +
+            std::to_string(get<CTransform>(t).vec.y) + '\n';
 
-    auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
-        std::to_string(get<CTransform>(t).vec.y) + '\n';
-    std::copy(s.begin(), s.end(), buffer.begin());
-    NetworkSender::send(admin, GetIndex<CConnection>(t), buffer);
+        NetworkSender::send(admin, conn, Packet(get<CId>(t).id, s));
+    });
 }

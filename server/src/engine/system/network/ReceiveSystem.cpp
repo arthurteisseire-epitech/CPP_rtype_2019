@@ -5,8 +5,6 @@
 ** ReceiveSystem.cpp
 */
 
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
 #include "ReceiveSystem.hpp"
 
 ecs::ReceiveSystem::ReceiveSystem(std::shared_ptr<EntityAdmin> admin) :
@@ -25,12 +23,12 @@ void ecs::ReceiveSystem::update(float)
 void ecs::ReceiveSystem::startReceive()
 {
     admin->network.socket.async_receive_from(
-        boost::asio::buffer(readBuffer),
+        boost::asio::buffer(&readBuffer, sizeof(readBuffer)),
         endpoint,
-        boost::bind(
+        std::bind(
             &ecs::ReceiveSystem::handleReceive,
             this,
-            boost::asio::placeholders::error
+            std::placeholders::_1
         )
     );
 }

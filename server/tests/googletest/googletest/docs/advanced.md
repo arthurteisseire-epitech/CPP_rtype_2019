@@ -1288,7 +1288,7 @@ number of situations, for example:
     command-line flags. You want to make sure your code performs correctly for
     various values of those flags.
 *   You want to test different implementations of an OO interface.
-*   You want to test your code over various inputs (a.k.a. data-driven testing).
+*   You want to test your code over various commands (a.k.a. data-driven testing).
     This feature is easy to abuse, so please exercise your good sense when doing
     it!
 

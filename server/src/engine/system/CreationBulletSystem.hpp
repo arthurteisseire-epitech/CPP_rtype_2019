@@ -18,7 +18,7 @@ namespace ecs
         void update(float deltaTime) override;
 
     private:
-        static bool isSpace(CInput::Key input);
+        static bool isSpace(CCommand::Key input);
     };
 }
 

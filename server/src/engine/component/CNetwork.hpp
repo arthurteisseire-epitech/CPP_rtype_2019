@@ -9,9 +9,9 @@
 #define RTYPE_CNETWORK_HPP
 
 #include <boost/asio/io_context.hpp>
-#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <queue>
-#include "Buffer.hpp"
+#include "Packet.hpp"
 
 namespace ecs
 {
@@ -24,7 +24,7 @@ namespace ecs
 
         boost::asio::io_context ioContext;
         boost::asio::ip::udp::socket socket;
-        std::queue<std::pair<boost::asio::ip::udp::endpoint, Buffer>> readBuffers;
+        std::queue<std::pair<boost::asio::ip::udp::endpoint, Packet>> readBuffers;
     };
 }
 

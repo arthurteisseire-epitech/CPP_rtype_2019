@@ -9,20 +9,22 @@
 #define RTYPE_TUPLELIST_HPP
 
 #include "MoveTuple.hpp"
-#include "InputTuple.hpp"
-#include "SendTuple.hpp"
+#include "CommandTuple.hpp"
+#include "SendRenderTuple.hpp"
 #include "CreationBulletTuple.hpp"
-#include "InputDirectionTuple.hpp"
+#include "CommandDirectionTuple.hpp"
+#include "HandleConnectionTuple.hpp"
 
 namespace ecs
 {
     using TupleList = std::tuple
         <
             MoveTuple,
-            InputTuple,
+            CommandTuple,
             SendTuple,
             CreationBulletTuple,
-            InputDirectionTuple
+            InputDirectionTuple,
+            HandleConnectionTuple
         >;
 }
 

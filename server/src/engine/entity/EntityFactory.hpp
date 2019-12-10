@@ -20,7 +20,6 @@ namespace ecs
                                   ObjectPool<CTransform>::index transformIdx,
                                   ObjectPool<CDirection>::index directionIdx);
         static void createBullet(std::shared_ptr<EntityAdmin> &admin,
-                                 ObjectPool<CConnection>::index connIdx,
                                  ObjectPool<CTransform>::index transformIdx,
                                  ObjectPool<CDirection>::index directionIdx);
     private:

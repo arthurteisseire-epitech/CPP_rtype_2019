@@ -16,14 +16,15 @@ namespace ecs
     class NetworkSender {
     public:
         static void send(const std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx,
-                         const Buffer &buffer);
+                         const Packet &buffer);
+        static void send(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn, const Packet &buffer);
 
     private:
-        NetworkSender(const std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx,
-                      const Buffer &buffer);
+        NetworkSender(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+                      const Packet &buffer);
 
         static void handleSend(NetworkSender *sender);
-        Buffer writeBuffer;
+        Packet writeBuffer;
     };
 }
 
