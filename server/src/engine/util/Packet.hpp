@@ -24,6 +24,12 @@ namespace ecs
             std::copy(s.begin(), s.end(), data.begin());
         }
 
+        void clear()
+        {
+            data.fill(0);
+            entityId = 0;
+        }
+
         [[nodiscard]] uint32_t getEntityId() const
         {
             return entityId;

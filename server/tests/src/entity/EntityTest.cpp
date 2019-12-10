@@ -15,7 +15,7 @@ using namespace ecs;
 TEST(Entity, destroy)
 {
     auto admin = std::make_shared<EntityAdmin>();
-    EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
+//    EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
 
 //    admin->entities.at(0)->destroy(admin);
 
@@ -26,10 +26,10 @@ TEST(Entity, destroy2)
 {
     auto admin = std::make_shared<EntityAdmin>();
 
-    for (int i = 0; i < 3; ++i) {
-        EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
-        GetPool<CTransform>(admin).at(ObjectPool<CTransform>::index(i)).vec.x = i;
-    }
+//    for (int i = 0; i < 3; ++i) {
+//        EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
+//        GetPool<CTransform>(admin).at(ObjectPool<CTransform>::index(i)).vec.x = i;
+//    }
 
 //    admin->entities.at(0)->destroy(admin);
 

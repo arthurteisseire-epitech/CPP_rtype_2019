@@ -18,6 +18,8 @@ namespace ecs
     template<typename T>
     class ObjectPool {
     public:
+        enum MEMORY {AVAILABLE, UNAVAILABLE};
+
         struct index {
             explicit index(std::size_t idx = 0) :
                 idx(idx)
@@ -39,29 +41,15 @@ namespace ecs
         index create(Args &&...args)
         {
             std::lock_guard<std::mutex> lock(mutex);
+            typename std::vector<std::pair<MEMORY, T>>::iterator it;
 
-            if (pool.size() == pool.capacity())
+            if (pool.size() == pool.capacity()) {
+                it = emplaceOnFreeSpace(args...);
+                if (it != pool.end())
+                    return index(it - pool.begin());
                 reallocate();
-
-            auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
-                return pair.first == AVAILABLE;
-            });
-            if (it == pool.end()) {
-                pool.push_back({UNAVAILABLE, T(args...)});
-                return index(pool.size() - 1);
-            } else {
-                *it = {UNAVAILABLE, T(args...)};
-                return index(it - pool.begin());
             }
-        }
-
-        index move(T &&obj)
-        {
-            std::lock_guard<std::mutex> lock(mutex);
-
-            if (pool.size() == pool.capacity())
-                reallocate();
-            pool.push_back(std::move(std::forward<std::pair<MEMORY, T>>({UNAVAILABLE, obj})));
+            pool.push_back(newElement(args...));
             return index(pool.size() - 1);
         }
 
@@ -89,9 +77,23 @@ namespace ecs
             return pool.end();
         }
 
-        enum MEMORY {AVAILABLE, UNAVAILABLE};
-
     private:
+        template<typename ...Args>
+        auto emplaceOnFreeSpace(Args &&...args)
+        {
+            auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
+                return pair.first == AVAILABLE;
+            });
+            if (it != pool.end())
+                *it = newElement(args...);
+            return it;
+        }
+
+        template<typename ...Args>
+        std::pair<MEMORY, T> newElement(Args&& ...args)
+        {
+            return {UNAVAILABLE, T(args...)};
+        }
 
         void reallocate()
         {
