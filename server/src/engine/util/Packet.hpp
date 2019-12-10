@@ -35,7 +35,7 @@ namespace ecs
             return entityId;
         }
 
-//        uint32_t magic = 9360624;
+        uint32_t magic = 9360624;
         std::array<uint8_t, 256> data{};
     private:
         uint32_t entityId{};
