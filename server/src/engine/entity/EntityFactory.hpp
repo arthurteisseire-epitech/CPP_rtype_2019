@@ -17,7 +17,6 @@ namespace ecs
     public:
         static void createPlayer(std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx);
         static void createBullet(std::shared_ptr<EntityAdmin> &admin,
-                                 ObjectPool<CConnection>::index connIdx,
                                  ObjectPool<CTransform>::index transformIdx,
                                  ObjectPool<CDirection>::index directionIdx);
     private:

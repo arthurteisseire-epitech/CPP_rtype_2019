@@ -17,9 +17,10 @@ namespace ecs
     public:
         static void send(const std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx,
                          const Packet &buffer);
+        static void send(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn, const Packet &buffer);
 
     private:
-        NetworkSender(const std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx,
+        NetworkSender(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
                       const Packet &buffer);
 
         static void handleSend(NetworkSender *sender);

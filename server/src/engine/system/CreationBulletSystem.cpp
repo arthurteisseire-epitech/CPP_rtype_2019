@@ -22,7 +22,6 @@ void ecs::CreationBulletSystem::update(float deltaTime)
 
         if (std::any_of(inputs.begin(), inputs.end(), isSpace)) {
             EntityFactory::createBullet(admin,
-                                        GetIndex<CConnection>(t),
                                         GetPool<CTransform>(admin).create(get<CTransform>(t).vec.x,
                                                                           get<CTransform>(t).vec.y),
                                         GetPool<CDirection>(admin).create(CDirection::RIGHT)

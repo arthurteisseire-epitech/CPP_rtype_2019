@@ -31,7 +31,6 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
 }
 
 void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
-                                      ObjectPool<CConnection>::index connectionIdx,
                                       ObjectPool<CTransform>::index transformIdx,
                                       ObjectPool<CDirection>::index directionIdx)
 {
@@ -39,7 +38,6 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
         new Entity(admin,
             GetPool<CType>(admin).create("basic_missile_launch"),
             GetPool<CId>(admin).create(nextId(admin)),
-            connectionIdx,
             transformIdx,
             directionIdx
         )

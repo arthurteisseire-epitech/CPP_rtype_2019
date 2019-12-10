@@ -12,16 +12,22 @@
 void ecs::NetworkSender::send(const std::shared_ptr<EntityAdmin> &admin, ecs::ObjectPool<ecs::CConnection>::index connIdx,
                               const Packet &buffer)
 {
-    new NetworkSender(admin, connIdx, buffer);
+    send(admin, GetPool<CConnection>(admin).at(connIdx), buffer);
 }
 
-ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, ecs::ObjectPool<ecs::CConnection>::index connIdx,
+void ecs::NetworkSender::send(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+                              const ecs::Packet &buffer)
+{
+    new NetworkSender(admin, conn, buffer);
+}
+
+ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
                                   const Packet &buffer) :
     writeBuffer(buffer)
 {
     admin->network.socket.async_send_to(
         boost::asio::buffer(&writeBuffer, sizeof(writeBuffer)),
-        GetPool<CConnection>(admin).at(connIdx).endpoint,
+        conn.endpoint,
         boost::bind(&ecs::NetworkSender::handleSend, this)
     );
 }

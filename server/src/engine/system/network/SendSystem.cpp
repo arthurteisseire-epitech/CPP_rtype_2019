@@ -22,9 +22,11 @@ void ecs::SendSystem::update(float deltaTime)
 
 void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
-    auto s = get<CType>(t).name + ':' +
-        std::to_string(get<CTransform>(t).vec.x) + ',' +
-        std::to_string(get<CTransform>(t).vec.y) + '\n';
+    ForEachMatching<CConnection>(admin, [this, &t] (CConnection &conn) {
+        auto s = get<CType>(t).name + ':' +
+            std::to_string(get<CTransform>(t).vec.x) + ',' +
+            std::to_string(get<CTransform>(t).vec.y) + '\n';
 
-    NetworkSender::send(admin, GetIndex<CConnection>(t), Packet(get<CId>(t).id, s));
+        NetworkSender::send(admin, conn, Packet(get<CId>(t).id, s));
+    });
 }

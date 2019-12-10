@@ -18,7 +18,6 @@ namespace ecs
     using CreationBulletTuple = std::tuple
         <
             ObjectPool<CCommand>::index,
-            ObjectPool<CConnection>::index,
             ObjectPool<CTransform>::index
         >;
 }

@@ -10,7 +10,7 @@
 
 #include "MoveTuple.hpp"
 #include "CommandTuple.hpp"
-#include "SendTuple.hpp"
+#include "SendRenderTuple.hpp"
 #include "CreationBulletTuple.hpp"
 #include "CommandDirectionTuple.hpp"
 #include "HandleConnectionTuple.hpp"
