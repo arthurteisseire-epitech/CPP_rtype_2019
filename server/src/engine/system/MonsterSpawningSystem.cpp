@@ -19,6 +19,7 @@ void ecs::MonsterSpawningSystem::update(float dTime)
         EntityFactory::createMonster(admin,
             GetPool<CTransform>(admin).create(generateRandomPosition()),
             GetPool<CDirection>(admin).create(CDirection::LEFT));
+        timeSinceLastSpawn = 0;
     }
 }
 

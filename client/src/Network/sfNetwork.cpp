@@ -43,7 +43,9 @@ void game::sfNetwork::disconnect()
 
 bool game::sfNetwork::send(const void *data, const size_t &size, std::size_t &)
 {
-    const auto result = socket.send(data, size, _IP, _port);
+    sf::IpAddress ip = _IP;
+    unsigned short port = _port;
+    const auto result = socket.send(data, size, ip, port);
 
     if (result != sf::Socket::Status::Done) {
         std::cerr << "send failed: socket status: ";
@@ -67,5 +69,7 @@ bool game::sfNetwork::send(const void *data, const size_t &size, std::size_t &)
 
 bool game::sfNetwork::receive(void *data, const std::size_t &size, std::size_t &received)
 {
-    return socket.receive(data, size, received, _IP, _port) != sf::Socket::NotReady;
+    sf::IpAddress ip = _IP;
+    unsigned short port = _port;
+    return socket.receive(data, size, received, ip, port) != sf::Socket::NotReady;
 }

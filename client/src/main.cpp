@@ -53,6 +53,8 @@ void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &wi
     const float y = std::stof(match[3]);
     const auto &pair = toDraw.find(id);
 
+    if (x < -0.1 || x > 1.1 || y < -0.1 || y > 1.1)
+        return;
     if (pair == toDraw.end() || gameSprite.getType(match[1]) != pair->second.first)
         toDraw[id] = std::make_pair(gameSprite.getType(typeStr), gameSprite.getSpriteOfType(typeStr));
     toDraw.at(id).second.setPosition(x * window.getSize().x, y * window.getSize().y);
