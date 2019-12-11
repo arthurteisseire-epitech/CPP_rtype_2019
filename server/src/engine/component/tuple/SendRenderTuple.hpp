@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** SendRenderTuple.hpp
+** SendTuple.hpp
 */
 
 #ifndef RTYPE_SENDRENDERTUPLE_HPP
@@ -16,9 +16,8 @@
 
 namespace ecs
 {
-    using SendRenderTuple = std::tuple
+    using SendTuple = std::tuple
         <
-            ObjectPool<CConnection>::index,
             ObjectPool<CTransform>::index,
             ObjectPool<CType>::index,
             ObjectPool<CId>::index

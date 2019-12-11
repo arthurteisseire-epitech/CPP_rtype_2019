@@ -17,16 +17,17 @@ void ecs::CreationBulletSystem::update(float deltaTime)
 {
     ForEachMatching<CreationBulletTuple>(admin, [this](CreationBulletTuple &t) {
 
-        auto &inputs = get<CInput>(t).inputs;
-        for (auto &input : inputs) {
-            if (get<CInput>(t).inputs.front() == CInput::SPACE) {
-                EntityFactory::createBullet(admin,
-                    GetIndex<CConnection>(t),
-                    GetPool<CTransform>(admin).create(get<CTransform>(t).vec.x, get<CTransform>(t).vec.y),
-                    GetPool<CDirection>(admin).create(CDirection::RIGHT)
-                );
-            }
+        auto &inputs = get<CCommand>(t).commands;
+
+        if (std::any_of(inputs.begin(), inputs.end(), isSpace)) {
+            EntityFactory::createBullet(admin,
+                GetPool<CTransform>(admin).create(get<CTransform>(t).vec),
+                GetPool<CDirection>(admin).create(CDirection::RIGHT));
         }
-        inputs.erase(std::remove(inputs.begin(), inputs.end(), CInput::SPACE), inputs.end());
     });
+}
+
+bool ecs::CreationBulletSystem::isSpace(CCommand::Key input)
+{
+    return input == CCommand::SPACE;
 }

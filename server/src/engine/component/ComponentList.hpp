@@ -12,9 +12,12 @@
 #include "CConnection.hpp"
 #include "CDirection.hpp"
 #include "CId.hpp"
-#include "CInput.hpp"
+#include "CCommand.hpp"
 #include "CTransform.hpp"
 #include "CType.hpp"
+#include "CShootingAI.hpp"
+#include "CCooldown.hpp"
+#include "CSpeed.hpp"
 
 namespace ecs
 {
@@ -23,9 +26,12 @@ namespace ecs
             CConnection,
             CDirection,
             CId,
-            CInput,
+            CCommand,
             CTransform,
-            CType
+            CType,
+            CShootingAI,
+            CCooldown,
+            CSpeed
         >;
 }
 

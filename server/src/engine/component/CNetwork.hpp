@@ -9,19 +9,22 @@
 #define RTYPE_CNETWORK_HPP
 
 #include <boost/asio/io_context.hpp>
-#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ip/udp.hpp>
+#include <queue>
+#include "Packet.hpp"
 
 namespace ecs
 {
     struct CNetwork {
         explicit CNetwork(int port) :
             ioContext(),
-            acceptor(ioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+            socket(ioContext, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port))
         {
         }
 
         boost::asio::io_context ioContext;
-        boost::asio::ip::tcp::acceptor acceptor;
+        boost::asio::ip::udp::socket socket;
+        std::queue<std::pair<boost::asio::ip::udp::endpoint, Packet>> readBuffers;
     };
 }
 

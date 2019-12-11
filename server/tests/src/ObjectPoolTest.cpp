@@ -15,7 +15,7 @@ TEST(ComponentPool, create)
 
     auto p = healthComponentPool.create();
 
-    ASSERT_TRUE(p != nullptr);
+    EXPECT_EQ(p.idx, 0);
 }
 
 TEST(ComponentPool, createWithArgs)
@@ -24,16 +24,30 @@ TEST(ComponentPool, createWithArgs)
 
     auto p = healthComponentPool.create(20);
 
-    ASSERT_TRUE(p->life == 20);
+    EXPECT_TRUE(healthComponentPool.at(p).life == 20);
 }
 
 TEST(ComponentPool, destroy)
 {
-    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
-    auto p = healthComponentPool.create();
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool(10);
+    auto p1 = healthComponentPool.create();
+    auto p2 = healthComponentPool.create();
 
-    healthComponentPool.destroy(p);
-    ASSERT_EQ(p, healthComponentPool.create());
+    healthComponentPool.destroy(p1);
+
+    EXPECT_EQ(p1.idx + 1, p2.idx);
+}
+
+
+TEST(ComponentPool, destroyWithOnePadSize)
+{
+    ecs::ObjectPool<ecs::CHealth> healthComponentPool(1);
+    auto p1 = healthComponentPool.create();
+
+    healthComponentPool.destroy(p1);
+
+    auto p2 = healthComponentPool.create();
+    EXPECT_EQ(p1.idx, p2.idx);
 }
 
 TEST(ComponentPool, iterate)
@@ -48,17 +62,4 @@ TEST(ComponentPool, iterate)
         ++actualNbComponents;
 
     EXPECT_EQ(actualNbComponents, nbComponents);
-}
-
-TEST(ComponentPool, addExistingComponent)
-{
-    ecs::ObjectPool<ecs::CHealth> healthComponentPool;
-    auto p = ecs::CHealth();
-
-    healthComponentPool.move(std::move(p));
-
-    int count = 0;
-    for (auto &c : healthComponentPool)
-        ++count;
-    EXPECT_EQ(count, 1);
 }

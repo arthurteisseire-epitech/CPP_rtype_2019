@@ -11,8 +11,6 @@
 #include <tuple>
 #include "TupleList.hpp"
 #include "ComponentList.hpp"
-#include <boost/fusion/algorithm/iteration/for_each.hpp>
-#include <boost/fusion/adapted/std_tuple.hpp>
 
 namespace ecs
 {
@@ -26,30 +24,22 @@ namespace ecs
     struct has_types;
 
     template<typename ...T, typename Tuple>
-    struct has_types<std::tuple<T...>, Tuple> : std::conjunction<has_type<T, Tuple>...> {};
+    struct has_types<std::tuple<T...>, Tuple> : std::conjunction<has_type<std::remove_const_t<T>, Tuple>...> {};
 
     // TODO -- Template recursion seems to be a better way to achieve this
     template<typename IdxTuple, typename ...Ts>
     auto getTuplesMatching(const std::tuple<Ts...> &t)
     {
         return std::apply([](Ts...) {
-            return std::tuple_cat(std::conditional_t<(has_types<Ts, IdxTuple>::value),
+            return std::tuple_cat(std::conditional_t<has_types<Ts, IdxTuple>::value,
                                                      std::tuple<typename ObjectPool<Ts>::index>,
                                                      std::tuple<>
                                                     >{}...);
         }, t);
     }
 
-    template <typename Tuple>
-    auto tupleToObjectPoolTuple()
-    {
-        return std::apply([] (auto ...ts) {
-            return make_tuple(ObjectPool<decltype(ts)>{}...);
-        }, Tuple{});
-    }
-
-    template<typename ...Args>
-    using EntityTuples = decltype(getTuplesMatching<decltype(std::tuple<Args...>{})>(TupleList{}));
+    template<typename Tuple, typename ...Args>
+    using ComponentsTuples = decltype(getTuplesMatching<decltype(std::tuple<Args...>{})>(Tuple{}));
 
 
     template<typename Tuple>
@@ -62,8 +52,6 @@ namespace ecs
 
     using TuplePools = rebindToPools<TupleList>::type;
     using ComponentPools = rebindToPools<ComponentList>::type;
-
-    using Pools = decltype(std::tuple_cat(TuplePools{}, ComponentPools{}));
 }
 
 #endif

@@ -6,20 +6,28 @@
 */
 
 #include "SystemUtil.hpp"
-#include "InputSystem.hpp"
+#include "CommandSystem.hpp"
 #include "SendSystem.hpp"
 #include "MoveSystem.hpp"
 #include "UpdateTypeSystem.hpp"
 #include "CreationBulletSystem.hpp"
-#include "InputDirectionSystem.hpp"
+#include "MonsterSpawningSystem.hpp"
+#include "DispatchPacketSystem.hpp"
+#include "CommandDirectionSystem.hpp"
+#include "HandleConnectionSystem.hpp"
+#include "ShootingAISystem.hpp"
 
 std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_ptr<EntityAdmin> &admin)
 {
     std::unique_ptr<ASystem> init[] = {
         std::make_unique<CreationBulletSystem>(admin),
+        std::make_unique<DispatchPacketSystem>(admin),
+        std::make_unique<CommandSystem>(admin),
+        std::make_unique<HandleConnectionSystem>(admin),
         std::make_unique<UpdateTypeSystem>(admin),
-        std::make_unique<InputSystem>(admin),
-        std::make_unique<InputDirectionSystem>(admin),
+        std::make_unique<MonsterSpawningSystem>(admin),
+        std::make_unique<CommandDirectionSystem>(admin),
+        std::make_unique<ShootingAISystem>(admin),
         std::make_unique<MoveSystem>(admin),
         std::make_unique<SendSystem>(admin)
     };

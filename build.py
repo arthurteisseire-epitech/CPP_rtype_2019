@@ -6,7 +6,7 @@ import os
 def get_cmake_options():
     cmake_options = '-G "'
     if os.name == 'nt':
-        cmake_options += 'Visual Studio 16 2029'
+        cmake_options += 'Visual Studio 16 2019'
     else:
         cmake_options += 'Unix Makefiles'
     cmake_options += '"'

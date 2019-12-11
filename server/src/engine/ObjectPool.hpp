@@ -18,8 +18,11 @@ namespace ecs
     template<typename T>
     class ObjectPool {
     public:
+        enum MEMORY {AVAILABLE, UNAVAILABLE};
+
         struct index {
-            explicit index(std::size_t idx = 0) : idx(idx)
+            explicit index(std::size_t idx = 0) :
+                idx(idx)
             {
             }
 
@@ -35,23 +38,18 @@ namespace ecs
         }
 
         template<typename ...Args>
-        index create(Args ...args)
+        index create(Args &&...args)
         {
             std::lock_guard<std::mutex> lock(mutex);
+            typename std::vector<std::pair<MEMORY, T>>::iterator it;
 
-            if (pool.size() == pool.capacity())
+            if (pool.size() == pool.capacity()) {
+                it = emplaceOnFreeSpace(args...);
+                if (it != pool.end())
+                    return index(it - pool.begin());
                 reallocate();
-            pool.emplace_back(args...);
-            return index(pool.size() - 1);
-        }
-
-        index move(T &&obj)
-        {
-            std::lock_guard<std::mutex> lock(mutex);
-
-            if (pool.size() == pool.capacity())
-                reallocate();
-            pool.push_back(std::move(std::forward<T>(obj)));
+            }
+            pool.push_back(newElement(args...));
             return index(pool.size() - 1);
         }
 
@@ -59,35 +57,50 @@ namespace ecs
         {
             std::lock_guard<std::mutex> lock(mutex);
 
-            std::iter_swap(pool.begin() + idx.idx, std::prev(pool.end()));
-            pool.pop_back();
+            pool.at(idx.idx).first = AVAILABLE;
         }
 
         T &at(index idx)
         {
             std::lock_guard<std::mutex> lock(mutex);
 
-            return pool.at(idx.idx);
+            return pool.at(idx.idx).second;
         }
 
-        typename std::vector<T>::iterator begin()
+        auto begin()
         {
             return pool.begin();
         }
 
-        typename std::vector<T>::iterator end()
+        auto end()
         {
             return pool.end();
         }
 
     private:
+        template<typename ...Args>
+        auto emplaceOnFreeSpace(Args &&...args)
+        {
+            auto it = std::find_if(pool.begin(), pool.end(), [](auto &pair) {
+                return pair.first == AVAILABLE;
+            });
+            if (it != pool.end())
+                *it = newElement(args...);
+            return it;
+        }
+
+        template<typename ...Args>
+        std::pair<MEMORY, T> newElement(Args&& ...args)
+        {
+            return {UNAVAILABLE, T(args...)};
+        }
 
         void reallocate()
         {
             pool.reserve(pool.size() + padSize);
         }
 
-        std::vector<T> pool;
+        std::vector<std::pair<MEMORY, T>> pool;
         std::mutex mutex;
         int padSize;
     };

@@ -31,13 +31,13 @@ namespace ecs
         void setDirection(CDirection::Direction dir_enum)
         {
             if (dir_enum == LEFT)
-                dir.x = -1;
+                dir.x = -0.01;
             else if (dir_enum == RIGHT)
-                dir.x = 1;
+                dir.x = 0.01;
             else if (dir_enum == UP)
-                dir.y = -1;
+                dir.y = -0.01;
             else if (dir_enum == DOWN)
-                dir.y = 1;
+                dir.y = 0.01;
             if (dir_enum == NONE) {
                 dir.x = 0;
                 dir.y = 0;

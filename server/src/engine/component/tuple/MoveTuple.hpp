@@ -11,13 +11,15 @@
 #include "ObjectPool.hpp"
 #include "CDirection.hpp"
 #include "CTransform.hpp"
+#include "CSpeed.hpp"
 
 namespace ecs
 {
     using MoveTuple = std::tuple
         <
             ObjectPool<CTransform>::index,
-            ObjectPool<CDirection>::index
+            ObjectPool<CDirection>::index,
+            ObjectPool<CSpeed>::index
         >;
 }
 

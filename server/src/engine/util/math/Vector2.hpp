@@ -18,6 +18,7 @@ namespace mut
         Vector2 operator-(const Vector2 &v1) const;
         Vector2 operator+=(const Vector2 &v1);
         Vector2 operator-=(const Vector2 &v1);
+        Vector2 operator*(const float &f);
         bool operator==(const Vector2 &v1) const;
         bool operator!=(const Vector2 &v1) const;
 
@@ -61,6 +62,12 @@ namespace mut
     {
         *this = *this - v1;
         return *this;
+    }
+
+    template<typename T>
+    Vector2<T> Vector2<T>::operator*(const float &f)
+    {
+        return {x * f, y * f};
     }
 
     using Vec2f = Vector2<float>;

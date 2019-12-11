@@ -20,12 +20,20 @@ namespace ecs
             admin(std::move(admin))
         {
         }
+
         virtual void update(float deltaTime) = 0;
 
-        template <class T, class Tuple>
-        T &get(Tuple &tuple)
+        template<class T, class Tuple>
+        std::conditional_t<has_type<typename ObjectPool<T>::index, Tuple>::value, T, const T> &get(Tuple &tuple)
         {
-            return std::get<ObjectPool<T>>(admin->pools).at(std::get<typename ObjectPool<T>::index>(tuple));
+            using type = std::conditional_t
+                <
+                    has_type<typename ObjectPool<T>::index, Tuple>::value,
+                    typename ObjectPool<T>::index,
+                    const typename ObjectPool<T>::index
+                >;
+
+            return std::get<ObjectPool<T>>(admin->pools).at(std::get<type>(tuple));
         }
 
     protected:

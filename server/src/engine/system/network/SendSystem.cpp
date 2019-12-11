@@ -7,25 +7,26 @@
 
 #include <boost/bind.hpp>
 #include "SendSystem.hpp"
-#include "NetworkUtil.hpp"
+#include "NetworkSender.hpp"
 #include "Util.hpp"
 
-ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::SendSystem::SendSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
 void ecs::SendSystem::update(float deltaTime)
 {
-    ForEachMatching<SendRenderTuple>(admin, boost::bind(&ecs::SendSystem::updateTuple, this, _1));
+    ForEachMatching<SendTuple>(admin, std::bind(&ecs::SendSystem::updateTuple, this, std::placeholders::_1));
 }
 
-void ecs::SendSystem::updateTuple(ecs::SendRenderTuple &t)
+void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
-    std::array<char, 1024> buffer{};
+    ForEachMatching<CConnection>(admin, [this, &t] (CConnection &conn) {
+        auto s = get<CType>(t).name + ':' +
+            std::to_string(get<CTransform>(t).vec.x) + ',' +
+            std::to_string(get<CTransform>(t).vec.y);
 
-    auto s = std::to_string(get<CId>(t).id) + ';' + get<CType>(t).name + ':' + std::to_string(get<CTransform>(t).vec.x) + ',' +
-        std::to_string(get<CTransform>(t).vec.y) + '\n';
-    buffer.fill(0);
-    std::copy(s.begin(), s.end(), buffer.begin());
-    NetworkUtil::send(admin, GetIndex<CConnection>(t), buffer);
+        NetworkSender::send(admin, conn, Packet(get<CId>(t).id, s));
+    });
 }
