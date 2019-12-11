@@ -27,7 +27,7 @@ void ecs::CreationBulletSystem::update(float deltaTime)
     });
 }
 
-bool ecs::CreationBulletSystem::isSpace(ReceiveProtocole::Key input)
+bool ecs::CreationBulletSystem::isSpace(ReceiveProtocol::Key input)
 {
-    return input == ReceiveProtocole::SPACE;
+    return input == ReceiveProtocol::SPACE;
 }

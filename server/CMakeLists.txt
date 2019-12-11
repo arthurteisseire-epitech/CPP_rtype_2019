@@ -13,6 +13,7 @@ include_directories(
 	src/engine/util/math
 	src/engine/util/network
 	src/engine/util
+	src/engine/protocol
 	src/engine
 	src
 )

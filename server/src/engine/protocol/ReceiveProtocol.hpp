@@ -2,17 +2,17 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** ReceiveProtocole.hpp
+** ReceiveProtocol.hpp
 */
 
-#ifndef RTYPE_RECEIVEPROTOCOLE_HPP
-#define RTYPE_RECEIVEPROTOCOLE_HPP
+#ifndef RTYPE_RECEIVEPROTOCOL_HPP
+#define RTYPE_RECEIVEPROTOCOL_HPP
 
 #include <unordered_map>
 
 namespace ecs
 {
-    class ReceiveProtocole {
+    class ReceiveProtocol {
     public:
         enum Key {
             LEFT,

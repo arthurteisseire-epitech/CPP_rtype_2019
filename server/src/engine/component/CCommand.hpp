@@ -9,12 +9,12 @@
 #define RTYPE_CCOMMAND_HPP
 
 #include <vector>
-#include "ReceiveProtocole.hpp"
+#include "ReceiveProtocol.hpp"
 
 namespace ecs
 {
     struct CCommand {
-        std::vector<ReceiveProtocole::Key> commands;
+        std::vector<ReceiveProtocol::Key> commands;
     };
 }
 
