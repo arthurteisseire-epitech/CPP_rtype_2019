@@ -25,6 +25,7 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
             GetPool<CCommand>(admin).create(),
             GetPool<CDirection>(admin).create(),
             GetPool<CType>(admin).create("spaceship_normal"),
+            GetPool<CSpeed>(admin).create(1),
             GetPool<CId>(admin).create(nextId(admin))
         )
     );
@@ -38,6 +39,7 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
         new Entity(admin,
             GetPool<CType>(admin).create("basic_missile_launch"),
             GetPool<CId>(admin).create(nextId(admin)),
+            GetPool<CSpeed>(admin).create(5),
             transformIdx,
             directionIdx
         )
@@ -53,7 +55,8 @@ void ecs::EntityFactory::createShootingMonster(std::shared_ptr<EntityAdmin> &adm
             GetPool<CType>(admin).create("spaceship_normal_rev"),
             GetPool<CId>(admin).create(nextId(admin)),
             GetPool<CShootingAI>(admin).create(),
-            GetPool<CCooldown>(admin).create(2),
+            GetPool<CCooldown>(admin).create(1),
+            GetPool<CSpeed>(admin).create(2),
             transformIdx,
             directionIdx
         )

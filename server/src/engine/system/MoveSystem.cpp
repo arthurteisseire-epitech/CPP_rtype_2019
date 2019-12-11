@@ -17,7 +17,7 @@ void ecs::MoveSystem::update(float)
 {
     ForEachMatching<MoveTuple>(admin, [this](MoveTuple &t) {
 
-        get<CTransform>(t).vec += get<CDirection>(t).dir;
+        get<CTransform>(t).vec += get<CDirection>(t).dir * get<CSpeed>(t).speed;
 
     });
 }
