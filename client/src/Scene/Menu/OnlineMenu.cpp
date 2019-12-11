@@ -33,15 +33,23 @@ void Client::OnlineMenu::event(Client::IScene *&self, sf::Event &event, Client::
 void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
 {
     try {
-        Client::Packet packet(network.findReceived("new connection"));
+        Client::Packet packet(network.findReceived("connected"));
         uint8_t i(0);
         for (i = 0; _players[i]; i++);
         if (i < _players.size()) {
-            _players[i] = new Client::Ship(packet.getId(), 16, "Ship.png");
+            _players[i] = new Client::Ship(packet.getId(), 16, "Ship.png", true);
         }
     } catch (std::runtime_error &packetNotFound) {}
     try {
-        Client::Packet packet(network.findReceived("lost connection"));
+        Client::Packet packet(network.findReceived("new player"));
+        uint8_t i(0);
+        for (i = 0; _players[i]; i++);
+        if (i < _players.size()) {
+            _players[i] = new Client::Ship(packet.getId(), 16, "Ship.png", false);
+        }
+    } catch (std::runtime_error &packetNotFound) {}
+    try {
+        Client::Packet packet(network.findReceived("lost player"));
         for (uint8_t i = 0; _players[i]; i++) {
             if (_players[i]->getId() == packet.getId()) {
                 delete _players[i];

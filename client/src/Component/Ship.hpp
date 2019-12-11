@@ -13,7 +13,7 @@
 namespace Client {
     class Ship : public IComponent {
     public:
-        Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled = true);
+        Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled);
         ~Ship() override;
         void move(const sf::Vector2<float> &position) override;
         void adjust(Client::Window &window) override;

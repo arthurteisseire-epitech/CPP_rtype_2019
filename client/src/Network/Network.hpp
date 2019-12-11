@@ -8,7 +8,7 @@
 #ifndef RTYPE_NETWORK_HPP
 #define RTYPE_NETWORK_HPP
 
-#define PORT 10001
+#define PORT 1234
 
 #include <SFML/Network.hpp>
 #include <string>
