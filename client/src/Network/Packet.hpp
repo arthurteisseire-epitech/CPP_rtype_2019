@@ -18,6 +18,7 @@
 #define PACKET_MATE_CONNECTED "mate connected"
 #define PACKET_MATE_LOST "mate lost"
 #define PACKET_PLAYER_CONNECTED "player connected"
+#define PACKET_START_GAME "start game"
 
 #define MAGIC_NB 9360624
 #define DEFAULT_ID 0

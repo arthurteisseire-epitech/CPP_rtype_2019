@@ -44,7 +44,9 @@ void Client::Game::update(Client::IScene *&self, Client::Network &network, Clien
 {
     if (!_players[0]) {
         Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
-        _players[0] = new Client::Ship(packet.getId(), 128, "Ship.png", true);
+        uint32_t packetId(packet.getId());
+        _players[0] = new Client::Ship(packetId, 128, "Ship.png", true);
+        network.send(Client::Packet(PACKET_START_GAME, packetId).getRaw());
     }
     for (auto &component : _components) {
         component->update(network, window);

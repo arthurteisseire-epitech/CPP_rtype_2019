@@ -74,9 +74,9 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network,
             _next = new Client::Game(_players, this);
         }
     } else if (clockTime - _quitRefTime > 0.5f) {
-        network.send(Client::Packet("ready", _playerId).getRaw());
         self = _next;
         self->update(self, network, window);
+        network.send(Client::Packet(PACKET_START_GAME, _playerId).getRaw());
     }
     for (auto &component : _components) {
         component->update(network, window);
