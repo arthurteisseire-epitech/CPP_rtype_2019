@@ -5,13 +5,12 @@
 ** Created by Arthamios, modified by Vleb
 */
 
-#include <exception>
+#include <iostream>
 #include "Network.hpp"
 
 Client::Network::Network(const std::string &serverIp, const uint16_t &clientPort) :
     _socket(), _serverIp(serverIp), _active(true), _receiver(&Client::Network::receiver, this)
 {
-    _socket.setBlocking(false);
     _socket.bind(clientPort);
     this->send(Client::Packet("connect").getRaw());
     _receiver.launch();
@@ -76,7 +75,7 @@ void Client::Network::receiver()
     while (_active) {
         uint64_t received = 0;
         do {
-            this->receive(&packet, sizeof(packet), received);
+            this->receive(&packet, sizeof(Client::RawPacket), received);
         } while (!received || packet.magic != MAGIC_NB);
         _mutex.lock();
         _buffer.push_back(packet);
