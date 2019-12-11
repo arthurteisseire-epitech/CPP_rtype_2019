@@ -16,10 +16,6 @@ namespace ecs
     public:
         explicit CommandSystem(std::shared_ptr<EntityAdmin> admin);
         void update(float deltaTime) override;
-
-    private:
-        static const std::map<std::string, ecs::CCommand::Key> directions;
-        static const std::string space;
     };
 }
 

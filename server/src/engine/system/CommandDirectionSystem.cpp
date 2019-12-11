@@ -8,11 +8,11 @@
 #include <utility>
 #include "CommandDirectionSystem.hpp"
 
-const std::map<ecs::CCommand::Key, ecs::CDirection::Direction> ecs::CommandDirectionSystem::directions = {
-    {ecs::CCommand::LEFT, ecs::CDirection::LEFT},
-    {ecs::CCommand::RIGHT, ecs::CDirection::RIGHT},
-    {ecs::CCommand::UP, ecs::CDirection::UP},
-    {ecs::CCommand::DOWN, ecs::CDirection::DOWN}
+const std::map<ecs::ReceiveProtocol::Key, ecs::CDirection::Direction> ecs::CommandDirectionSystem::directions = {
+    {ecs::ReceiveProtocol::LEFT, ecs::CDirection::LEFT},
+    {ecs::ReceiveProtocol::RIGHT, ecs::CDirection::RIGHT},
+    {ecs::ReceiveProtocol::UP, ecs::CDirection::UP},
+    {ecs::ReceiveProtocol::DOWN, ecs::CDirection::DOWN}
 };
 
 ecs::CommandDirectionSystem::CommandDirectionSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
@@ -33,7 +33,7 @@ void ecs::CommandDirectionSystem::update(float dt)
     });
 }
 
-bool ecs::CommandDirectionSystem::isKeyADirection(ecs::CCommand::Key key)
+bool ecs::CommandDirectionSystem::isKeyADirection(ReceiveProtocol::Key key)
 {
     return directions.find(key) != directions.end();
 }

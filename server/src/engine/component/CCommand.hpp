@@ -8,21 +8,13 @@
 #ifndef RTYPE_CCOMMAND_HPP
 #define RTYPE_CCOMMAND_HPP
 
-#include <queue>
+#include <vector>
+#include "ReceiveProtocol.hpp"
 
 namespace ecs
 {
     struct CCommand {
-        enum Key {
-            LEFT,
-            RIGHT,
-            UP,
-            DOWN,
-            SPACE,
-            CONNECT
-        };
-
-        std::vector<Key> commands;
+        std::vector<ReceiveProtocol::Key> commands;
     };
 }
 
