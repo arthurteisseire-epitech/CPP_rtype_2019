@@ -16,9 +16,9 @@ namespace ecs
     class EntityFactory {
     public:
         static void createPlayer(std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx);
-        static void createMonster(std::shared_ptr<EntityAdmin> &admin,
-                                  ObjectPool<CTransform>::index transformIdx,
-                                  ObjectPool<CDirection>::index directionIdx);
+        static void createShootingMonster(std::shared_ptr<EntityAdmin> &admin,
+                                          ObjectPool<CTransform>::index transformIdx,
+                                          ObjectPool<CDirection>::index directionIdx);
         static void createBullet(std::shared_ptr<EntityAdmin> &admin,
                                  ObjectPool<CTransform>::index transformIdx,
                                  ObjectPool<CDirection>::index directionIdx);

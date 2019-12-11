@@ -15,6 +15,7 @@
 #include "CDirection.hpp"
 #include "CType.hpp"
 #include "CId.hpp"
+#include "CCooldown.hpp"
 
 namespace ecs
 {
@@ -24,7 +25,8 @@ namespace ecs
             ObjectPool<CDirection>::index,
             ObjectPool<CType>::index,
             ObjectPool<CShootingAI>::index,
-            ObjectPool<CId>::index
+            ObjectPool<CId>::index,
+            ObjectPool<CCooldown>::index
         >;
 }
 

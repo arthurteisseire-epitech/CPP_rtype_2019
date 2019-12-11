@@ -16,6 +16,7 @@
 #include "CTransform.hpp"
 #include "CType.hpp"
 #include "CShootingAI.hpp"
+#include "CCooldown.hpp"
 
 namespace ecs
 {
@@ -27,7 +28,8 @@ namespace ecs
             CCommand,
             CTransform,
             CType,
-            CShootingAI
+            CShootingAI,
+            CCooldown
         >;
 }
 

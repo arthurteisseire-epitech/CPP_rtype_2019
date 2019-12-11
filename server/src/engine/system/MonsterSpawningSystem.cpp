@@ -16,8 +16,7 @@ void ecs::MonsterSpawningSystem::update(float dTime)
 {
     timeSinceLastSpawn += dTime;
     if (timeSinceLastSpawn > 2) {
-        EntityFactory::createMonster(admin,
-            GetPool<CTransform>(admin).create(generateRandomPosition()),
+        EntityFactory::createShootingMonster(admin, GetPool<CTransform>(admin).create(generateRandomPosition()),
             GetPool<CDirection>(admin).create(CDirection::LEFT));
         timeSinceLastSpawn = 0;
     }

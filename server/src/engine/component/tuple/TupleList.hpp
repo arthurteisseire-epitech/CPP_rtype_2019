@@ -14,6 +14,7 @@
 #include "CreationBulletTuple.hpp"
 #include "CommandDirectionTuple.hpp"
 #include "HandleConnectionTuple.hpp"
+#include "ShootingAITuple.hpp"
 
 namespace ecs
 {
@@ -24,7 +25,8 @@ namespace ecs
             SendTuple,
             CreationBulletTuple,
             InputDirectionTuple,
-            HandleConnectionTuple
+            HandleConnectionTuple,
+            ShootingAITuple
         >;
 }
 

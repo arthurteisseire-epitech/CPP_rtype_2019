@@ -9,8 +9,7 @@
 #include "CreationBulletTuple.hpp"
 #include "EntityFactory.hpp"
 
-ecs::CreationBulletSystem::CreationBulletSystem(std::shared_ptr<EntityAdmin> admin) :
-    ASystem(std::move(admin))
+ecs::CreationBulletSystem::CreationBulletSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
 {
 }
 
@@ -22,10 +21,8 @@ void ecs::CreationBulletSystem::update(float deltaTime)
 
         if (std::any_of(inputs.begin(), inputs.end(), isSpace)) {
             EntityFactory::createBullet(admin,
-                                        GetPool<CTransform>(admin).create(get<CTransform>(t).vec.x,
-                                                                          get<CTransform>(t).vec.y),
-                                        GetPool<CDirection>(admin).create(CDirection::RIGHT)
-            );
+                GetPool<CTransform>(admin).create(get<CTransform>(t).vec),
+                GetPool<CDirection>(admin).create(CDirection::RIGHT));
         }
     });
 }
