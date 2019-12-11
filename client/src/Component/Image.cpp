@@ -12,7 +12,7 @@ Client::Image::Image(uint8_t layer, const sf::Vector2<float> &position, const st
     _layer(layer), _position(position), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
-        throw std::runtime_error("Cannot load texture: " + texturePath);
+        throw std::runtime_error("\'Client::Image::Image\': Cannot load texture: " + texturePath);
     }
     _sprite = sf::Sprite(*_texture);
 }

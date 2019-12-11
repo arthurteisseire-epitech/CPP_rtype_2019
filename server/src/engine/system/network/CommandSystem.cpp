@@ -15,11 +15,11 @@ ecs::CommandSystem::CommandSystem(std::shared_ptr<EntityAdmin> admin) :
 }
 
 const std::map<std::string, ecs::CCommand::Key> ecs::CommandSystem::directions = {
-    {"left", ecs::CCommand::LEFT},
-    {"right", ecs::CCommand::RIGHT},
-    {"up", ecs::CCommand::UP},
-    {"down", ecs::CCommand::DOWN},
-    {"space", ecs::CCommand::SPACE},
+    {"action left", ecs::CCommand::LEFT},
+    {"action right", ecs::CCommand::RIGHT},
+    {"action up", ecs::CCommand::UP},
+    {"action down", ecs::CCommand::DOWN},
+    {"action space", ecs::CCommand::SPACE},
     {"connect", ecs::CCommand::CONNECT},
 };
 

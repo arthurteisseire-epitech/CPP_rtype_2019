@@ -12,7 +12,7 @@ Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const 
     _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(nullptr)
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
-        throw std::runtime_error("Cannot load texture: " + texturePath);
+        throw std::runtime_error("\'Client::Button::Button\': Cannot load texture: " + texturePath);
     }
     sf::Vector2<int> textureSize(_texture->getSize());
     _sprite = sf::Sprite(*_texture, {0, 0, textureSize.x, textureSize.y / 3});
@@ -22,13 +22,13 @@ Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const 
     _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
-        throw std::runtime_error("Cannot load texture: " + texturePath);
+        throw std::runtime_error("\'Client::Button::Button\': Cannot load texture: " + texturePath);
     } else if (!_textureAlt->loadFromFile(ASSETS_DIR + textureAltPath)) {
-        throw std::runtime_error("Cannot load texture: " + textureAltPath);
+        throw std::runtime_error("\'Client::Button::Button\': Cannot load texture: " + textureAltPath);
     }
     sf::Vector2<int> textureSize(_texture->getSize());
     if (textureSize != sf::Vector2<int>(_textureAlt->getSize())) {
-        throw std::runtime_error(texturePath + " and " + textureAltPath + "are not the same size.");
+        throw std::runtime_error("\'Client::Button::Button\':" + texturePath + " and " + textureAltPath + "are not the same size.");
     }
     _sprite = sf::Sprite(invert ? *_textureAlt : *_texture, {0, 0, textureSize.x, textureSize.y / 3});
 }

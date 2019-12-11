@@ -9,12 +9,13 @@
 #include "OnlineMenu.hpp"
 #include "Scene/Game.hpp"
 
-Client::OnlineMenu::OnlineMenu(Client::IScene *prev) : _prev(prev), _components({
-    new Client::Loader(0, {0.5f, 0.5f}, "Menu/Loader.png"),
-    new Client::Image(0, {0.5f, 0.75f}, "Menu/WaitingMsg.png"),
-    new Client::Image(0, {0.5f, 0.8f}, "Menu/WaitingTip.png"),
-    new Client::Fading(1, 4.0f, 0.5f, true)
-}), _players({nullptr, nullptr, nullptr, nullptr}), _clock(), _quitRefTime(-1.f), _next(nullptr)
+Client::OnlineMenu::OnlineMenu(Client::IScene *prev) :
+    _prev(prev), _components({
+        new Client::Loader(0, {0.5f, 0.5f}, "Menu/Loader.png"),
+        new Client::Image(0, {0.5f, 0.75f}, "Menu/WaitingMsg.png"),
+        new Client::Image(0, {0.5f, 0.8f}, "Menu/WaitingTip.png"),
+        new Client::Fading(1, 4.0f, 0.5f, true)
+    }), _players({nullptr, nullptr, nullptr, nullptr}), _playerId(0), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }
 
@@ -33,23 +34,24 @@ void Client::OnlineMenu::event(Client::IScene *&self, sf::Event &event, Client::
 void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
 {
     try {
-        Client::Packet packet(network.findReceived("connected"));
+        Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
+        _playerId = packet.getId();
         uint8_t i(0);
         for (i = 0; _players[i]; i++);
         if (i < _players.size()) {
-            _players[i] = new Client::Ship(packet.getId(), 16, "Ship.png", true);
+            _players[i] = new Client::Ship(_playerId, 128, "Ship.png", true);
         }
     } catch (std::runtime_error &packetNotFound) {}
     try {
-        Client::Packet packet(network.findReceived("new player"));
+        Client::Packet packet(network.findReceived(PACKET_MATE_CONNECTED));
         uint8_t i(0);
         for (i = 0; _players[i]; i++);
         if (i < _players.size()) {
-            _players[i] = new Client::Ship(packet.getId(), 16, "Ship.png", false);
+            _players[i] = new Client::Ship(packet.getId(), 128, "Ship.png", false);
         }
     } catch (std::runtime_error &packetNotFound) {}
     try {
-        Client::Packet packet(network.findReceived("lost player"));
+        Client::Packet packet(network.findReceived(PACKET_MATE_LOST));
         for (uint8_t i = 0; _players[i]; i++) {
             if (_players[i]->getId() == packet.getId()) {
                 delete _players[i];
@@ -72,6 +74,7 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network,
             _next = new Client::Game(_players, this);
         }
     } else if (clockTime - _quitRefTime > 0.5f) {
+        network.send(Client::Packet("ready", _playerId).getRaw());
         self = _next;
         self->update(self, network, window);
     }

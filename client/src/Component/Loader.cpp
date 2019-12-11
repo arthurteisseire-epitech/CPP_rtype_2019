@@ -12,7 +12,7 @@ Client::Loader::Loader(uint8_t layer, const sf::Vector2<float> &position, const 
     _layer(layer), _position(position), _clock(), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
-        throw std::runtime_error("Cannot load texture: " + texturePath);
+        throw std::runtime_error("\'Client::Loader::Loader\': Cannot load texture: " + texturePath);
     }
     _sprite = sf::Sprite(*_texture);
     sf::Vector2<float> textureSize(_texture->getSize());

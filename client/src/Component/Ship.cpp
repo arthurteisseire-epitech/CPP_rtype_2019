@@ -12,7 +12,7 @@ Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, b
     _id(id), _layer(layer), _controlled(controlled), _position(0, 0), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
-        throw std::runtime_error("Cannot load texture: " + texturePath);
+        throw std::runtime_error("\'Client::Ship::Ship\': Cannot load texture: " + texturePath);
     }
     sf::Vector2<int> textureSize(_texture->getSize());
     sf::Rect<int> textureRect(2, controlled ? 0 : 1 + id % 4, textureSize.x / 5, textureSize.y / 5);
@@ -47,19 +47,19 @@ bool Client::Ship::event(const sf::Event &event, Client::KeyBind &keyBind, Clien
         Client::Packet packet(_id);
         switch (keyBind.getAction(event.key.code)) {
         case sf::Keyboard::Key::Up:
-            packet.setPayload("up");
+            packet.setPayload(PACKET_ACTION_UP);
             break;
         case sf::Keyboard::Key::Down:
-            packet.setPayload("down");
+            packet.setPayload(PACKET_ACTION_DOWN);
             break;
         case sf::Keyboard::Key::Left:
-            packet.setPayload("left");
+            packet.setPayload(PACKET_ACTION_LEFT);
             break;
         case sf::Keyboard::Key::Right:
-            packet.setPayload("right");
+            packet.setPayload(PACKET_ACTION_RIGHT);
             break;
         case sf::Keyboard::Key::Space:
-            packet.setPayload("space");
+            packet.setPayload(PACKET_ACTION_SPACE);
             break;
         default:
             return false;

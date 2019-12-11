@@ -5,14 +5,13 @@
 ** Created by Arthamios, modified by Vleb
 */
 
-#include <iostream>
 #include "Network.hpp"
 
 Client::Network::Network(const std::string &serverIp, const uint16_t &clientPort) :
     _socket(), _serverIp(serverIp), _active(true), _receiver(&Client::Network::receiver, this)
 {
     _socket.bind(clientPort);
-    this->send(Client::Packet("connect").getRaw());
+    this->send(Client::Packet(PACKET_CONNECT).getRaw());
     _receiver.launch();
 }
 
@@ -21,7 +20,7 @@ Client::Network::~Network()
     _mutex.lock();
     _active = false;
     _mutex.unlock();
-    this->send(Client::Packet("disconnect").getRaw());
+    this->send(Client::Packet(PACKET_DISCONNECT).getRaw());
     _receiver.terminate();
 }
 
@@ -66,7 +65,7 @@ Client::Packet Client::Network::findReceived(const std::string &payload)
             return packet;
         }
     }
-    throw std::runtime_error("\'Client::Network::findReceived\': No packet found.");
+    throw std::runtime_error("\'Client::Network::findReceived\': Packet not found: " + payload);
 }
 
 void Client::Network::receiver()
