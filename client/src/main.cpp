@@ -14,7 +14,7 @@ int main(int ac, char **av)
 {
     Client::IScene *scene = new Client::MainMenu();
     Client::KeyBind keyBind;
-    Client::Network network("127.0.0.1", 1234);
+    Client::Network network("127.0.0.1", std::stoi(av[1]));
     Client::Window window;
     while (window.isOpen()) {
         sf::Event event;
@@ -32,4 +32,3 @@ int main(int ac, char **av)
     delete scene;
     return 0;
 }
-

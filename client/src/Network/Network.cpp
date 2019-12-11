@@ -8,10 +8,11 @@
 #include <exception>
 #include "Network.hpp"
 
-Client::Network::Network(const std::string &ip, const uint16_t &port) :
-    _socket(), _ip(ip), _port(port), _active(true), _receiver(&Client::Network::receiver, this)
+Client::Network::Network(const std::string &serverIp, const uint16_t &clientPort) :
+    _socket(), _serverIp(serverIp), _active(true), _receiver(&Client::Network::receiver, this)
 {
     _socket.setBlocking(false);
+    _socket.bind(clientPort);
     this->send(Client::Packet("connect").getRaw());
     _receiver.launch();
 }
@@ -27,7 +28,7 @@ Client::Network::~Network()
 
 void Client::Network::send(const void *data, const uint64_t &size)
 {
-    _socket.send(data, size, _ip, _port);
+    _socket.send(data, size, _serverIp, SERVER_PORT);
 }
 
 void Client::Network::send(const Client::RawPacket *packet)
@@ -72,7 +73,6 @@ Client::Packet Client::Network::findReceived(const std::string &payload)
 void Client::Network::receiver()
 {
     Client::RawPacket packet;
-    _socket.bind(PORT);
     while (_active) {
         uint64_t received = 0;
         do {

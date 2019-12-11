@@ -8,7 +8,7 @@
 #ifndef RTYPE_NETWORK_HPP
 #define RTYPE_NETWORK_HPP
 
-#define PORT 1234
+#define SERVER_PORT 1234
 
 #include <SFML/Network.hpp>
 #include <string>
@@ -18,7 +18,7 @@
 namespace Client {
     class Network {
     public:
-        Network(const std::string &ip, const uint16_t &port);
+        Network(const std::string &serverIp, const uint16_t &clientPort);
         ~Network();
         void send(const void *data, const uint64_t &size);
         void send(const Client::RawPacket *packet);
@@ -28,8 +28,7 @@ namespace Client {
     private:
         void receiver();
         sf::UdpSocket _socket;
-        sf::IpAddress _ip;
-        uint16_t _port;
+        sf::IpAddress _serverIp;
         bool _active;
         sf::Thread _receiver;
         std::vector<Client::RawPacket> _buffer;
