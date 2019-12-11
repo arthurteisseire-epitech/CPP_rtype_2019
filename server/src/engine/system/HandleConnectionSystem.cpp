@@ -22,11 +22,11 @@ void ecs::HandleConnectionSystem::update(float dt)
                 if (get<CId>(t).id != get<CId>(t2).id)
                     NetworkSender::send(admin,
                                         GetIndex<CConnection>(t2),
-                                        Packet(get<CId>(t2).id, "new connection"));
+                                        Packet(get<CId>(t2).id, "new player"));
                 else
                     NetworkSender::send(admin,
                                         GetIndex<CConnection>(t2),
-                                        Packet(get<CId>(t2).id, "ok"));
+                                        Packet(get<CId>(t2).id, "connected"));
             });
         }
     });
