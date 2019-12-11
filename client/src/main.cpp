@@ -20,6 +20,9 @@ int main(int ac, char **av)
         sf::Event event;
         while (window.pollEvent(event)) {
             scene->event(scene, event, keyBind, network, window);
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
         }
         scene->update(scene, network, window);
         window.clear();
@@ -29,3 +32,4 @@ int main(int ac, char **av)
     delete scene;
     return 0;
 }
+
