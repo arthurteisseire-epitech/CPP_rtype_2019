@@ -7,7 +7,8 @@
 
 #include "Game.hpp"
 
-Client::Game::Game(Client::IScene *prev)
+Client::Game::Game(std::array<Client::Ship *, 4> &players, Client::IScene *prev) :
+    _players(players)
 {
 }
 

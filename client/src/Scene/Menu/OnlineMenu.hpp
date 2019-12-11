@@ -8,10 +8,12 @@
 #ifndef RTYPE_ONLINEMENU_HPP
 #define RTYPE_ONLINEMENU_HPP
 
+#include <array>
 #include <vector>
 #include "Component/Fading.hpp"
 #include "Component/Image.hpp"
 #include "Component/Loader.hpp"
+#include "Component/Ship.hpp"
 #include "Scene/IScene.hpp"
 
 namespace Client {
@@ -25,9 +27,9 @@ namespace Client {
     private:
         Client::IScene *_prev;
         std::vector<Client::IComponent *> _components;
+        std::array<Client::Ship *, 4> _players;
         sf::Clock _clock;
         float _quitRefTime;
-        uint8_t _playerNb;
         Client::IScene *_next;
     };
 }

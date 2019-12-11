@@ -13,7 +13,7 @@
 namespace Client {
     class Fading : public IComponent {
     public:
-        Fading(uint32_t id, uint8_t layer, float duration, float delay = 0.f, bool invert = false);
+        Fading(uint8_t layer, float duration, float delay = 0.f, bool invert = false);
         ~Fading() override = default;
         void move(const sf::Vector2<float> &position) override;
         void adjust(Client::Window &window) override;
@@ -24,7 +24,6 @@ namespace Client {
     private:
         void adjust(const sf::Vector2<float> &size) override;
         void place(const sf::Vector2<float> &position) override;
-        uint32_t _id;
         uint8_t _layer;
         float _duration;
         float _delay;

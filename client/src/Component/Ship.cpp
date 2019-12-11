@@ -93,6 +93,16 @@ void Client::Ship::render(Client::Window &window, uint8_t layer)
     }
 }
 
+uint32_t Client::Ship::getId() const
+{
+    return _id;
+}
+
+bool Client::Ship::isControlled() const
+{
+    return _controlled;
+}
+
 void Client::Ship::adjust(const sf::Vector2<float> &scale)
 {
     _sprite.setScale(scale);

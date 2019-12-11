@@ -21,6 +21,8 @@ namespace Client {
         bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
+        uint32_t getId() const;
+        bool isControlled() const;
     private:
         void adjust(const sf::Vector2<float> &scale) override;
         void place(const sf::Vector2<float> &position) override;

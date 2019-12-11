@@ -13,7 +13,7 @@
 namespace Client {
     class Image : public IComponent {
     public:
-        Image(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
+        Image(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
         ~Image() override;
         void move(const sf::Vector2<float> &position) override;
         void adjust(Client::Window &window) override;
@@ -24,7 +24,6 @@ namespace Client {
     private:
         void adjust(const sf::Vector2<float> &scale) override;
         void place(const sf::Vector2<float> &position) override;
-        uint32_t _id;
         uint8_t _layer;
         sf::Vector2<float> _position;
         sf::Texture *_texture;

@@ -29,7 +29,7 @@ namespace Client {
         Packet(const RawPacket &rawPacket);
         ~Packet();
         RawPacket *getRaw() const;
-        [[nodiscard]] std::array<uint8_t, 256> &getPayload() const;
+        std::string getPayload() const;
         uint32_t getId() const;
         void setPayload(const std::string &payload);
     private:

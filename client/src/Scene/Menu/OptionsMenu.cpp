@@ -17,12 +17,12 @@ static const std::vector<sf::Vector2<float>> buttonPosList({
 });
 
 Client::OptionsMenu::OptionsMenu(const Client::Window &window, Client::IScene *prev) : _prev(prev), _components({
-    new Client::Image(1, 1, {-0.5f, 0.5f}, "Menu/MenuBgL.png"),
-    new Client::Image(2, 0, {0.5f, 0.5f}, "Menu/MenuBgR.png")
+    new Client::Image(1, {-0.5f, 0.5f}, "Menu/MenuBgL.png"),
+    new Client::Image(0, {0.5f, 0.5f}, "Menu/MenuBgR.png")
 }), _buttons({
-    {new Client::Button(3, 2, buttonPosList[0], "Menu/ButtonWinOn.png", "Menu/ButtonWinOff.png", window.getFullscreen()), &Client::OptionsMenu::window},
-    {new Client::Button(4, 2, buttonPosList[1], "Menu/ButtonVsyncOff.png", "Menu/ButtonVsyncOn.png", window.getVsync()), &Client::OptionsMenu::vsync},
-    {new Client::Button(5, 2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::OptionsMenu::back}
+    {new Client::Button(2, buttonPosList[0], "Menu/ButtonWinOn.png", "Menu/ButtonWinOff.png", window.getFullscreen()), &Client::OptionsMenu::window},
+    {new Client::Button(2, buttonPosList[1], "Menu/ButtonVsyncOff.png", "Menu/ButtonVsyncOn.png", window.getVsync()), &Client::OptionsMenu::vsync},
+    {new Client::Button(2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::OptionsMenu::back}
 }), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }

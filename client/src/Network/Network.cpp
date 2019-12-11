@@ -12,7 +12,6 @@ Client::Network::Network(const std::string &ip, const uint16_t &port) :
     _socket(), _ip(ip), _port(port), _active(true), _receiver(&Client::Network::receiver, this)
 {
     _socket.setBlocking(false);
-    this->send(Client::Packet("connect").getRaw());
     _receiver.launch();
 }
 
@@ -55,9 +54,24 @@ Client::Packet Client::Network::findReceived(const uint32_t &id)
     throw std::runtime_error("\'Client::Network::findReceived\': No packet found.");
 }
 
+Client::Packet Client::Network::findReceived(const std::string &payload)
+{
+    for (int i = 0; i < _buffer.size(); i++) {
+        std::string packetPayload;
+        std::copy(_buffer[i].payload.begin(), _buffer[i].payload.end(), packetPayload.begin());
+        if (packetPayload == payload) {
+            Client::Packet packet(_buffer[i]);
+            _buffer.erase(_buffer.begin() + i);
+            return packet;
+        }
+    }
+    throw std::runtime_error("\'Client::Network::findReceived\': No packet found.");
+}
+
 void Client::Network::receiver()
 {
     Client::RawPacket packet;
+    _socket.bind(PORT);
     while (_active) {
         uint64_t received = 0;
         do {

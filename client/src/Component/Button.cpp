@@ -8,8 +8,8 @@
 #include "Button.hpp"
 #include "CommonComponent.hpp"
 
-Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
-    _id(id), _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(nullptr)
+Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
+    _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(nullptr)
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("Cannot load texture: " + texturePath);
@@ -18,8 +18,8 @@ Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &pos
     _sprite = sf::Sprite(*_texture, {0, 0, textureSize.x, textureSize.y / 3});
 }
 
-Client::Button::Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert) :
-    _id(id), _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(new sf::Texture())
+Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert) :
+    _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("Cannot load texture: " + texturePath);

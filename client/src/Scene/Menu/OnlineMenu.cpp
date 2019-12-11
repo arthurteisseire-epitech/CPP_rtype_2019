@@ -10,10 +10,11 @@
 #include "Scene/Game.hpp"
 
 Client::OnlineMenu::OnlineMenu(Client::IScene *prev) : _prev(prev), _components({
-    new Client::Loader(1, 0, {0.5f, 0.5f}, "Menu/Loader.png"),
-    new Client::Image(2, 0, {0.5f, 0.75f}, "Menu/WaitingMsg.png"),
-    new Client::Fading(3, 1, 4.0f, 0.5f, true)
-}), _clock(), _quitRefTime(-1.f), _playerNb(1), _next(nullptr)
+    new Client::Loader(0, {0.5f, 0.5f}, "Menu/Loader.png"),
+    new Client::Image(0, {0.5f, 0.75f}, "Menu/WaitingMsg.png"),
+    new Client::Image(0, {0.5f, 0.8f}, "Menu/WaitingTip.png"),
+    new Client::Fading(1, 4.0f, 0.5f, true)
+}), _players({nullptr, nullptr, nullptr, nullptr}), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }
 
@@ -32,21 +33,35 @@ void Client::OnlineMenu::event(Client::IScene *&self, sf::Event &event, Client::
 void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
 {
     try {
-        Client::Packet packet(network.findReceived(DEFAULT_ID));
-        std::string packetPayload;
-        std::copy(packet.getPayload().begin(), packet.getPayload().end(), packetPayload.begin());
-        if (packetPayload == "new connection") {
-            _playerNb++;
-        } else if (packetPayload == "lost connection") {
-            _playerNb--;
+        Client::Packet packet(network.findReceived("new connection"));
+        uint8_t i(0);
+        for (i = 0; _players[i]; i++);
+        if (i < _players.size()) {
+            _players[i] = new Client::Ship(packet.getId(), 16, "Ship.png");
+        }
+    } catch (std::runtime_error &packetNotFound) {}
+    try {
+        Client::Packet packet(network.findReceived("lost connection"));
+        for (uint8_t i = 0; _players[i]; i++) {
+            if (_players[i]->getId() == packet.getId()) {
+                delete _players[i];
+                for (uint8_t j = i; _players[j]; j++) {
+                    try {
+                        _players[j] = _players[j + 1];
+                    } catch (std::out_of_range &outOfRange) {
+                        _players[j] = nullptr;
+                    }
+                }
+                break;
+            }
         }
     } catch (std::runtime_error &packetNotFound) {}
     float clockTime(_clock.getElapsedTime().asSeconds());
     if (_quitRefTime < 0.f) {
-        if (_playerNb == 4 || clockTime > 60.f) {
-            _components.push_back(new Client::Fading(4, 1, 0.5f));
+        if (_players.back() || clockTime > 60.f) {
+            _components.push_back(new Client::Fading(1, 0.5f));
             _quitRefTime = clockTime;
-            _next = new Client::Game(this);
+            _next = new Client::Game(_players, this);
         }
     } else if (clockTime - _quitRefTime > 0.5f) {
         self = _next;

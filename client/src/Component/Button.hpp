@@ -13,8 +13,8 @@
 namespace Client {
     class Button : public IComponent {
     public:
-        Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
-        Button(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert = false);
+        Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath);
+        Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert = false);
         ~Button() override;
         void move(const sf::Vector2<float> &position) override;
         void adjust(Client::Window &window) override;
@@ -26,7 +26,6 @@ namespace Client {
         void adjust(const sf::Vector2<float> &scale) override;
         void place(const sf::Vector2<float> &position) override;
         void invert();
-        uint32_t _id;
         uint8_t _layer;
         sf::Vector2<float> _position;
         sf::Texture *_texture;

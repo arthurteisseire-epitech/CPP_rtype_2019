@@ -18,7 +18,6 @@ Client::Packet::Packet(const uint32_t &id) : _packet(new Client::RawPacket)
 Client::Packet::Packet(const std::string &payload, const uint32_t &id) : _packet(new Client::RawPacket)
 {
     _packet->magic = MAGIC_NB;
-    _packet->payload.fill(0);
     this->setPayload(payload);
     _packet->id = id;
 }
@@ -38,9 +37,11 @@ Client::RawPacket *Client::Packet::getRaw() const
     return _packet;
 }
 
-std::array<uint8_t, 256> &Client::Packet::getPayload() const
+std::string Client::Packet::getPayload() const
 {
-    return _packet->payload;
+    std::string payload;
+    std::copy(_packet->payload.begin(), _packet->payload.end(), payload.begin());
+    return payload;
 }
 
 uint32_t Client::Packet::getId() const
@@ -48,7 +49,8 @@ uint32_t Client::Packet::getId() const
     return _packet->id;
 }
 
-void Client::Packet::setPayload(const std::string &s)
+void Client::Packet::setPayload(const std::string &payload)
 {
-    std::copy(s.begin(), s.end(), _packet->payload.begin());
+    _packet->payload.fill(0);
+    std::copy(payload.begin(), payload.end(), _packet->payload.begin());
 }

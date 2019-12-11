@@ -8,8 +8,8 @@
 #include "CommonComponent.hpp"
 #include "Image.hpp"
 
-Client::Image::Image(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
-    _id(id), _layer(layer), _position(position), _texture(new sf::Texture())
+Client::Image::Image(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
+    _layer(layer), _position(position), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("Cannot load texture: " + texturePath);
