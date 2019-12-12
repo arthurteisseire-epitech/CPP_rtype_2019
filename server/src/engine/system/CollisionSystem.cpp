@@ -34,8 +34,8 @@ void ecs::CollisionSystem::updateTuple(CCommand &t)
 
 void ecs::CollisionSystem::handleCollision(const std::pair<ReceiveProtocol::Key, std::string> &command)
 {
-    unsigned int id1 = std::stoi(command.second.substr(0, command.second.find(';')));
-    unsigned int id2 = std::stoi(command.second.substr(command.second.find(';') + 1));
+    unsigned int id1 = std::stoi(command.second.substr(0, command.second.find(',')));
+    unsigned int id2 = std::stoi(command.second.substr(command.second.find(',') + 1));
 
     auto t1 = GetById<CollisionTuple>(admin, id1);
     auto t2 = GetById<CollisionTuple>(admin, id2);
