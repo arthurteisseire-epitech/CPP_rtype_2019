@@ -19,15 +19,10 @@ void ecs::CreationBulletSystem::update(float deltaTime)
 
         auto &inputs = get<CCommand>(t).commands;
 
-        if (std::any_of(inputs.begin(), inputs.end(), isSpace)) {
+        if (ReceiveProtocol::any(ReceiveProtocol::SPACE, inputs)) {
             EntityFactory::createBullet(admin,
                 GetPool<CTransform>(admin).create(get<CTransform>(t).vec),
                 GetPool<CDirection>(admin).create(CDirection::RIGHT));
         }
     });
-}
-
-bool ecs::CreationBulletSystem::isSpace(const std::pair<ReceiveProtocol::Key, std::string> &input)
-{
-    return input.first == ReceiveProtocol::SPACE;
 }

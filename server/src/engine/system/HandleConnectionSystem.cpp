@@ -20,7 +20,7 @@ void ecs::HandleConnectionSystem::update(float dt)
 {
     ForEachMatching<HandleConnectionTuple>(admin, [this](HandleConnectionTuple &t) {
         auto &c = get<CCommand>(t).commands;
-        if (std::any_of(c.begin(), c.end(), isConnect)) {
+        if (ReceiveProtocol::any(ReceiveProtocol::CONNECT, c)) {
             ForEachMatching<HandleConnectionTuple>(admin, [this, &t](HandleConnectionTuple &t2) {
                 if (get<CId>(t).id != get<CId>(t2).id)
                     NetworkSender::send(admin,
@@ -33,9 +33,4 @@ void ecs::HandleConnectionSystem::update(float dt)
             });
         }
     });
-}
-
-bool ecs::HandleConnectionSystem::isConnect(const std::pair<ReceiveProtocol::Key, std::string> &pair)
-{
-    return pair.first == ReceiveProtocol::CONNECT;
 }

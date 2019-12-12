@@ -24,3 +24,10 @@ std::pair<ecs::ReceiveProtocol::Key, std::string> ecs::ReceiveProtocol::find(con
         return {UNKOWN, ""};
     return {it->second, command.substr(std::min(command.length(), keyString.length() + 1))};
 }
+
+std::function<bool(const std::pair<ecs::ReceiveProtocol::Key, std::string> &)> ecs::ReceiveProtocol::is(ecs::ReceiveProtocol::Key key)
+{
+    return ([&key] (const std::pair<Key, std::string> &pair) {
+        return pair.first == key;
+    });
+}
