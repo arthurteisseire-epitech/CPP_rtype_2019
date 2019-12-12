@@ -6,32 +6,33 @@
 */
 
 #include "gtest/gtest.h"
+#include "EntityAdmin.hpp"
 #include "ObjectPool.hpp"
 #include "Entity.hpp"
 #include "EntityFactory.hpp"
 
 using namespace ecs;
 
-TEST(Entity, destroy)
+TEST(Entity, destroyComponents)
 {
     auto admin = std::make_shared<EntityAdmin>();
-//    EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
+    auto &connPool = GetPool<CConnection>(admin);
+    EntityFactory::createPlayer(admin, connPool.create(boost::asio::ip::udp::endpoint()));
 
-//    admin->entities.at(0)->destroy(admin);
+    admin->entities.at(0)->destroy(admin);
 
-    EXPECT_EQ(GetPool<CConnection>(admin).begin(), GetPool<CConnection>(admin).end());
+    for (const auto &pair : connPool)
+        EXPECT_EQ(pair.first, ecs::ObjectPool<CConnection>::AVAILABLE);
 }
 
-TEST(Entity, destroy2)
+TEST(Entity, destroyTuples)
 {
     auto admin = std::make_shared<EntityAdmin>();
+    auto &cmdDirTuplePool = GetPool<CommandTuple>(admin);
+    EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
 
-//    for (int i = 0; i < 3; ++i) {
-//        EntityFactory::createPlayer(admin, GetPool<CConnection>(admin).create(boost::asio::ip::udp::endpoint()));
-//        GetPool<CTransform>(admin).at(ObjectPool<CTransform>::index(i)).vec.x = i;
-//    }
+    admin->entities.at(0)->destroy(admin);
 
-//    admin->entities.at(0)->destroy(admin);
-
-    EXPECT_EQ(GetPool<CConnection>(admin).begin(), GetPool<CConnection>(admin).end());
+    for (const auto &pair : cmdDirTuplePool)
+        EXPECT_EQ(pair.first, ecs::ObjectPool<CommandTuple>::AVAILABLE);
 }

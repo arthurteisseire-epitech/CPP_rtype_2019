@@ -40,6 +40,20 @@ namespace ecs
             }, Tuple{});
         }
 
+        void destroy(std::shared_ptr<EntityAdmin> &admin) override
+        {
+            destroy(admin, components);
+            destroy(admin, tuples);
+        }
+
+        template <typename Tuple>
+        void destroy(std::shared_ptr<EntityAdmin> &admin, Tuple &&tuple)
+        {
+            std::apply([&admin](auto ...ts) {
+                (std::get<ObjectPool<typename decltype(ts)::type>>(admin->pools).destroy(ts), ...);
+            }, std::forward<Tuple>(tuple));
+        }
+
         template<typename T>
         T get()
         {
