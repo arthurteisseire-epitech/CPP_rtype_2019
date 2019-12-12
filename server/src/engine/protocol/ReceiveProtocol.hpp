@@ -26,7 +26,6 @@ namespace ecs
         };
 
         static std::pair<ecs::ReceiveProtocol::Key, std::string> find(const std::string &command);
-        static std::function<bool(const std::pair<Key, std::string> &pair)> is(Key key);
 
         template<typename T>
         static bool any(Key key, const T &t)
