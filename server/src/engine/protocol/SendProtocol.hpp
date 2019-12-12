@@ -17,6 +17,7 @@ namespace ecs
         enum Key {
             NEW_CONNECTION,
             CONNECTED,
+            ENTITY_MOVE,
         };
 
         static std::string_view get(Key key);
