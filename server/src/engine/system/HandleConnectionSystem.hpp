@@ -16,6 +16,7 @@ namespace ecs
     public:
         explicit HandleConnectionSystem(std::shared_ptr<EntityAdmin> admin);
         void update(float dt) override;
+        void updateTuple(HandleConnectionTuple &t);
     };
 }
 
