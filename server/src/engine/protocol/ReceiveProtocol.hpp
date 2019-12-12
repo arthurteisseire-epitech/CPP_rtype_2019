@@ -26,7 +26,7 @@ namespace ecs
 
         static Key find(const std::string &command);
     private:
-        static const std::unordered_map<std::string, Key> commands;
+        static const std::unordered_map<std::string_view, Key> commands;
     };
 }
 

@@ -5,8 +5,10 @@
 ** HandleConnectionSystem.cpp
 */
 
-#include "NetworkSender.hpp"
 #include "HandleConnectionSystem.hpp"
+#include "NetworkSender.hpp"
+#include "SendProtocol.hpp"
+#include "ReceiveProtocol.hpp"
 
 ecs::HandleConnectionSystem::HandleConnectionSystem(std::shared_ptr<EntityAdmin> admin) :
     ASystem(std::move(admin))
@@ -22,11 +24,11 @@ void ecs::HandleConnectionSystem::update(float dt)
                 if (get<CId>(t).id != get<CId>(t2).id)
                     NetworkSender::send(admin,
                                         GetIndex<CConnection>(t2),
-                                        Packet(get<CId>(t2).id, "mate connected"));
+                                        Packet(get<CId>(t2).id, SendProtocol::get(SendProtocol::NEW_CONNECTION)));
                 else
                     NetworkSender::send(admin,
                                         GetIndex<CConnection>(t2),
-                                        Packet(get<CId>(t2).id, "player connected"));
+                                        Packet(get<CId>(t2).id, SendProtocol::get(SendProtocol::CONNECTED)));
             });
         }
     });

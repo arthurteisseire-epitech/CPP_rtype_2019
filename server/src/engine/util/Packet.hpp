@@ -25,6 +25,13 @@ namespace ecs
             std::copy(s.begin(), s.end(), data.begin());
         }
 
+        Packet(uint32_t entityId, std::string_view s) :
+            entityId(entityId)
+        {
+            data.fill(0);
+            std::copy(s.begin(), s.end(), data.begin());
+        }
+
         void clear()
         {
             data.fill(0);
