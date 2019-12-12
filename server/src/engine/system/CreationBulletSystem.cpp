@@ -17,12 +17,17 @@ void ecs::CreationBulletSystem::update(float deltaTime)
 {
     ForEachMatching<CreationBulletTuple>(admin, [this](CreationBulletTuple &t) {
 
-        auto &inputs = get<CCommand>(t).commands;
+        auto &commands = get<CCommand>(t).commands;
 
-        if (ReceiveProtocol::any(ReceiveProtocol::SPACE, inputs)) {
+        if (std::any_of(commands.begin(), commands.end(), isSpace)) {
             EntityFactory::createBullet(admin,
                 GetPool<CTransform>(admin).create(get<CTransform>(t).vec),
                 GetPool<CDirection>(admin).create(CDirection::RIGHT));
         }
     });
+}
+
+bool ecs::CreationBulletSystem::isSpace(const std::pair<ReceiveProtocol::Key, std::string> &pair)
+{
+    return pair.first == ReceiveProtocol::SPACE;
 }

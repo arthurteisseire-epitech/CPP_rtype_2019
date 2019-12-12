@@ -27,12 +27,6 @@ namespace ecs
 
         static std::pair<ecs::ReceiveProtocol::Key, std::string> find(const std::string &command);
 
-        template<typename T>
-        static bool any(Key key, const T &t)
-        {
-            return std::any_of(t.begin(), t.end(), [&key](const auto &pair) {return key == pair.first;});
-        }
-
     private:
         static const std::unordered_map<std::string_view, Key> commands;
     };
