@@ -6,6 +6,7 @@
 */
 
 #include <utility>
+#include "DestroyEntity.hpp"
 #include "TypeProtocol.hpp"
 #include "CollisionSystem.hpp"
 
@@ -42,6 +43,11 @@ void ecs::CollisionSystem::handleCollision(const std::pair<ReceiveProtocol::Key,
     if (t1.has_value() && t2.has_value()) {
         get<CHealth>(t1.value().get()).life -= get<CCollisionDamage>(t2.value().get()).damage;
         get<CHealth>(t2.value().get()).life -= get<CCollisionDamage>(t1.value().get()).damage;
+
+        if (get<CHealth>(t1.value().get()).life <= 0)
+            DestroyEntity(admin, get<CId>(t1.value().get()).id);
+        if (get<CHealth>(t2.value().get()).life <= 0)
+            DestroyEntity(admin, get<CId>(t2.value().get()).id);
     }
 }
 

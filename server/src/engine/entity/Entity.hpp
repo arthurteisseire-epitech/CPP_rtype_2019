@@ -54,10 +54,9 @@ namespace ecs
             }, std::forward<Tuple>(tuple));
         }
 
-        template<typename T>
-        T get()
+        [[nodiscard]] unsigned int getId(std::shared_ptr<EntityAdmin> &admin) const override
         {
-            return std::get<T>(tuples);
+            return GetPool<CId>(admin).at(GetIndex<CId>(components)).id;
         }
 
     private:

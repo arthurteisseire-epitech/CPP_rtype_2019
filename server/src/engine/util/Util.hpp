@@ -11,7 +11,6 @@
 #include <optional>
 #include "ObjectPool.hpp"
 #include "EntityAdmin.hpp"
-#include "Entity.hpp"
 
 namespace ecs
 {
@@ -32,14 +31,7 @@ namespace ecs
     template<typename T, typename Tuple>
     typename ObjectPool<T>::index GetIndex(Tuple &t)
     {
-        using type = std::conditional_t
-            <
-                has_type<typename ObjectPool<T>::index, Tuple>::value,
-                typename ObjectPool<T>::index,
-                const typename ObjectPool<T>::index
-            >;
-
-        return std::get<type>(t);
+        return std::get<typename ObjectPool<T>::index>(t);
     }
 
     template<typename Tuple>

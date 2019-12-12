@@ -15,6 +15,7 @@ namespace ecs
     public:
         ~IEntity() = default;
         virtual void destroy(std::shared_ptr<EntityAdmin> &admin) = 0;
+        [[nodiscard]] virtual unsigned int getId(std::shared_ptr<EntityAdmin> &admin) const = 0;
     };
 }
 

@@ -8,6 +8,7 @@
 #include "EntityFactory.hpp"
 #include "Util.hpp"
 #include "TypeProtocol.hpp"
+#include "Entity.hpp"
 
 #include "CConnection.hpp"
 #include "CTransform.hpp"
