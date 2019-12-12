@@ -24,7 +24,7 @@ namespace ecs
             UNKOWN,
         };
 
-        static Key find(const std::string &command);
+        static std::pair<ecs::ReceiveProtocol::Key, std::string> find(const std::string &command);
     private:
         static const std::unordered_map<std::string_view, Key> commands;
     };

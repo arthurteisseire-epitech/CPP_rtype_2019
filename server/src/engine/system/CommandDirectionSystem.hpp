@@ -19,7 +19,7 @@ namespace ecs
         void update(float dt) override;
 
     private:
-        static bool isKeyADirection(ReceiveProtocol::Key key);
+        static bool isKeyADirection(const std::pair<ReceiveProtocol::Key, std::string> &pair);
         static const std::map<ReceiveProtocol::Key, ecs::CDirection::Direction> directions;
     };
 }

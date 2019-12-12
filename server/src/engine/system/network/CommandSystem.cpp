@@ -26,9 +26,9 @@ void ecs::CommandSystem::update(float deltaTime)
             std::string s(std::begin(buffers.front().data), std::end(buffers.front().data));
             s.erase(std::remove_if(s.begin(), s.end(), iscntrl), s.end());
 
-            auto key = ReceiveProtocol::find(s);
-            if (key != ReceiveProtocol::UNKOWN)
-                get<CCommand>(t).commands.push_back(key);
+            auto pair = ReceiveProtocol::find(s);
+            if (pair.first != ReceiveProtocol::UNKOWN)
+                get<CCommand>(t).commands.push_back(pair);
             buffers.pop();
         }
     });

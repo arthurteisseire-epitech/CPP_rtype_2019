@@ -5,6 +5,7 @@
 ** HandleConnectionSystem.cpp
 */
 
+#include <any>
 #include "HandleConnectionSystem.hpp"
 #include "NetworkSender.hpp"
 #include "SendProtocol.hpp"
@@ -19,7 +20,7 @@ void ecs::HandleConnectionSystem::update(float dt)
 {
     ForEachMatching<HandleConnectionTuple>(admin, [this](HandleConnectionTuple &t) {
         auto &c = get<CCommand>(t).commands;
-        if (std::find(c.begin(), c.end(), ReceiveProtocol::CONNECT) != c.end()) {
+        if (std::any_of(c.begin(), c.end(), isConnect)) {
             ForEachMatching<HandleConnectionTuple>(admin, [this, &t](HandleConnectionTuple &t2) {
                 if (get<CId>(t).id != get<CId>(t2).id)
                     NetworkSender::send(admin,
@@ -32,4 +33,9 @@ void ecs::HandleConnectionSystem::update(float dt)
             });
         }
     });
+}
+
+bool ecs::HandleConnectionSystem::isConnect(const std::pair<ReceiveProtocol::Key, std::string> &pair)
+{
+    return pair.first == ReceiveProtocol::CONNECT;
 }

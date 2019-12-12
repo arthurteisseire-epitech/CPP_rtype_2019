@@ -28,12 +28,12 @@ void ecs::CommandDirectionSystem::update(float dt)
 
         auto it = std::find_if(inputs.begin(), inputs.end(), &isKeyADirection);
         if (it != inputs.end())
-            dir = directions.at(*it);
+            dir = directions.at(it->first);
         get<CDirection>(t).setDirection(dir);
     });
 }
 
-bool ecs::CommandDirectionSystem::isKeyADirection(ReceiveProtocol::Key key)
+bool ecs::CommandDirectionSystem::isKeyADirection(const std::pair<ReceiveProtocol::Key, std::string> &pair)
 {
-    return directions.find(key) != directions.end();
+    return directions.find(pair.first) != directions.end();
 }

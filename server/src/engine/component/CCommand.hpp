@@ -14,7 +14,7 @@
 namespace ecs
 {
     struct CCommand {
-        std::vector<ReceiveProtocol::Key> commands;
+        std::vector<std::pair<ReceiveProtocol::Key, std::string>> commands;
     };
 }
 

@@ -18,7 +18,7 @@ namespace ecs
         void update(float deltaTime) override;
 
     private:
-        static bool isSpace(ReceiveProtocol::Key input);
+        static bool isSpace(const std::pair<ReceiveProtocol::Key, std::string> &input);
     };
 }
 
