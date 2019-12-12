@@ -29,7 +29,7 @@ void ecs::HandleConnectionSystem::updateTuple(ecs::HandleConnectionTuple &t)
             if (get<CId>(t).id != get<CId>(t2).id)
                 NetworkSender::send(admin,
                                     GetIndex<CConnection>(t2),
-                                    Packet(get<CId>(t2).id, SendProtocol::get(SendProtocol::NEW_CONNECTION)));
+                                    Packet(get<CId>(t2).id, SendProtocol::get(SendProtocol::MATE_CONNECTED)));
             else
                 NetworkSender::send(admin,
                                     GetIndex<CConnection>(t2),

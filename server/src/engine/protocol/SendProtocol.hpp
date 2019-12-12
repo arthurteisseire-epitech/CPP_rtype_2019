@@ -16,6 +16,7 @@ namespace ecs
     public:
         enum Key {
             CONNECTED,
+            MATE_CONNECTED,
             ENTITY_SET,
         };
 
