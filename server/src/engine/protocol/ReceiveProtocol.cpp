@@ -18,7 +18,7 @@ const std::unordered_map<std::string_view, ecs::ReceiveProtocol::Key> ecs::Recei
 
 std::pair<ecs::ReceiveProtocol::Key, std::string> ecs::ReceiveProtocol::find(const std::string &command)
 {
-    auto keyString = command.substr(0, command.find(' '));
+    auto keyString = command.substr(0, command.find(':'));
     auto it = commands.find(keyString);
     if (it == commands.end())
         return {UNKOWN, ""};

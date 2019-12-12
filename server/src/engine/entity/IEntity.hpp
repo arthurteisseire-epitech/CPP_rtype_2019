@@ -10,9 +10,11 @@
 
 namespace ecs
 {
+    class EntityAdmin;
     class IEntity {
     public:
         ~IEntity() = default;
+        virtual void destroy(std::shared_ptr<EntityAdmin> &admin) = 0;
     };
 }
 
