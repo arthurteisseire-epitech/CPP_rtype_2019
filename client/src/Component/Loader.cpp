@@ -51,3 +51,8 @@ void Client::Loader::render(Client::Window &window, uint8_t layer)
         window.draw(_sprite);
     }
 }
+
+uint32_t Client::Loader::getId() const
+{
+    return 0;
+}

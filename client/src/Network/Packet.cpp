@@ -6,6 +6,7 @@
 */
 
 #include <cstring>
+#include <sstream>
 #include "Packet.hpp"
 
 Client::Packet::Packet(const uint32_t &id) : _packet(new Client::RawPacket)
@@ -42,6 +43,17 @@ std::string Client::Packet::getPayload() const
     std::string payload;
     std::copy(_packet->payload.begin(), _packet->payload.end(), payload.begin());
     return payload;
+}
+
+std::vector<std::string> Client::Packet::getParsedPayload() const
+{
+    std::istringstream splitStream(this->getPayload());
+    std::string subPayload;
+    std::vector<std::string> splitPayload;
+    while (std::getline(splitStream, subPayload, ':')) {
+        splitPayload.push_back(subPayload);
+    }
+    return splitPayload;
 }
 
 uint32_t Client::Packet::getId() const

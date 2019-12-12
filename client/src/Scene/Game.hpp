@@ -23,7 +23,7 @@ namespace Client {
     private:
         Client::IScene *_prev;
         std::vector<Client::IComponent *> _components;
-        std::array<Client::Ship *, 4> _players;
+        bool _start;
     };
 }
 

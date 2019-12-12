@@ -13,7 +13,8 @@
 #define PACKET_ACTION_LEFT "action_left"
 #define PACKET_ACTION_RIGHT "action_right"
 #define PACKET_ACTION_SPACE "action_space"
-#define PACKET_COLLISION "collision:%i"
+#define PACKET_ENTITY_COLLISION "entity_collision"
+#define PACKET_ENTITY_SET "entity_set"
 #define PACKET_CONNECT "connect"
 #define PACKET_DISCONNECT "disconnect"
 #define PACKET_MATE_CONNECTED "mate_connected"
@@ -27,6 +28,7 @@
 #include <cstdint>
 #include <SFML/Network.hpp>
 #include <string>
+#include <vector>
 
 namespace Client {
     struct RawPacket {
@@ -43,6 +45,8 @@ namespace Client {
         ~Packet();
         RawPacket *getRaw() const;
         std::string getPayload() const;
+        std::vector<std::string> getParsedPayload() const;
+        std::string getPrefix() const;
         uint32_t getId() const;
         void setPayload(const std::string &payload);
     private:

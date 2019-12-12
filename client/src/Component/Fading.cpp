@@ -45,3 +45,8 @@ void Client::Fading::render(Client::Window &window, uint8_t layer)
         window.draw(_sprite);
     }
 }
+
+uint32_t Client::Fading::getId() const
+{
+    return 0;
+}

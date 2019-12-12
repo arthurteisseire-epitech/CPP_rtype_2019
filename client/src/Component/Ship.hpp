@@ -8,7 +8,7 @@
 #ifndef RTYPE_SHIP_HPP
 #define RTYPE_SHIP_HPP
 
-#include "IComponent.hpp"
+#include "Component/IComponent.hpp"
 
 namespace Client {
     class Ship : public IComponent {
@@ -21,7 +21,7 @@ namespace Client {
         bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
-        uint32_t getId() const;
+        uint32_t getId() const override;
         bool isControlled() const;
     private:
         uint32_t _id;

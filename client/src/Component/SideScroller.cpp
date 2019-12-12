@@ -60,3 +60,8 @@ void Client::SideScroller::render(Client::Window &window, uint8_t layer)
         window.draw(_spriteAlt);
     }
 }
+
+uint32_t Client::SideScroller::getId() const
+{
+    return 0;
+}

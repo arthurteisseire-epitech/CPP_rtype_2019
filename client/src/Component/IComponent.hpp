@@ -26,6 +26,7 @@ namespace Client {
         virtual bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) = 0;
         virtual void update(Client::Network &network, Client::Window &window) = 0;
         virtual void render(Client::Window &window, uint8_t layer) = 0;
+        virtual uint32_t getId() const = 0;
     };
 }
 

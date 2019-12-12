@@ -43,7 +43,7 @@ std::pair<std::string, uint16_t> Client::Network::receive(void *data, const uint
     return std::pair<std::string, uint16_t>(connectionAddr.toString(), connectionPort);
 }
 
-Client::Packet Client::Network::findReceived(const uint16_t &index)
+Client::Packet Client::Network::findReceived(const uint64_t &index)
 {
     if (index < _buffer.size()) {
         return Client::Packet(_buffer[index]);
@@ -54,7 +54,7 @@ Client::Packet Client::Network::findReceived(const uint16_t &index)
 
 Client::Packet Client::Network::findReceived(const uint32_t &id)
 {
-    for (uint16_t i = 0; i < _buffer.size(); i++) {
+    for (uint64_t i = 0; i < _buffer.size(); i++) {
         if (_buffer[i].id == id) {
             Client::Packet packet(_buffer[i]);
             _mutex.lock();
@@ -68,7 +68,7 @@ Client::Packet Client::Network::findReceived(const uint32_t &id)
 
 Client::Packet Client::Network::findReceived(const std::string &payload)
 {
-    for (uint16_t i = 0; i < _buffer.size(); i++) {
+    for (uint64_t i = 0; i < _buffer.size(); i++) {
         std::string packetPayload;
         std::copy(_buffer[i].payload.begin(), _buffer[i].payload.end(), packetPayload.begin());
         if (packetPayload == payload) {
@@ -80,6 +80,13 @@ Client::Packet Client::Network::findReceived(const std::string &payload)
         }
     }
     throw std::runtime_error("\'Client::Network::findReceived\': Packet not found: " + payload);
+}
+
+void Client::Network::emptyBuffer()
+{
+    _mutex.lock();
+    _buffer.clear();
+    _mutex.unlock();
 }
 
 void Client::Network::receiver()

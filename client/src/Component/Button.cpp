@@ -61,26 +61,24 @@ bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
 {
     sf::Vector2<int> mousePos(sf::Mouse::getPosition());
     sf::Vector2<int> buttonPos(_sprite.getPosition());
-    sf::Vector2<int> textureSize(_texture->getSize());
+    sf::Rect<int> buttonRect(_sprite.getTextureRect());
     sf::Vector2<float> spriteScale(_sprite.getScale());
-    sf::Vector2<int> spriteSize(textureSize.x * spriteScale.x, textureSize.y / 3.f * spriteScale.y);
-    sf::Rect<int> buttonRect(0, 0, textureSize.x, textureSize.y / 3);
+    sf::Vector2<int> spriteSize(buttonRect.width * spriteScale.x, buttonRect.height * spriteScale.y);
+    sf::Rect<int> newButtonRect(0, 0, buttonRect.width, buttonRect.height);
     bool clicked(false);
 
-    if (buttonRect.contains(mousePos - buttonPos + spriteSize / 2)) {
-        buttonRect.top = buttonRect.height;
+    if (newButtonRect.contains(mousePos - buttonPos + spriteSize / 2)) {
+        newButtonRect.top = buttonRect.height;
         if (event.type == sf::Event::MouseButtonPressed ||
             (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)) {
-            buttonRect.top += buttonRect.height;
+            newButtonRect.top += buttonRect.height;
         } else if (event.type == sf::Event::MouseButtonReleased ||
             (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)) {
             this->invert();
             clicked = true;
         }
-    } else {
-        buttonRect.top = 0;
     }
-    _sprite.setTextureRect(buttonRect);
+    _sprite.setTextureRect(newButtonRect);
     return clicked;
 }
 
@@ -95,6 +93,11 @@ void Client::Button::render(Client::Window &window, uint8_t layer)
     if (layer == _layer) {
         window.draw(_sprite);
     }
+}
+
+uint32_t Client::Button::getId() const
+{
+    return 0;
 }
 
 void Client::Button::invert()

@@ -55,3 +55,8 @@ void Client::Image::render(Client::Window &window, uint8_t layer)
         window.draw(_sprite);
     }
 }
+
+uint32_t Client::Image::getId() const
+{
+    return 0;
+}
