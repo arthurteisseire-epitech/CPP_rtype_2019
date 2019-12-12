@@ -22,6 +22,7 @@ namespace Client {
         bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
+        std::string getIdentity() const override;
         uint32_t getId() const override;
     private:
         uint8_t _layer;

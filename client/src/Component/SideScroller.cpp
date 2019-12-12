@@ -61,6 +61,11 @@ void Client::SideScroller::render(Client::Window &window, uint8_t layer)
     }
 }
 
+std::string Client::SideScroller::getIdentity() const
+{
+    return "side_scroller";
+}
+
 uint32_t Client::SideScroller::getId() const
 {
     return 0;

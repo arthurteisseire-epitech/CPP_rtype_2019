@@ -23,6 +23,11 @@ Client::Network::~Network()
     _mutex.unlock();
     this->send(Client::Packet(PACKET_DISCONNECT).getRaw());
     _receiver.terminate();
+    _mutex.lock();
+    for (auto &packet : _buffer) {
+        delete packet;
+    }
+    _mutex.unlock();
 }
 
 void Client::Network::send(const void *data, const uint64_t &size)
@@ -55,49 +60,53 @@ Client::Packet Client::Network::findReceived(const uint64_t &index)
 Client::Packet Client::Network::findReceived(const uint32_t &id)
 {
     for (uint64_t i = 0; i < _buffer.size(); i++) {
-        if (_buffer[i].id == id) {
+        if (_buffer[i]->id == id) {
             Client::Packet packet(_buffer[i]);
-            _mutex.lock();
-            _buffer.erase(_buffer.begin() + i);
-            _mutex.unlock();
+            this->removeFromBuffer(i);
             return packet;
         }
     }
     throw std::runtime_error("\'Client::Network::findReceived\': No packet found.");
 }
 
-Client::Packet Client::Network::findReceived(const std::string &payload)
+Client::Packet Client::Network::findReceived(const std::string &prefix)
 {
     for (uint64_t i = 0; i < _buffer.size(); i++) {
-        std::string packetPayload;
-        std::copy(_buffer[i].payload.begin(), _buffer[i].payload.end(), packetPayload.begin());
-        if (packetPayload == payload) {
-            Client::Packet packet(_buffer[i]);
-            _mutex.lock();
-            _buffer.erase(_buffer.begin() + i);
-            _mutex.unlock();
+        Client::Packet packet(_buffer[i]);
+        if (packet.getPrefix() == prefix) {
+            this->removeFromBuffer(i);
             return packet;
         }
     }
-    throw std::runtime_error("\'Client::Network::findReceived\': Packet not found: " + payload);
+    throw std::runtime_error("\'Client::Network::findReceived\': Packet not found: " + prefix);
+}
+
+void Client::Network::removeFromBuffer(const uint64_t &index)
+{
+    _mutex.lock();
+    _buffer.erase(_buffer.begin() + index);
+    _mutex.unlock();
 }
 
 void Client::Network::emptyBuffer()
 {
     _mutex.lock();
+    for (auto &packet : _buffer) {
+        delete packet;
+    }
     _buffer.clear();
     _mutex.unlock();
 }
 
 void Client::Network::receiver()
 {
-    Client::RawPacket packet;
     while (_active) {
+        auto packet = new Client::RawPacket;
         uint64_t received = 0;
         do {
-            this->receive(&packet, sizeof(Client::RawPacket), received);
-        } while (!received || packet.magic != MAGIC_NB);
-        std::cout << "Received: \'" << packet.payload.data() << "\' on ID: " << packet.id << std::endl;
+            this->receive(packet, sizeof(Client::RawPacket), received);
+        } while (!received || packet->magic != MAGIC_NB);
+        std::cout << "Received: \'" << packet->payload.data() << "\' on ID: " << packet->id << std::endl;
         _mutex.lock();
         _buffer.push_back(packet);
         _mutex.unlock();

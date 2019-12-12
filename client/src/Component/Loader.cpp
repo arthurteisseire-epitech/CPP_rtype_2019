@@ -52,6 +52,11 @@ void Client::Loader::render(Client::Window &window, uint8_t layer)
     }
 }
 
+std::string Client::Loader::getIdentity() const
+{
+    return "identity";
+}
+
 uint32_t Client::Loader::getId() const
 {
     return 0;

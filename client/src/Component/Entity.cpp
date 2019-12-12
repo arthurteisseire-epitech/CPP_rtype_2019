@@ -2,17 +2,17 @@
 ** EPITECH PROJECT, 2019
 ** rtype
 ** File description:
-** SpriteSheet.cpp
+** Entity.cpp
 */
 
 #include "CommonComponent.hpp"
-#include "SpriteSheet.hpp"
+#include "Entity.hpp"
 
-Client::SpriteSheet::SpriteSheet(uint32_t id, uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const sf::Vector2<uint32_t> &layout) :
-    _id(id), _layer(layer), _position(position), _clock(), _texture(new sf::Texture())
+Client::Entity::Entity(uint32_t id, uint8_t layer, const std::string &identity, const sf::Vector2<float> &position, const std::string &texturePath, const sf::Vector2<uint32_t> &layout) :
+    _id(id), _layer(layer), _identity(identity), _position(position), _clock(), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
-        throw std::runtime_error("\'Client::SpriteSheet::SpriteSheet\': Cannot load texture: " + texturePath);
+        throw std::runtime_error("\'Client::Entity::Entity\': Cannot load texture: " + texturePath);
     }
     sf::Vector2<uint32_t> textureSize(_texture->getSize());
     sf::Rect<int> textureRect(0, 0, textureSize.x / layout.x, textureSize.y / layout.y);
@@ -22,27 +22,27 @@ Client::SpriteSheet::SpriteSheet(uint32_t id, uint8_t layer, const sf::Vector2<f
     _sprite.setOrigin(sf::Vector2<float>(textureRect.width, textureRect.height));
 }
 
-void Client::SpriteSheet::move(const sf::Vector2<float> &position)
+void Client::Entity::move(const sf::Vector2<float> &position)
 {
     _position = position;
 }
 
-void Client::SpriteSheet::adjust(Client::Window &window)
+void Client::Entity::adjust(Client::Window &window)
 {
     COMPONENT_ADJUST
 }
 
-void Client::SpriteSheet::place(Client::Window &window)
+void Client::Entity::place(Client::Window &window)
 {
     COMPONENT_PLACE
 }
 
-bool Client::SpriteSheet::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
+bool Client::Entity::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     return false;
 }
 
-void Client::SpriteSheet::update(Client::Network &network, Client::Window &window)
+void Client::Entity::update(Client::Network &network, Client::Window &window)
 {
     int clockTime(_clock.getElapsedTime().asMilliseconds());
     sf::Vector2<uint32_t> textureSize(_texture->getSize());
@@ -54,14 +54,19 @@ void Client::SpriteSheet::update(Client::Network &network, Client::Window &windo
     this->place(window);
 }
 
-void Client::SpriteSheet::render(Client::Window &window, uint8_t layer)
+void Client::Entity::render(Client::Window &window, uint8_t layer)
 {
     if (layer == _layer) {
         window.draw(_sprite);
     }
 }
 
-uint32_t Client::SpriteSheet::getId() const
+std::string Client::Entity::getIdentity() const
+{
+    return _identity;
+}
+
+uint32_t Client::Entity::getId() const
 {
     return 0;
 }

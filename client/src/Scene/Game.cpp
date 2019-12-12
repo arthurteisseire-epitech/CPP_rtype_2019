@@ -9,12 +9,15 @@
 #include <sstream>
 #include "Component/Fading.hpp"
 #include "Component/SideScroller.hpp"
-#include "Component/SpriteSheet.hpp"
+#include "Component/Entity.hpp"
 #include "Game.hpp"
 
 static const std::map<std::string, std::pair<std::string, sf::Vector2<uint32_t>>> entityData({
-    {"missile", {"Missile.png", {1, 1}}},
-    {"enemy", {"Enemy.png", {1, 1}}}
+    {"alien", {"Alien.png", {1, 1}}},
+    {"missile_fire1", {"MissileFire1.png", {1, 1}}},
+    {"missile_fire2", {"MissileFire2.png", {1, 1}}},
+    {"missile_standard", {"MissileStandard.png", {1, 1}}},
+    {"missile_inverted", {"MissileInverted.png", {1, 1}}}
 });
 
 Client::Game::Game(Client::IScene *prev) :
@@ -69,17 +72,27 @@ void Client::Game::update(Client::IScene *&self, Client::Network &network, Clien
             std::vector<std::string> payload(packet.getParsedPayload());
             uint32_t packetId(packet.getId());
             if (payload[0] == PACKET_ENTITY_SET) {
+                network.removeFromBuffer(i);
                 std::istringstream coordStream(payload[2]);
                 std::string coordStr;
                 std::vector<float> coordList;
-                while (std::getline(coordStream, coordStr, ';')) {
+                while (std::getline(coordStream, coordStr, ',')) {
                     coordList.push_back(std::stof(coordStr));
                 }
                 sf::Vector2<float> coord(coordList[0], coordList[1]);
+                if (coord.x < -0.5f || coord.x > 1.5f || coord.y < -0.5f || coord.y > 1.5f) {
+                    continue;
+                }
                 bool componentExists(false);
                 for (auto &component : _components) {
                     if (packetId == component->getId()) {
-                        component->move(coord);
+                        if (payload[1] == component->getIdentity()) {
+                            component->move(coord);
+                        } else {
+                            delete component;
+                            std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
+                            component = new Client::Entity(packetId, 2, payload[1], coord, data.first, data.second);
+                        }
                         componentExists = true;
                         break;
                     }
@@ -89,7 +102,7 @@ void Client::Game::update(Client::IScene *&self, Client::Network &network, Clien
                         _components.push_back(new Client::Ship(packetId, 1, "Ship.png", false));
                     } else {
                         std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
-                        _components.push_back(new Client::SpriteSheet(packetId, 2, coord, data.first, data.second));
+                        _components.push_back(new Client::Entity(packetId, 2, payload[1], coord, data.first, data.second));
                     }
                 }
             }

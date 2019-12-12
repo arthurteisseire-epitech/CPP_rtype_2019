@@ -94,6 +94,11 @@ void Client::Ship::render(Client::Window &window, uint8_t layer)
     }
 }
 
+std::string Client::Ship::getIdentity() const
+{
+    return "ship";
+}
+
 uint32_t Client::Ship::getId() const
 {
     return _id;

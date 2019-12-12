@@ -95,6 +95,11 @@ void Client::Button::render(Client::Window &window, uint8_t layer)
     }
 }
 
+std::string Client::Button::getIdentity() const
+{
+    return "button";
+}
+
 uint32_t Client::Button::getId() const
 {
     return 0;

@@ -25,7 +25,8 @@ namespace Client {
         std::pair<std::string, uint16_t> receive(void *data, const uint64_t &size, uint64_t &received);
         Client::Packet findReceived(const uint64_t &index);
         Client::Packet findReceived(const uint32_t &id);
-        Client::Packet findReceived(const std::string &payload);
+        Client::Packet findReceived(const std::string &prefix);
+        void removeFromBuffer(const uint64_t &index);
         void emptyBuffer();
     private:
         void receiver();
@@ -33,7 +34,7 @@ namespace Client {
         sf::IpAddress _serverIp;
         bool _active;
         sf::Thread _receiver;
-        std::vector<Client::RawPacket> _buffer;
+        std::vector<Client::RawPacket *> _buffer;
         sf::Mutex _mutex;
     };
 }

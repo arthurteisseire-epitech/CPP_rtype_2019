@@ -8,19 +8,22 @@
 #ifndef RTYPE_PACKET_HPP
 #define RTYPE_PACKET_HPP
 
+//SEND
 #define PACKET_ACTION_UP "action_up"
 #define PACKET_ACTION_DOWN "action_down"
 #define PACKET_ACTION_LEFT "action_left"
 #define PACKET_ACTION_RIGHT "action_right"
 #define PACKET_ACTION_SPACE "action_space"
-#define PACKET_ENTITY_COLLISION "entity_collision"
-#define PACKET_ENTITY_SET "entity_set"
 #define PACKET_CONNECT "connect"
 #define PACKET_DISCONNECT "disconnect"
+#define PACKET_ENTITY_COLLISION "entity_collision"
+#define PACKET_START_GAME "start_game"
+
+//RECEIVE
+#define PACKET_ENTITY_SET "entity_set"
 #define PACKET_MATE_CONNECTED "mate_connected"
 #define PACKET_MATE_LOST "mate_lost"
 #define PACKET_PLAYER_CONNECTED "player_connected"
-#define PACKET_START_GAME "start_game"
 
 #define MAGIC_NB 9360624
 #define DEFAULT_ID 0
@@ -41,7 +44,8 @@ namespace Client {
     public:
         Packet(const uint32_t &id = DEFAULT_ID);
         Packet(const std::string &payload, const uint32_t &id = DEFAULT_ID);
-        Packet(const RawPacket &rawPacket);
+        Packet(Client::RawPacket *rawPacket);
+        Packet(Client::Packet &packet);
         ~Packet();
         RawPacket *getRaw() const;
         std::string getPayload() const;
@@ -50,7 +54,9 @@ namespace Client {
         uint32_t getId() const;
         void setPayload(const std::string &payload);
     private:
+        void disableDestruction();
         RawPacket *_packet;
+        bool _destroy;
     };
 }
 

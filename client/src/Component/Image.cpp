@@ -56,6 +56,11 @@ void Client::Image::render(Client::Window &window, uint8_t layer)
     }
 }
 
+std::string Client::Image::getIdentity() const
+{
+    return "image";
+}
+
 uint32_t Client::Image::getId() const
 {
     return 0;

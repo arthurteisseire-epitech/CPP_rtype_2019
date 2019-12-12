@@ -46,6 +46,11 @@ void Client::Fading::render(Client::Window &window, uint8_t layer)
     }
 }
 
+std::string Client::Fading::getIdentity() const
+{
+    return "fading";
+}
+
 uint32_t Client::Fading::getId() const
 {
     return 0;
