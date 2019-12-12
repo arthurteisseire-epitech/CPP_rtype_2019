@@ -14,8 +14,8 @@
 namespace ecs
 {
     struct CType {
-        explicit CType(std::string str) : name(std::move(str)) {}
-        std::string name;
+        explicit CType(std::string_view str) : name(str) {}
+        std::string_view name;
     };
 }
 

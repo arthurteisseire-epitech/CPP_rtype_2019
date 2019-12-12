@@ -9,7 +9,7 @@
 #include "Util.hpp"
 #include "UpdateTypeSystem.hpp"
 
-const std::unordered_map<std::string, std::string> ecs::UpdateTypeSystem::nextType = {
+const std::unordered_map<std::string_view, std::string_view> ecs::UpdateTypeSystem::nextType = {
     {"basic_missile_launch", "basic_missile_launch_2"},
     {"basic_missile_launch_2", "basic_missile_launched"},
     {"basic_missile_launch_2_rev", "basic_missile_launched_rev"},
