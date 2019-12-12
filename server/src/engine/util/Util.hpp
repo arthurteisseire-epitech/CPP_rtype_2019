@@ -8,6 +8,7 @@
 #ifndef RTYPE_UTIL_HPP
 #define RTYPE_UTIL_HPP
 
+#include <optional>
 #include "ObjectPool.hpp"
 #include "EntityAdmin.hpp"
 #include "Entity.hpp"
@@ -15,7 +16,7 @@
 namespace ecs
 {
     template<typename T>
-    ObjectPool<T> &GetPool(const std::shared_ptr<EntityAdmin> &admin)
+    ObjectPool <T> &GetPool(const std::shared_ptr<EntityAdmin> &admin)
     {
         return std::get<ObjectPool<T>>(admin->pools);
     }
@@ -39,6 +40,18 @@ namespace ecs
             >;
 
         return std::get<type>(t);
+    }
+
+    template<typename Tuple>
+    std::optional<std::reference_wrapper<Tuple>> GetById(std::shared_ptr<EntityAdmin> &admin, unsigned int entityId)
+    {
+        for (auto &t : GetPool<Tuple>(admin)) {
+            if (t.first == ObjectPool<Tuple>::UNAVAILABLE &&
+                GetPool<CId>(admin).at(GetIndex<CId>(t.second)).id == entityId) {
+                return {t.second};
+            }
+        }
+        return std::nullopt;
     }
 }
 

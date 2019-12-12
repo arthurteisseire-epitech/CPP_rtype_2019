@@ -18,6 +18,8 @@
 #include "CShootingAI.hpp"
 #include "CCooldown.hpp"
 #include "CSpeed.hpp"
+#include "CCollisionDamage.hpp"
+#include "CHealth.hpp"
 
 namespace ecs
 {
@@ -31,7 +33,9 @@ namespace ecs
             CType,
             CShootingAI,
             CCooldown,
-            CSpeed
+            CSpeed,
+            CCollisionDamage,
+            CHealth
         >;
 }
 
