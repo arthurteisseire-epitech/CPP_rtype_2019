@@ -16,17 +16,16 @@ const std::unordered_map<std::string, std::string> ecs::UpdateTypeSystem::nextTy
     {"basic_missile_launch_rev", "basic_missile_launch_2_rev"}
 };
 
-ecs::UpdateTypeSystem::UpdateTypeSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::UpdateTypeSystem::UpdateTypeSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
 void ecs::UpdateTypeSystem::update(float)
 {
-    ForEachMatching<CType>(admin, [this](CType &t)
-    {
+    ForEachMatching<CType>(admin, [this](CType &t) {
         auto res = nextType.find(t.name);
         if (res != nextType.end())
             t.name = res->second;
-    }
-    );
+    });
 }

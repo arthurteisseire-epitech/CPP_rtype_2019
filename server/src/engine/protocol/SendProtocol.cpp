@@ -10,7 +10,7 @@
 const std::unordered_map<ecs::SendProtocol::Key, std::string_view> ecs::SendProtocol::commands = {
     {ecs::SendProtocol::NEW_CONNECTION, "new player"},
     {ecs::SendProtocol::CONNECTED, "connected"},
-    {ecs::SendProtocol::ENTITY_MOVE, "entity_move"},
+    {ecs::SendProtocol::ENTITY_SET, "entity_set"},
 };
 
 std::string_view ecs::SendProtocol::get(ecs::SendProtocol::Key key)
