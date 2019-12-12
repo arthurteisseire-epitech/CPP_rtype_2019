@@ -17,6 +17,9 @@ namespace ecs
         explicit HandleConnectionSystem(std::shared_ptr<EntityAdmin> admin);
         void update(float dt) override;
         void updateTuple(HandleConnectionTuple &t);
+
+    private:
+        static bool isConnect(const std::pair<ReceiveProtocol::Key, std::string> &pair);
     };
 }
 

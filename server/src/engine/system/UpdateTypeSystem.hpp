@@ -18,7 +18,7 @@ namespace ecs {
         void update(float dt) override;
 
     private:
-        static const std::unordered_map<std::string, std::string> nextType;
+        static const std::unordered_map<std::string_view, std::string_view> nextType;
     };
 }
 
