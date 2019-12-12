@@ -26,9 +26,6 @@ namespace Client {
         virtual bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) = 0;
         virtual void update(Client::Network &network, Client::Window &window) = 0;
         virtual void render(Client::Window &window, uint8_t layer) = 0;
-    private:
-        virtual void adjust(const sf::Vector2<float> &scale) = 0;
-        virtual void place(const sf::Vector2<float> &position) = 0;
     };
 }
 

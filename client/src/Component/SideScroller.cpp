@@ -16,6 +16,9 @@ Client::SideScroller::SideScroller(uint8_t layer, const std::string &texturePath
     }
     _sprite = sf::Sprite(*_texture);
     _spriteAlt = sf::Sprite(*_texture);
+    sf::Vector2<float> textureSize(_texture->getSize());
+    _sprite.setOrigin(textureSize / 2.f);
+    _spriteAlt.setOrigin(textureSize / 2.f);
 }
 
 void Client::SideScroller::move(const sf::Vector2<float> &position)
@@ -26,12 +29,14 @@ void Client::SideScroller::move(const sf::Vector2<float> &position)
 void Client::SideScroller::adjust(Client::Window &window)
 {
     COMPONENT_ADJUST
+    _spriteAlt.setScale(newScale);
+    _spriteAlt.setOrigin(newOrigin);
 }
 
 void Client::SideScroller::place(Client::Window &window)
 {
     COMPONENT_PLACE
-    _spriteAlt.setPosition({newPosition.x + spriteSize.x, newPosition.y});
+    _spriteAlt.setPosition({newPosition.x + _texture->getSize().x * _sprite.getScale().x, newPosition.y});
 }
 
 bool Client::SideScroller::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
@@ -54,15 +59,4 @@ void Client::SideScroller::render(Client::Window &window, uint8_t layer)
         window.draw(_sprite);
         window.draw(_spriteAlt);
     }
-}
-
-void Client::SideScroller::adjust(const sf::Vector2<float> &scale)
-{
-    _sprite.setScale(scale);
-    _spriteAlt.setScale(scale);
-}
-
-void Client::SideScroller::place(const sf::Vector2<float> &position)
-{
-    _sprite.setPosition(position);
 }

@@ -60,7 +60,7 @@ std::pair<std::string, uint16_t> parseArgs(int ac, char **av)
     } else {
         throw std::runtime_error("\'parseArgs\': This program requires at least 1 argument at launch. Please retry with -h or --help for more information.");
     }
-    if (clientPort < 0 || clientPort > 65535) {
+    if (clientPort < 0 || clientPort > 65535 || clientPort == SERVER_PORT) {
         throw std::runtime_error("\'parseArgs\': The given port is invalid.");
     }
     return {serverIp, clientPort};

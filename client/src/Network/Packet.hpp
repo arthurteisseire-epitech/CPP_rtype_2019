@@ -8,17 +8,18 @@
 #ifndef RTYPE_PACKET_HPP
 #define RTYPE_PACKET_HPP
 
-#define PACKET_ACTION_UP "action up"
-#define PACKET_ACTION_DOWN "action down"
-#define PACKET_ACTION_LEFT "action left"
-#define PACKET_ACTION_RIGHT "action right"
-#define PACKET_ACTION_SPACE "action space"
+#define PACKET_ACTION_UP "action_up"
+#define PACKET_ACTION_DOWN "action_down"
+#define PACKET_ACTION_LEFT "action_left"
+#define PACKET_ACTION_RIGHT "action_right"
+#define PACKET_ACTION_SPACE "action_space"
+#define PACKET_COLLISION "collision:%i"
 #define PACKET_CONNECT "connect"
 #define PACKET_DISCONNECT "disconnect"
-#define PACKET_MATE_CONNECTED "mate connected"
-#define PACKET_MATE_LOST "mate lost"
-#define PACKET_PLAYER_CONNECTED "player connected"
-#define PACKET_START_GAME "start game"
+#define PACKET_MATE_CONNECTED "mate_connected"
+#define PACKET_MATE_LOST "mate_lost"
+#define PACKET_PLAYER_CONNECTED "player_connected"
+#define PACKET_START_GAME "start_game"
 
 #define MAGIC_NB 9360624
 #define DEFAULT_ID 0

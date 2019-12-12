@@ -14,11 +14,12 @@ Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, b
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("\'Client::Ship::Ship\': Cannot load texture: " + texturePath);
     }
-    sf::Vector2<int> textureSize(_texture->getSize());
+    sf::Vector2<uint32_t> textureSize(_texture->getSize());
     sf::Rect<int> textureRect(2, controlled ? 0 : 1 + id % 4, textureSize.x / 5, textureSize.y / 5);
     textureRect.left *= textureRect.width;
     textureRect.top *= textureRect.height;
     _sprite = sf::Sprite(*_texture, textureRect);
+    _sprite.setOrigin(sf::Vector2<float>(textureRect.width, textureRect.height));
 }
 
 Client::Ship::~Ship()
@@ -101,14 +102,4 @@ uint32_t Client::Ship::getId() const
 bool Client::Ship::isControlled() const
 {
     return _controlled;
-}
-
-void Client::Ship::adjust(const sf::Vector2<float> &scale)
-{
-    _sprite.setScale(scale);
-}
-
-void Client::Ship::place(const sf::Vector2<float> &position)
-{
-    _sprite.setPosition(position);
 }

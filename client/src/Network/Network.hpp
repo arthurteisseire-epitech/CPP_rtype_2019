@@ -23,6 +23,7 @@ namespace Client {
         void send(const void *data, const uint64_t &size);
         void send(const Client::RawPacket *packet);
         std::pair<std::string, uint16_t> receive(void *data, const uint64_t &size, uint64_t &received);
+        Client::Packet findReceived(const uint16_t &index);
         Client::Packet findReceived(const uint32_t &id);
         Client::Packet findReceived(const std::string &payload);
     private:

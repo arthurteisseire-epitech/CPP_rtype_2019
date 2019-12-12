@@ -15,6 +15,7 @@ Client::Image::Image(uint8_t layer, const sf::Vector2<float> &position, const st
         throw std::runtime_error("\'Client::Image::Image\': Cannot load texture: " + texturePath);
     }
     _sprite = sf::Sprite(*_texture);
+    _sprite.setOrigin(sf::Vector2<float>(_texture->getSize()) / 2.f);
 }
 
 Client::Image::~Image()
@@ -53,14 +54,4 @@ void Client::Image::render(Client::Window &window, uint8_t layer)
     if (layer == _layer) {
         window.draw(_sprite);
     }
-}
-
-void Client::Image::adjust(const sf::Vector2<float> &scale)
-{
-    _sprite.setScale(scale);
-}
-
-void Client::Image::place(const sf::Vector2<float> &position)
-{
-    _sprite.setPosition(position);
 }

@@ -14,8 +14,10 @@ Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const 
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("\'Client::Button::Button\': Cannot load texture: " + texturePath);
     }
-    sf::Vector2<int> textureSize(_texture->getSize());
-    _sprite = sf::Sprite(*_texture, {0, 0, textureSize.x, textureSize.y / 3});
+    sf::Vector2<uint32_t> textureSize(_texture->getSize());
+    sf::Rect<int> textureRect(0, 0, textureSize.x, textureSize.y / 3);
+    _sprite = sf::Sprite(*_texture, textureRect);
+    _sprite.setOrigin(sf::Vector2<float>(textureRect.width, textureRect.height));
 }
 
 Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert) :
@@ -30,7 +32,9 @@ Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const 
     if (textureSize != sf::Vector2<int>(_textureAlt->getSize())) {
         throw std::runtime_error("\'Client::Button::Button\':" + texturePath + " and " + textureAltPath + "are not the same size.");
     }
-    _sprite = sf::Sprite(invert ? *_textureAlt : *_texture, {0, 0, textureSize.x, textureSize.y / 3});
+    sf::Rect<int> textureRect(0, 0, textureSize.x, textureSize.y / 3);
+    _sprite = sf::Sprite(invert ? *_textureAlt : *_texture, textureRect);
+    _sprite.setOrigin(sf::Vector2<float>(textureRect.width, textureRect.height));
 }
 
 Client::Button::~Button()
@@ -58,10 +62,12 @@ bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
     sf::Vector2<int> mousePos(sf::Mouse::getPosition());
     sf::Vector2<int> buttonPos(_sprite.getPosition());
     sf::Vector2<int> textureSize(_texture->getSize());
+    sf::Vector2<float> spriteScale(_sprite.getScale());
+    sf::Vector2<int> spriteSize(textureSize.x * spriteScale.x, textureSize.y / 3.f * spriteScale.y);
     sf::Rect<int> buttonRect(0, 0, textureSize.x, textureSize.y / 3);
     bool clicked(false);
 
-    if (buttonRect.contains(mousePos - buttonPos)) {
+    if (buttonRect.contains(mousePos - buttonPos + spriteSize / 2)) {
         buttonRect.top = buttonRect.height;
         if (event.type == sf::Event::MouseButtonPressed ||
             (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)) {
@@ -89,16 +95,6 @@ void Client::Button::render(Client::Window &window, uint8_t layer)
     if (layer == _layer) {
         window.draw(_sprite);
     }
-}
-
-void Client::Button::adjust(const sf::Vector2<float> &scale)
-{
-    _sprite.setScale(scale);
-}
-
-void Client::Button::place(const sf::Vector2<float> &position)
-{
-    _sprite.setPosition(position);
 }
 
 void Client::Button::invert()

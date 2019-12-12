@@ -24,7 +24,7 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
             GetPool<CTransform>(admin).create(),
             GetPool<CCommand>(admin).create(),
             GetPool<CDirection>(admin).create(),
-            GetPool<CType>(admin).create("spaceship_normal"),
+            GetPool<CType>(admin).create("ship:normal"),
             GetPool<CSpeed>(admin).create(1),
             GetPool<CId>(admin).create(nextId(admin))
         )
@@ -37,7 +37,7 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
 {
     admin->entities.emplace_back(
         new Entity(admin,
-            GetPool<CType>(admin).create("basic_missile_launch"),
+            GetPool<CType>(admin).create("missile:normal"),
             GetPool<CId>(admin).create(nextId(admin)),
             GetPool<CSpeed>(admin).create(5),
             transformIdx,
@@ -52,7 +52,7 @@ void ecs::EntityFactory::createShootingMonster(std::shared_ptr<EntityAdmin> &adm
 {
     admin->entities.emplace_back(
         new Entity(admin,
-            GetPool<CType>(admin).create("spaceship_normal_rev"),
+            GetPool<CType>(admin).create("ship:inverted"),
             GetPool<CId>(admin).create(nextId(admin)),
             GetPool<CShootingAI>(admin).create(),
             GetPool<CCooldown>(admin).create(1),

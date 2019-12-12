@@ -19,7 +19,7 @@ void Client::Fading::move(const sf::Vector2<float> &position)
 
 void Client::Fading::adjust(Client::Window &window)
 {
-    this->adjust(sf::Vector2<float>(window.getSize()));
+    _sprite.setSize(sf::Vector2<float>(window.getSize()));
 }
 
 void Client::Fading::place(Client::Window &window)
@@ -44,13 +44,4 @@ void Client::Fading::render(Client::Window &window, uint8_t layer)
     if (layer == _layer) {
         window.draw(_sprite);
     }
-}
-
-void Client::Fading::adjust(const sf::Vector2<float> &size)
-{
-    _sprite.setSize(size);
-}
-
-void Client::Fading::place(const sf::Vector2<float> &position)
-{
 }

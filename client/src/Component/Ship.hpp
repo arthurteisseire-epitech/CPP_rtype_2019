@@ -24,8 +24,6 @@ namespace Client {
         uint32_t getId() const;
         bool isControlled() const;
     private:
-        void adjust(const sf::Vector2<float> &scale) override;
-        void place(const sf::Vector2<float> &position) override;
         uint32_t _id;
         uint8_t _layer;
         bool _controlled;

@@ -22,8 +22,6 @@ namespace Client {
         void update(Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
     private:
-        void adjust(const sf::Vector2<float> &scale) override;
-        void place(const sf::Vector2<float> &position) override;
         uint8_t _layer;
         float _speed;
         sf::Vector2<float> _position;
