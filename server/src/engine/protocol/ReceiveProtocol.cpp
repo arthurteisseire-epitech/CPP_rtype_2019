@@ -8,12 +8,14 @@
 #include "ReceiveProtocol.hpp"
 
 const std::unordered_map<std::string_view, ecs::ReceiveProtocol::Key> ecs::ReceiveProtocol::commands = {
-    {"left",    ecs::ReceiveProtocol::LEFT},
-    {"right",   ecs::ReceiveProtocol::RIGHT},
-    {"up",      ecs::ReceiveProtocol::UP},
-    {"down",    ecs::ReceiveProtocol::DOWN},
-    {"space",   ecs::ReceiveProtocol::SPACE},
+    {"action_left",    ecs::ReceiveProtocol::LEFT},
+    {"action_right",   ecs::ReceiveProtocol::RIGHT},
+    {"action_up",      ecs::ReceiveProtocol::UP},
+    {"action_down",    ecs::ReceiveProtocol::DOWN},
+    {"action_space",   ecs::ReceiveProtocol::SPACE},
     {"connect", ecs::ReceiveProtocol::CONNECT},
+    {"disconnect", ecs::ReceiveProtocol::DISCONNECT},
+    {"entity_collision", ecs::ReceiveProtocol::COLLISION},
 };
 
 std::pair<ecs::ReceiveProtocol::Key, std::string> ecs::ReceiveProtocol::find(const std::string &command)

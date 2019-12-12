@@ -22,6 +22,8 @@ namespace ecs
             DOWN,
             SPACE,
             CONNECT,
+            DISCONNECT,
+            COLLISION,
             UNKOWN,
         };
 

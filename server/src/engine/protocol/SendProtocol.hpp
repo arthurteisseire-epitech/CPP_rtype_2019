@@ -15,7 +15,6 @@ namespace ecs
     class SendProtocol {
     public:
         enum Key {
-            NEW_CONNECTION,
             CONNECTED,
             ENTITY_SET,
         };
