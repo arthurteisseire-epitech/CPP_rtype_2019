@@ -23,7 +23,7 @@ void ecs::EntityFactory::createPlayer(std::shared_ptr<EntityAdmin> &admin,
     admin->entities.emplace_back(
         new Entity(admin,
                    connIdx,
-                   GetPool<CTransform>(admin).create(),
+                   GetPool<CTransform>(admin).create(mut::Vec2f(0.1f, 0.5f)),
                    GetPool<CCommand>(admin).create(),
                    GetPool<CDirection>(admin).create(),
                    GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::SHIP_NORMAL)),
