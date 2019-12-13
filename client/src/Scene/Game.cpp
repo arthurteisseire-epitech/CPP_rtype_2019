@@ -21,7 +21,7 @@ static const std::map<std::string, std::pair<std::string, sf::Vector2<uint32_t>>
 });
 
 static const std::map<std::string, void (Client::Game::*)(const std::vector<std::string> &, const uint32_t &)> entityAction({
-    {PACKET_ENTITY_DESTROY, &Client::Game::deleteEntity},
+    {PACKET_ENTITY_DELETE, &Client::Game::deleteEntity},
     {PACKET_ENTITY_SET, &Client::Game::setEntity}
 });
 

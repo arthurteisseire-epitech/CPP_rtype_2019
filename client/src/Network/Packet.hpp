@@ -20,7 +20,7 @@
 #define PACKET_START_GAME "start_game"
 
 //RECEIVE
-#define PACKET_ENTITY_DESTROY "entity_destroy"
+#define PACKET_ENTITY_DELETE "entity_delete"
 #define PACKET_ENTITY_SET "entity_set"
 #define PACKET_MATE_CONNECTED "mate_connected"
 #define PACKET_MATE_LOST "mate_lost"
