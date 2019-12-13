@@ -20,6 +20,11 @@ static const std::map<std::string, std::pair<std::string, sf::Vector2<uint32_t>>
     {"missile_inverted", {"MissileInverted.png", {1, 1}}}
 });
 
+static const std::map<std::string, void (Client::Game::*)(const std::vector<std::string> &, const uint32_t &)> entityAction({
+    {PACKET_ENTITY_DELETE, &Client::Game::deleteEntity},
+    {PACKET_ENTITY_SET, &Client::Game::setEntity}
+});
+
 Client::Game::Game(Client::IScene *prev) :
     _prev(prev), _components({
         new Client::SideScroller(0, "Background.png", 0.1f),
@@ -70,40 +75,10 @@ void Client::Game::update(Client::IScene *&self, Client::Network &network, Clien
         try {
             Client::Packet packet(network.findReceived(i));
             std::vector<std::string> payload(packet.getParsedPayload());
-            uint32_t packetId(packet.getId());
-            if (payload[0] == PACKET_ENTITY_SET) {
-                network.removeFromBuffer(i);
-                std::istringstream coordStream(payload[2]);
-                std::string coordStr;
-                std::vector<float> coordList;
-                while (std::getline(coordStream, coordStr, ',')) {
-                    coordList.push_back(std::stof(coordStr));
-                }
-                sf::Vector2<float> coord(coordList[0], coordList[1]);
-                if (coord.x < -0.5f || coord.x > 1.5f || coord.y < -0.5f || coord.y > 1.5f) {
-                    continue;
-                }
-                bool componentExists(false);
-                for (auto &component : _components) {
-                    if (packetId == component->getId()) {
-                        if (payload[1] == component->getIdentity()) {
-                            component->move(coord);
-                        } else {
-                            delete component;
-                            std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
-                            component = new Client::Entity(packetId, 2, payload[1], coord, data.first, data.second);
-                        }
-                        componentExists = true;
-                        break;
-                    }
-                }
-                if (!componentExists) {
-                    if (payload[1] == "ship") {
-                        _components.push_back(new Client::Ship(packetId, 1, "Ship.png", false));
-                    } else {
-                        std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
-                        _components.push_back(new Client::Entity(packetId, 2, payload[1], coord, data.first, data.second));
-                    }
+            for (auto &action : entityAction) {
+                if (action.first == payload[0]) {
+                    network.removeFromBuffer(i);
+                    (this->*action.second)(payload, packet.getId());
                 }
             }
         } catch (std::logic_error &parsingError) {
@@ -122,6 +97,52 @@ void Client::Game::render(Client::Window &window)
     for (uint8_t layer = 0; layer < 255; layer++) {
         for (auto &component : _components) {
             component->render(window, layer);
+        }
+    }
+}
+
+void Client::Game::deleteEntity(const std::vector<std::string> &payload, const uint32_t &id)
+{
+    for (uint64_t i = 0; i < _components.size(); i++) {
+        if (_components[i]->getId() == id) {
+            delete _components[i];
+            _components.erase(_components.begin() + i);
+        }
+    }
+}
+
+void Client::Game::setEntity(const std::vector<std::string> &payload, const uint32_t &id)
+{
+    std::istringstream coordStream(payload[2]);
+    std::string coordStr;
+    std::vector<float> coordList;
+    while (std::getline(coordStream, coordStr, ',')) {
+        coordList.push_back(std::stof(coordStr));
+    }
+    sf::Vector2<float> coord(coordList[0], coordList[1]);
+    if (coord.x < -0.5f || coord.x > 1.5f || coord.y < -0.5f || coord.y > 1.5f) {
+        return;
+    }
+    bool componentExists(false);
+    for (auto &component : _components) {
+        if (id == component->getId()) {
+            if (payload[1] == component->getIdentity()) {
+                component->move(coord);
+            } else {
+                delete component;
+                std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
+                component = new Client::Entity(id, 2, payload[1], coord, data.first, data.second);
+            }
+            componentExists = true;
+            break;
+        }
+    }
+    if (!componentExists) {
+        if (payload[1] == "ship") {
+            _components.push_back(new Client::Ship(id, 1, "Ship.png", false));
+        } else {
+            std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
+            _components.push_back(new Client::Entity(id, 2, payload[1], coord, data.first, data.second));
         }
     }
 }

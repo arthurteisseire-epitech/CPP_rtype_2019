@@ -20,6 +20,8 @@ namespace Client {
         void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::IScene *&self, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
+        void deleteEntity(const std::vector<std::string> &payload, const uint32_t &id);
+        void setEntity(const std::vector<std::string> &payload, const uint32_t &id);
     private:
         Client::IScene *_prev;
         std::vector<Client::IComponent *> _components;
