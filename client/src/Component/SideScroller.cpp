@@ -44,7 +44,7 @@ bool Client::SideScroller::event(const sf::Event &event, Client::KeyBind &keyBin
     return false;
 }
 
-void Client::SideScroller::update(Client::Network &network, Client::Window &window)
+void Client::SideScroller::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     float displacement(_clock.getElapsedTime().asSeconds() * _speed);
     displacement -= float(int(displacement));

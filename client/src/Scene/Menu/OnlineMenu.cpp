@@ -31,7 +31,7 @@ void Client::OnlineMenu::event(Client::IScene *&self, sf::Event &event, Client::
 {
 }
 
-void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
+void Client::OnlineMenu::update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     try {
         Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
@@ -75,11 +75,11 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::Network &network,
         }
     } else if (clockTime - _quitRefTime > 0.5f) {
         self = _next;
-        self->update(self, network, window);
+        self->update(self, keyBind, network, window);
         network.send(Client::Packet(PACKET_START_GAME, _playerId).getRaw());
     }
     for (auto &component : _components) {
-        component->update(network, window);
+        component->update(keyBind, network, window);
     }
 }
 

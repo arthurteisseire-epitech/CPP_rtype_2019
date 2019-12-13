@@ -18,6 +18,7 @@ namespace Client {
         ~KeyBind() = default;
         void rebind(const sf::Keyboard::Key bind, const sf::Keyboard::Key action);
         sf::Keyboard::Key getAction(const sf::Keyboard::Key bind);
+        sf::Keyboard::Key getBind(const sf::Keyboard::Key action);
         bool isBound(const sf::Keyboard::Key bind);
     private:
         std::map<sf::Keyboard::Key, sf::Keyboard::Key> _bind;

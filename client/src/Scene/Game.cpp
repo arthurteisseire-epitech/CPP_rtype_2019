@@ -21,7 +21,7 @@ static const std::map<std::string, std::pair<std::string, sf::Vector2<uint32_t>>
 });
 
 static const std::map<std::string, void (Client::Game::*)(const std::vector<std::string> &, const uint32_t &)> entityAction({
-    {PACKET_ENTITY_DELETE, &Client::Game::deleteEntity},
+    {PACKET_ENTITY_DESTROY, &Client::Game::deleteEntity},
     {PACKET_ENTITY_SET, &Client::Game::setEntity}
 });
 
@@ -59,7 +59,8 @@ void Client::Game::event(Client::IScene *&self, sf::Event &event, Client::KeyBin
     }
 }
 
-void Client::Game::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
+#include <iostream>
+void Client::Game::update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     if (_start) {
         if (_components.size() == 2) {
@@ -79,6 +80,8 @@ void Client::Game::update(Client::IScene *&self, Client::Network &network, Clien
                 if (action.first == payload[0]) {
                     network.removeFromBuffer(i);
                     (this->*action.second)(payload, packet.getId());
+                    i--;
+                    break;
                 }
             }
         } catch (std::logic_error &parsingError) {
@@ -87,8 +90,21 @@ void Client::Game::update(Client::IScene *&self, Client::Network &network, Clien
             break;
         }
     }
-    for (auto &component : _components) {
-        component->update(network, window);
+    for (auto &component1 : _components) {
+        for (auto &component2 : _components) {
+            std::pair<uint32_t, uint32_t> collision(component1->getId(), component2->getId());
+            if (!collision.first) {
+                break;
+            } else if (!collision.second || collision.first == collision.second) {
+                continue;
+            }
+            if (component1->collide(component2, window)) {
+                std::ostringstream payload;
+                payload << PACKET_ENTITY_COLLISION << ':' << collision.first << ',' << collision.second;
+                network.send(Client::Packet(payload.str(), collision.first).getRaw());
+            }
+        }
+        component1->update(keyBind, network, window);
     }
 }
 
@@ -107,6 +123,7 @@ void Client::Game::deleteEntity(const std::vector<std::string> &payload, const u
         if (_components[i]->getId() == id) {
             delete _components[i];
             _components.erase(_components.begin() + i);
+            break;
         }
     }
 }

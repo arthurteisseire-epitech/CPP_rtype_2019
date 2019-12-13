@@ -38,7 +38,7 @@ bool Client::Loader::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
     return false;
 }
 
-void Client::Loader::update(Client::Network &network, Client::Window &window)
+void Client::Loader::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     _sprite.setRotation(_clock.getElapsedTime().asSeconds() * 360.f);
     this->adjust(window);

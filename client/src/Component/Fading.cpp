@@ -32,7 +32,7 @@ bool Client::Fading::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
     return false;
 }
 
-void Client::Fading::update(Client::Network &network, Client::Window &window)
+void Client::Fading::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     float clockTime(std::max(_clock.getElapsedTime().asSeconds() - _delay, 0.f));
     float progress(std::min(_invert ? std::max(_duration - clockTime, 0.f) : clockTime, _duration));

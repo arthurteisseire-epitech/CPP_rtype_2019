@@ -39,7 +39,7 @@ void Client::MainMenu::event(Client::IScene *&self, sf::Event &event, Client::Ke
     MENU_EVENT
 }
 
-void Client::MainMenu::update(Client::IScene *&self, Client::Network &network, Client::Window &window)
+void Client::MainMenu::update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     MENU_UPDATE
 }

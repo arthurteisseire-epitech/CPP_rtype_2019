@@ -8,6 +8,14 @@
 #include "Component/CommonComponent.hpp"
 #include "Ship.hpp"
 
+static const std::map<sf::Keyboard::Key, std::string> shipAction({
+    {sf::Keyboard::Key::Up, PACKET_ACTION_UP},
+    {sf::Keyboard::Key::Down, PACKET_ACTION_DOWN},
+    {sf::Keyboard::Key::Left, PACKET_ACTION_LEFT},
+    {sf::Keyboard::Key::Right, PACKET_ACTION_RIGHT},
+    {sf::Keyboard::Key::Space, PACKET_ACTION_SPACE}
+});
+
 Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) :
     _id(id), _layer(layer), _controlled(controlled), _position(0.1f, 0.5f), _texture(new sf::Texture())
 {
@@ -44,43 +52,20 @@ void Client::Ship::place(Client::Window &window)
 
 bool Client::Ship::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
-    if (_controlled && event.type == sf::Event::KeyPressed && keyBind.isBound(event.key.code)) {
-        Client::Packet packet(_id);
-        switch (keyBind.getAction(event.key.code)) {
-        case sf::Keyboard::Key::Up:
-            packet.setPayload(PACKET_ACTION_UP);
-            break;
-        case sf::Keyboard::Key::Down:
-            packet.setPayload(PACKET_ACTION_DOWN);
-            break;
-        case sf::Keyboard::Key::Left:
-            packet.setPayload(PACKET_ACTION_LEFT);
-            break;
-        case sf::Keyboard::Key::Right:
-            packet.setPayload(PACKET_ACTION_RIGHT);
-            break;
-        case sf::Keyboard::Key::Space:
-            packet.setPayload(PACKET_ACTION_SPACE);
-            break;
-        default:
-            return false;
-        }
-        network.send(packet.getRaw());
-        return true;
-    }
     return false;
 }
 
-void Client::Ship::update(Client::Network &network, Client::Window &window)
+void Client::Ship::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     this->adjust(window);
-    try {
-        Client::Packet packet(network.findReceived(_id));
-        _position = {0, 0};
-    } catch (std::runtime_error &packetNotFound) {
-        return;
-    }
     this->place(window);
+    if (_controlled) {
+        for (auto &action : shipAction) {
+            if (sf::Keyboard::isKeyPressed(keyBind.getBind(action.first))) {
+                network.send(Client::Packet(action.second, _id).getRaw());
+            }
+        }
+    }
     sf::Rect<int> spriteRect(_sprite.getTextureRect());
     float moveRatio(window.getSize().y / _sprite.getPosition().y - _position.y);
     spriteRect.left = (2 + (moveRatio > 0.01) + (moveRatio > 0.02) - (moveRatio < 0.01) - (moveRatio < 0.02)) * spriteRect.width;

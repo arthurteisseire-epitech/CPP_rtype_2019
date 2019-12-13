@@ -82,7 +82,7 @@ bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
     return clicked;
 }
 
-void Client::Button::update(Client::Network &network, Client::Window &window)
+void Client::Button::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     this->adjust(window);
     this->place(window);

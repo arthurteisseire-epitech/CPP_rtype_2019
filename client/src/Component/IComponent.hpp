@@ -24,7 +24,7 @@ namespace Client {
         virtual void adjust(Client::Window &window) = 0;
         virtual void place(Client::Window &window) = 0;
         virtual bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) = 0;
-        virtual void update(Client::Network &network, Client::Window &window) = 0;
+        virtual void update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) = 0;
         virtual void render(Client::Window &window, uint8_t layer) = 0;
         virtual bool collide(Client::IComponent *component, Client::Window &window) = 0;
         virtual std::string getIdentity() const = 0;

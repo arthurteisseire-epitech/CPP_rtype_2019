@@ -20,7 +20,7 @@ namespace Client {
         void adjust(Client::Window &window) override;
         void place(Client::Window &window) override;
         bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
-        void update(Client::Network &network, Client::Window &window) override;
+        void update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
         bool collide(Client::IComponent *component, Client::Window &window) override;
         std::string getIdentity() const override;

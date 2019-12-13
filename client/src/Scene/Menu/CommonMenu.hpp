@@ -47,7 +47,7 @@ if (spawnTime < 1.f) {\
     if (quitTime > 0.5f) {\
         if (_next) {\
             self = _next;\
-            self->update(self, network, window);\
+            self->update(self, keyBind, network, window);\
         } else {\
             window.close();\
         }\
@@ -61,10 +61,10 @@ if (spawnTime < 1.f) {\
     }\
 }\
 for (auto &component : _components) {\
-    component->update(network, window);\
+    component->update(keyBind, network, window);\
 }\
 for (auto &button : _buttons) {\
-    button.first->update(network, window);\
+    button.first->update(keyBind, network, window);\
 }
 
 #define MENU_RENDER \

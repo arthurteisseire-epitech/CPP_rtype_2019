@@ -38,6 +38,7 @@ void Client::Network::send(const void *data, const uint64_t &size)
 void Client::Network::send(const Client::RawPacket *packet)
 {
     this->send(packet, sizeof(Client::RawPacket));
+    std::cout << "Sent: \'" << packet->payload.data() << "\' on ID: " << packet->id << std::endl;
 }
 
 std::pair<std::string, uint16_t> Client::Network::receive(void *data, const uint64_t &size, uint64_t &received)
@@ -106,7 +107,7 @@ void Client::Network::receiver()
         do {
             this->receive(packet, sizeof(Client::RawPacket), received);
         } while (!received || packet->magic != MAGIC_NB);
-        //std::cout << "Received: \'" << packet->payload.data() << "\' on ID: " << packet->id << std::endl;
+        std::cout << "Received: \'" << packet->payload.data() << "\' on ID: " << packet->id << std::endl;
         _mutex.lock();
         _buffer.push_back(packet);
         _mutex.unlock();

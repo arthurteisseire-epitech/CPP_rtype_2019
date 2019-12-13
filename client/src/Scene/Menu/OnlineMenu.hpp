@@ -22,7 +22,7 @@ namespace Client {
         OnlineMenu(Client::IScene *prev = nullptr);
         ~OnlineMenu() override;
         void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
-        void update(Client::IScene *&self, Client::Network &network, Client::Window &window) override;
+        void update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
     private:
         Client::IScene *_prev;

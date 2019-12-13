@@ -43,7 +43,7 @@ bool Client::Image::event(const sf::Event &event, Client::KeyBind &keyBind, Clie
     return false;
 }
 
-void Client::Image::update(Client::Network &network, Client::Window &window)
+void Client::Image::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     this->adjust(window);
     this->place(window);

@@ -42,7 +42,7 @@ bool Client::Entity::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
     return false;
 }
 
-void Client::Entity::update(Client::Network &network, Client::Window &window)
+void Client::Entity::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     int clockTime(_clock.getElapsedTime().asMilliseconds());
     sf::Vector2<uint32_t> textureSize(_texture->getSize());

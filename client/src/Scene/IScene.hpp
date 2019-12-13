@@ -18,7 +18,7 @@ namespace Client {
     public:
         virtual ~IScene() = default;
         virtual void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) = 0;
-        virtual void update(Client::IScene *&self, Client::Network &network, Client::Window &window) = 0;
+        virtual void update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) = 0;
         virtual void render(Client::Window &window) = 0;
     };
 }

@@ -83,7 +83,7 @@ int main(int ac, char **av)
                 }
                 scene->event(scene, event, keyBind, network, window);
             }
-            scene->update(scene, network, window);
+            scene->update(scene, keyBind, network, window);
             window.clear();
             scene->render(window);
             window.display();

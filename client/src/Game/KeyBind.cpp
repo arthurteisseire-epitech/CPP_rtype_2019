@@ -34,6 +34,16 @@ sf::Keyboard::Key Client::KeyBind::getAction(const sf::Keyboard::Key bind)
     return _bind[bind];
 }
 
+sf::Keyboard::Key Client::KeyBind::getBind(const sf::Keyboard::Key action)
+{
+    for (auto &pair : _bind) {
+        if (pair.second == action) {
+            return pair.first;
+        }
+    }
+    return sf::Keyboard::Key::Unknown;
+}
+
 bool Client::KeyBind::isBound(const sf::Keyboard::Key bind)
 {
     return _bind.find(bind) != _bind.end();
