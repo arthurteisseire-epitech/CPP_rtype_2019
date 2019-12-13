@@ -20,17 +20,16 @@ void ecs::DispatchPacketSystem::update(float)
     while (!buffers.empty()) {
         auto &p = buffers.front();
 
-        auto &connPool = GetPool<CConnection>(admin);
-        auto it = std::find_if(connPool.begin(), connPool.end(), [&p] (auto &pair) {
-            return pair.second.endpoint == p.first;
+        auto optConn = FindOneMatching<CConnection>(admin, [&p] (CConnection &conn) {
+            return conn.endpoint == p.first;
         });
 
-        if (it == connPool.end()) {
-            auto connIdx = connPool.create(p.first);
+        if (!optConn.has_value()) {
+            auto connIdx = GetPool<CConnection>(admin).create(p.first);
             EntityFactory::createPlayer(admin, connIdx);
             GetPool<CConnection>(admin).at(connIdx).readBuffers.push(p.second);
         } else {
-            it->second.readBuffers.push(p.second);
+            optConn.value().get().readBuffers.push(p.second);
         }
         buffers.pop();
     }
