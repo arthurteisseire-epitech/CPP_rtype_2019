@@ -94,6 +94,11 @@ void Client::Ship::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::Ship::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::Ship::getIdentity() const
 {
     return "ship";
@@ -104,7 +109,12 @@ uint32_t Client::Ship::getId() const
     return _id;
 }
 
-bool Client::Ship::isControlled() const
+sf::Vector2<float> Client::Ship::getPosition() const
 {
-    return _controlled;
+    return _position;
+}
+
+sf::Vector2<float> Client::Ship::getSpriteSize() const
+{
+    COMPONENT_SPRITE_SIZE
 }

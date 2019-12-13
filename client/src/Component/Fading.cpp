@@ -5,6 +5,7 @@
 ** Fading.cpp
 */
 
+#include "CommonComponent.hpp"
 #include "Fading.hpp"
 
 Client::Fading::Fading(uint8_t layer, float duration, float delay, bool invert) :
@@ -46,6 +47,11 @@ void Client::Fading::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::Fading::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::Fading::getIdentity() const
 {
     return "fading";
@@ -54,4 +60,14 @@ std::string Client::Fading::getIdentity() const
 uint32_t Client::Fading::getId() const
 {
     return 0;
+}
+
+sf::Vector2<float> Client::Fading::getPosition() const
+{
+    return {0.5f, 0.5f};
+}
+
+sf::Vector2<float> Client::Fading::getSpriteSize() const
+{
+    return _sprite.getSize();
 }

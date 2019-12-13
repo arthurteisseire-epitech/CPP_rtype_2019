@@ -21,8 +21,11 @@ namespace Client {
         bool event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window, uint8_t layer) override;
+        bool collide(Client::IComponent *component, Client::Window &window) override;
         std::string getIdentity() const override;
         uint32_t getId() const override;
+        sf::Vector2<float> getPosition() const override;
+        sf::Vector2<float> getSpriteSize() const override;
     private:
         uint8_t _layer;
         float _duration;

@@ -106,7 +106,7 @@ void Client::Network::receiver()
         do {
             this->receive(packet, sizeof(Client::RawPacket), received);
         } while (!received || packet->magic != MAGIC_NB);
-        std::cout << "Received: \'" << packet->payload.data() << "\' on ID: " << packet->id << std::endl;
+        //std::cout << "Received: \'" << packet->payload.data() << "\' on ID: " << packet->id << std::endl;
         _mutex.lock();
         _buffer.push_back(packet);
         _mutex.unlock();

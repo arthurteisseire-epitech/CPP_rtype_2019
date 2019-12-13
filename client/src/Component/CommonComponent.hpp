@@ -22,4 +22,25 @@ sf::Vector2<float> winSize(window.getSize());\
 sf::Vector2<float> newPosition(winSize.x * _position.x, winSize.y * _position.y);\
 _sprite.setPosition(newPosition);
 
+#define COMPONENT_COLLIDE \
+sf::Vector2<float> sprite1Position(this->getPosition());\
+sf::Vector2<float> sprite2Position(component->getPosition());\
+sf::Vector2<float> sprite1Size(this->getSpriteSize());\
+sf::Vector2<float> sprite2Size(component->getSpriteSize());\
+sf::Vector2<uint32_t> windowSize(window.getSize());\
+return sf::Rect<float>({\
+sprite1Position.x * windowSize.x - sprite1Size.x / 2.f,\
+sprite1Position.y * windowSize.y - sprite1Size.y / 2.f,\
+sprite1Size.x, sprite1Size.y\
+}).intersects(sf::Rect<float>({\
+    sprite2Position.x * windowSize.x - sprite2Size.x / 2.f,\
+    sprite2Position.y * windowSize.y - sprite2Size.y / 2.f,\
+    sprite2Size.x, sprite2Size.y\
+}));
+
+#define COMPONENT_SPRITE_SIZE \
+sf::Rect<int> textureRect(_sprite.getTextureRect());\
+sf::Vector2<float> spriteScale(_sprite.getScale());\
+return {textureRect.width * spriteScale.x, textureRect.height * spriteScale.y};
+
 #endif

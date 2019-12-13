@@ -52,6 +52,11 @@ void Client::Loader::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::Loader::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::Loader::getIdentity() const
 {
     return "identity";
@@ -60,4 +65,14 @@ std::string Client::Loader::getIdentity() const
 uint32_t Client::Loader::getId() const
 {
     return 0;
+}
+
+sf::Vector2<float> Client::Loader::getPosition() const
+{
+    return _position;
+}
+
+sf::Vector2<float> Client::Loader::getSpriteSize() const
+{
+    COMPONENT_SPRITE_SIZE
 }

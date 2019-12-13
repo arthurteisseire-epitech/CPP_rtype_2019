@@ -123,26 +123,22 @@ void Client::Game::setEntity(const std::vector<std::string> &payload, const uint
     if (coord.x < -0.5f || coord.x > 1.5f || coord.y < -0.5f || coord.y > 1.5f) {
         return;
     }
-    bool componentExists(false);
-    for (auto &component : _components) {
-        if (id == component->getId()) {
-            if (payload[1] == component->getIdentity()) {
-                component->move(coord);
+    for (uint64_t i = 2; i < _components.size(); i++) {
+        if (id == _components[i]->getId()) {
+            if (payload[1] == _components[i]->getIdentity()) {
+                _components[i]->move(coord);
+                return;
             } else {
-                delete component;
-                std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
-                component = new Client::Entity(id, 2, payload[1], coord, data.first, data.second);
+                delete _components[i];
+                _components.erase(_components.begin() + i);
+                break;
             }
-            componentExists = true;
-            break;
         }
     }
-    if (!componentExists) {
-        if (payload[1] == "ship") {
-            _components.push_back(new Client::Ship(id, 1, "Ship.png", false));
-        } else {
-            std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
-            _components.push_back(new Client::Entity(id, 2, payload[1], coord, data.first, data.second));
-        }
+    if (payload[1] == "ship") {
+        _components.push_back(new Client::Ship(id, 1, "Ship.png", false));
+    } else {
+        std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
+        _components.push_back(new Client::Entity(id, 2, payload[1], coord, data.first, data.second));
     }
 }

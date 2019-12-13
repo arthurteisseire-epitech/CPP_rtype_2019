@@ -61,6 +61,11 @@ void Client::SideScroller::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::SideScroller::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::SideScroller::getIdentity() const
 {
     return "side_scroller";
@@ -69,4 +74,14 @@ std::string Client::SideScroller::getIdentity() const
 uint32_t Client::SideScroller::getId() const
 {
     return 0;
+}
+
+sf::Vector2<float> Client::SideScroller::getPosition() const
+{
+    return _position;
+}
+
+sf::Vector2<float> Client::SideScroller::getSpriteSize() const
+{
+    COMPONENT_SPRITE_SIZE
 }

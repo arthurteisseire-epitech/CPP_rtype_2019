@@ -95,6 +95,11 @@ void Client::Button::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::Button::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::Button::getIdentity() const
 {
     return "button";
@@ -103,6 +108,16 @@ std::string Client::Button::getIdentity() const
 uint32_t Client::Button::getId() const
 {
     return 0;
+}
+
+sf::Vector2<float> Client::Button::getPosition() const
+{
+    return _position;
+}
+
+sf::Vector2<float> Client::Button::getSpriteSize() const
+{
+    COMPONENT_SPRITE_SIZE
 }
 
 void Client::Button::invert()

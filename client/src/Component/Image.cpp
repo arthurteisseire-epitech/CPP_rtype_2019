@@ -56,6 +56,11 @@ void Client::Image::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::Image::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::Image::getIdentity() const
 {
     return "image";
@@ -64,4 +69,14 @@ std::string Client::Image::getIdentity() const
 uint32_t Client::Image::getId() const
 {
     return 0;
+}
+
+sf::Vector2<float> Client::Image::getPosition() const
+{
+    return _position;
+}
+
+sf::Vector2<float> Client::Image::getSpriteSize() const
+{
+    COMPONENT_SPRITE_SIZE
 }

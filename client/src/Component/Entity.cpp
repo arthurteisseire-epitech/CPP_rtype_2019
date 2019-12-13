@@ -61,6 +61,11 @@ void Client::Entity::render(Client::Window &window, uint8_t layer)
     }
 }
 
+bool Client::Entity::collide(Client::IComponent *component, Client::Window &window)
+{
+    COMPONENT_COLLIDE
+}
+
 std::string Client::Entity::getIdentity() const
 {
     return _identity;
@@ -68,5 +73,15 @@ std::string Client::Entity::getIdentity() const
 
 uint32_t Client::Entity::getId() const
 {
-    return 0;
+    return _id;
+}
+
+sf::Vector2<float> Client::Entity::getPosition() const
+{
+    return _position;
+}
+
+sf::Vector2<float> Client::Entity::getSpriteSize() const
+{
+    COMPONENT_SPRITE_SIZE
 }
