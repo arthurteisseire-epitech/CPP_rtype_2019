@@ -19,6 +19,7 @@ namespace ecs
             MATE_CONNECTED,
             MATE_DISCONNECTED,
             ENTITY_SET,
+            ENTITY_DESTROY,
         };
 
         static std::string_view get(Key key);
