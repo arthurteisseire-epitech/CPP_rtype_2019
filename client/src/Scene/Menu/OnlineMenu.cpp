@@ -39,7 +39,7 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::KeyBind &keyBind,
         uint8_t i(0);
         for (i = 0; _players[i]; i++);
         if (i < _players.size()) {
-            _players[i] = new Client::Ship(_playerId, 128, "Ship.png", true);
+            _players[i] = new Client::Ship(_playerId, 128, "Game/Ship.png", true);
         }
     } catch (std::runtime_error &packetNotFound) {}
     try {
@@ -47,7 +47,7 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::KeyBind &keyBind,
         uint8_t i(0);
         for (i = 0; _players[i]; i++);
         if (i < _players.size()) {
-            _players[i] = new Client::Ship(packet.getId(), 128, "Ship.png", false);
+            _players[i] = new Client::Ship(packet.getId(), 128, "Game/Ship.png", false);
         }
     } catch (std::runtime_error &packetNotFound) {}
     try {

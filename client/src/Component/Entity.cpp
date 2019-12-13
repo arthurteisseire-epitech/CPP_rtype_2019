@@ -44,7 +44,7 @@ bool Client::Entity::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
 
 void Client::Entity::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
-    int clockTime(_clock.getElapsedTime().asMilliseconds());
+    int clockTime(_clock.getElapsedTime().asMilliseconds() / 200);
     sf::Vector2<uint32_t> textureSize(_texture->getSize());
     sf::Rect<int> textureRect(_sprite.getTextureRect());
     sf::Vector2<uint32_t> layout(textureSize.x / textureRect.width, textureSize.y / textureRect.height);

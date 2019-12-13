@@ -54,8 +54,8 @@ namespace Client {
         std::string getPrefix() const;
         uint32_t getId() const;
         void setPayload(const std::string &payload);
-    private:
         void disableDestruction();
+    private:
         RawPacket *_packet;
         bool _destroy;
     };

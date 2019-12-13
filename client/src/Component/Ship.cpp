@@ -57,8 +57,6 @@ bool Client::Ship::event(const sf::Event &event, Client::KeyBind &keyBind, Clien
 
 void Client::Ship::update(Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
-    this->adjust(window);
-    this->place(window);
     if (_controlled) {
         for (auto &action : shipAction) {
             if (sf::Keyboard::isKeyPressed(keyBind.getBind(action.first))) {
@@ -67,9 +65,11 @@ void Client::Ship::update(Client::KeyBind &keyBind, Client::Network &network, Cl
         }
     }
     sf::Rect<int> spriteRect(_sprite.getTextureRect());
-    float moveRatio(window.getSize().y / _sprite.getPosition().y - _position.y);
-    spriteRect.left = (2 + (moveRatio > 0.01) + (moveRatio > 0.02) - (moveRatio < 0.01) - (moveRatio < 0.02)) * spriteRect.width;
+    float moveRatio(_sprite.getPosition().y / window.getSize().y - _position.y);
+    spriteRect.left = (2 + (moveRatio > 0.f) + (moveRatio > 0.01f) - (moveRatio < 0.f) - (moveRatio < 0.01f)) * spriteRect.width;
     _sprite.setTextureRect(spriteRect);
+    this->adjust(window);
+    this->place(window);
 }
 
 void Client::Ship::render(Client::Window &window, uint8_t layer)
