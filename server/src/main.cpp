@@ -22,11 +22,8 @@ static void newGame()
     ReceiveSystem receiveSystem(admin);
     DispatchPacketSystem dispatchPacketSystem(admin);
 
-    std::thread t([&receiveSystem]() {receiveSystem.update(0.16);});
-    std::thread t2([&dispatchPacketSystem]() {
-        while (true)
-            dispatchPacketSystem.update(0.16);
-    });
+    std::thread t1([&receiveSystem]() {receiveSystem.update(0.16);});
+    std::thread t2([&dispatchPacketSystem]() {dispatchPacketSystem.update(0.16);});
 
     LobbyCommunication::waitForStartGame(admin);
     LobbyCommunication::notifyPlayers(admin);

@@ -19,8 +19,8 @@ void ecs::DispatchPacketSystem::update(float)
 {
     auto &buffers = admin->network.readBuffers;
 
-    while (!buffers.empty()) {
-        auto &p = buffers.front();
+    while (true) {
+        auto p = buffers.pop();
 
         auto optConn = FindOneMatching<CConnection>(admin, [&p] (CConnection &conn) {
             return conn.endpoint == p.first;
@@ -33,6 +33,5 @@ void ecs::DispatchPacketSystem::update(float)
         } else {
             optConn.value().get().readBuffers.push(p.second);
         }
-        buffers.pop();
     }
 }
