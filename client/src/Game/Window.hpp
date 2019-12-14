@@ -12,17 +12,19 @@
 #define WIN_REF_SIZE sf::Vector2<uint32_t>(1920, 1080)
 
 #include <cstdint>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
 namespace Client {
     class Window {
     public:
         Window();
-        ~Window() = default;
+        ~Window();
         void switchFullscreen();
         void switchSound();
         void switchVsync();
         void setFramerate(const uint32_t framerate);
+        void setMusic(const bool game);
         bool getFullscreen() const;
         bool getSound() const;
         bool getVsync() const;
@@ -44,6 +46,7 @@ namespace Client {
         uint32_t _framerate;
         sf::VideoMode _monitor;
         sf::Vector2<float> _renderRatio;
+        sf::Music _music;
     };
 }
 

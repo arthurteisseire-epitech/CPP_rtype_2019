@@ -5,15 +5,32 @@
 ** Created by Vleb
 */
 
+#include <vector>
+#include "Component/IComponent.hpp"
 #include "Window.hpp"
+
+static const std::vector<std::string> musicPath({
+    "Menu/Music.ogg",
+    "Game/Music.ogg"
+});
 
 Client::Window::Window() : _window(), _fullscreen(true), _sound(true), _vsync(true),
     _framerate(60), _monitor(sf::VideoMode::getDesktopMode()), _renderRatio(
         float(_monitor.width) / float(WIN_REF_SIZE.x),
         float(_monitor.height) / float(WIN_REF_SIZE.y)
-    )
+    ), _music()
 {
+    if (!_music.openFromFile(ASSETS_DIR + musicPath[0])) {
+        throw std::runtime_error("\'Client::Window::Window\': Cannot load music: " + musicPath[0]);
+    }
+    _music.setLoop(true);
     this->recreateWindow();
+    _music.play();
+}
+
+Client::Window::~Window()
+{
+    _music.stop();
 }
 
 void Client::Window::switchFullscreen()
@@ -25,6 +42,7 @@ void Client::Window::switchFullscreen()
 void Client::Window::switchSound()
 {
     _sound = !_sound;
+    _music.setVolume(float(_sound) * 100.f);
 }
 
 void Client::Window::switchVsync()
@@ -37,6 +55,15 @@ void Client::Window::setFramerate(const uint32_t framerate)
 {
     _framerate = framerate;
     _window.setFramerateLimit(_framerate);
+}
+
+void Client::Window::setMusic(const bool game)
+{
+    _music.stop();
+    if (!_music.openFromFile(ASSETS_DIR + musicPath[game])) {
+        throw std::runtime_error("\'Client::Window::Window\': Cannot load music: " + musicPath[game]);
+    }
+    _music.play();
 }
 
 bool Client::Window::getFullscreen() const

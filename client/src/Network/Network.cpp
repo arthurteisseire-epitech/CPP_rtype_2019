@@ -77,6 +77,8 @@ Client::Packet Client::Network::findReceived(const std::string &prefix)
         if (packet.getPrefix() == prefix) {
             this->removeFromBuffer(i);
             return packet;
+        } else {
+            packet.disableDestruction();
         }
     }
     throw std::runtime_error("\'Client::Network::findReceived\': Packet not found: " + prefix);

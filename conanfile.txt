@@ -3,9 +3,10 @@ boost/1.69.0@conan/stable
 sfml/2.5.1@bincrafters/stable
 
 [options]
+sfml:audio=True
 sfml:graphics=True
-sfml:window=True
 sfml:network=True
+sfml:window=True
 
 [generators]
 cmake

@@ -124,6 +124,7 @@ void Client::Game::update(Client::IScene *&self, Client::KeyBind &keyBind, Clien
         }
         network.emptyBuffer();
         network.send(Client::Packet(PACKET_GAME_START).getRaw());
+        window.setMusic(true);
         _status = run;
     }
     for (uint64_t i = 0; true; i++) {
@@ -262,6 +263,7 @@ void Client::Game::pauseMenu(Client::IScene *&self, Client::KeyBind &keyBind, Cl
         }
         if (quitTime > 0.5f) {
             if (_next) {
+                window.setMusic(false);
                 self = _next;
                 self->update(self, keyBind, network, window);
                 network.send(Client::Packet(PACKET_CONNECT).getRaw());

@@ -3,8 +3,12 @@ set(CLIENT_NAME r-type_client)
 project(${CLIENT_NAME})
 
 include_directories(
-	src/Network
 	src
+	src/Component
+	src/Game
+	src/Network
+	src/Scene
+	src/Scene/Menu
 )
 
 file(GLOB_RECURSE client_sources src/*.cpp src/*.hpp)
