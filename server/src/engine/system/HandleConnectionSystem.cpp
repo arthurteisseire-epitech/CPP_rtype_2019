@@ -9,6 +9,7 @@
 #include "NetworkSender.hpp"
 #include "SendProtocol.hpp"
 #include "ReceiveProtocol.hpp"
+#include "EntityUtil.hpp"
 
 ecs::HandleConnectionSystem::HandleConnectionSystem(std::shared_ptr<EntityAdmin> admin) :
     ASystem(std::move(admin))
@@ -24,11 +25,14 @@ void ecs::HandleConnectionSystem::update(float dt)
 void ecs::HandleConnectionSystem::updateTuple(ecs::HandleConnectionTuple &t1)
 {
     auto &c = get<CCommand>(t1).commands;
-    if (std::any_of(c.begin(), c.end(), isConnect)) {
+    if (std::any_of(c.begin(), c.end(), isConnect))
         ForEachMatching<HandleConnectionTuple>(admin, std::bind(&HandleConnectionSystem::handleConnection, this,
                                                                 t1,
                                                                 std::placeholders::_1));
-    }
+    else if (std::any_of(c.begin(), c.end(), isDisconnect))
+        ForEachMatching<HandleConnectionTuple>(admin, std::bind(&HandleConnectionSystem::handleDisconnection, this,
+                                                                t1,
+                                                                std::placeholders::_1));
 }
 
 void ecs::HandleConnectionSystem::handleConnection(HandleConnectionTuple &t1, ecs::HandleConnectionTuple &t2)
@@ -41,6 +45,16 @@ void ecs::HandleConnectionSystem::handleConnection(HandleConnectionTuple &t1, ec
         NetworkSender::send(admin,
                             GetIndex<CConnection>(t2),
                             Packet(get<CId>(t2).id, SendProtocol::get(SendProtocol::CONNECTED)));
+}
+
+void ecs::HandleConnectionSystem::handleDisconnection(ecs::HandleConnectionTuple &t1, ecs::HandleConnectionTuple &t2)
+{
+    if (get<CId>(t1).id != get<CId>(t2).id)
+        NetworkSender::send(admin,
+                            GetIndex<CConnection>(t2),
+                            Packet(get<CId>(t2).id, SendProtocol::get(SendProtocol::MATE_DISCONNECTED)));
+    else
+        EntityUtil::DestroyEntity(admin, get<CId>(t2).id);
 }
 
 bool ecs::HandleConnectionSystem::isConnect(const std::pair<ReceiveProtocol::Key, std::string> &pair)

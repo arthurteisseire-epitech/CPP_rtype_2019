@@ -77,6 +77,11 @@ namespace ecs
             return pool.end();
         }
 
+        [[nodiscard]] std::size_t size() const
+        {
+            return pool.size();
+        }
+
     private:
         template<typename ...Args>
         auto emplaceOnFreeSpace(Args &&...args)

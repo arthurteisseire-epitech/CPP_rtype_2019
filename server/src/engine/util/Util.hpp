@@ -28,6 +28,15 @@ namespace ecs
                 f(t.second);
     }
 
+    template<typename Tuple, typename Pred>
+    std::optional<std::reference_wrapper<Tuple>> FindOneMatching(std::shared_ptr<EntityAdmin> &admin, Pred pred)
+    {
+        for (auto &t : GetPool<Tuple>(admin))
+            if (t.first == ObjectPool<Tuple>::UNAVAILABLE && pred(t.second))
+                return {t.second};
+        return std::nullopt;
+    }
+
     template<typename T, typename Tuple>
     typename ObjectPool<T>::index GetIndex(Tuple &t)
     {
@@ -44,6 +53,12 @@ namespace ecs
             }
         }
         return std::nullopt;
+    }
+
+    template<class T, class Tuple>
+    T &GetFromTuple(Tuple &tuple, std::shared_ptr<EntityAdmin> &admin)
+    {
+        return GetPool<T>(admin).at(std::get<typename ObjectPool<T>::index>(tuple));
     }
 }
 

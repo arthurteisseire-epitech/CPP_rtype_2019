@@ -20,9 +20,10 @@ namespace ecs
 {
     struct EntityAdmin {
         EntityAdmin() :
-            network(1234),
+            network(0),
             currentId(0)
         {
+            std::cout << "new game on port " << network.socket.local_endpoint().port() << std::endl;
         }
 
         Pools pools{};

@@ -20,6 +20,8 @@ namespace ecs
 
     private:
         void handleConnection(HandleConnectionTuple &t1, HandleConnectionTuple &t2);
+        void handleDisconnection(HandleConnectionTuple &t1, HandleConnectionTuple &t2);
+
         static bool isConnect(const std::pair<ReceiveProtocol::Key, std::string> &pair);
         static bool isDisconnect(const std::pair<ReceiveProtocol::Key, std::string> &pair);
     };

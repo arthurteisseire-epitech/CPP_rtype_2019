@@ -18,6 +18,8 @@
 #include "CollisionTuple.hpp"
 #include "MonsterTuple.hpp"
 #include "DirectionUpdateTuple.hpp"
+#include "DestroyOOBTuple.hpp"
+#include "NotifyPlayerTuple.hpp"
 
 namespace ecs
 {
@@ -32,7 +34,10 @@ namespace ecs
             ShootingAITuple,
             CollisionTuple,
             MonsterTuple,
-            DirectionUpdateTuple
+            DirectionUpdateTuple,
+            CollisionTuple,
+            DestroyOOBTuple,
+            NotifyPlayerTuple
         >;
 }
 

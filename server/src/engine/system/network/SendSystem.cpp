@@ -6,7 +6,7 @@
 */
 
 #include <boost/bind.hpp>
-#include <SendProtocol.hpp>
+#include "SendProtocol.hpp"
 #include "SendSystem.hpp"
 #include "NetworkSender.hpp"
 #include "Util.hpp"
@@ -24,10 +24,9 @@ void ecs::SendSystem::update(float deltaTime)
 void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
 {
     ForEachMatching<CConnection>(admin, [this, &t](CConnection &conn) {
-        auto s = std::string(SendProtocol::get(SendProtocol::ENTITY_SET)) + ':' + std::string(get<CType>(t).name) + ';' +
-            std::to_string(get<CTransform>(t).vec.x) + ',' +
-            std::to_string(get<CTransform>(t).vec.y);
-
-        NetworkSender::send(admin, conn, Packet(get<CId>(t).id, s));
+        NetworkSender::send(admin, conn, Packet(get<CId>(t).id,
+                                                SendProtocol::entitySetToString(get<CType>(t).name,
+                                                                                get<CTransform>(t).vec.x,
+                                                                                get<CTransform>(t).vec.y)));
     });
 }
