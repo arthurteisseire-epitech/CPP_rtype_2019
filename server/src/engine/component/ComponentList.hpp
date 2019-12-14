@@ -15,11 +15,12 @@
 #include "CCommand.hpp"
 #include "CTransform.hpp"
 #include "CType.hpp"
-#include "CShootingAI.hpp"
 #include "CCooldown.hpp"
 #include "CSpeed.hpp"
 #include "CCollisionDamage.hpp"
 #include "CHealth.hpp"
+#include "CMoveType.hpp"
+#include "CBulletType.hpp"
 
 namespace ecs
 {
@@ -31,11 +32,12 @@ namespace ecs
             CCommand,
             CTransform,
             CType,
-            CShootingAI,
             CCooldown,
             CSpeed,
             CCollisionDamage,
-            CHealth
+            CHealth,
+            CMoveType,
+            CBulletType
         >;
 }
 

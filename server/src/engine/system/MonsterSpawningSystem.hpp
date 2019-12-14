@@ -19,8 +19,6 @@ namespace ecs
         void update(float dtime) override;
 
     private:
-        float timeSinceLastSpawn = 0;
-
         static mut::Vec2f generateRandomPosition();
     };
 }

@@ -15,6 +15,7 @@ include_directories(
 	src/engine/util
 	src/engine/protocol
 	src/engine
+	src/monster_libraries
 	src
 )
 

@@ -6,7 +6,7 @@
 */
 
 #include "CreationBulletSystem.hpp"
-#include "CreationBulletTuple.hpp"
+#include "PlayerCreationBulletTuple.hpp"
 #include "EntityFactory.hpp"
 
 ecs::CreationBulletSystem::CreationBulletSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
@@ -15,7 +15,7 @@ ecs::CreationBulletSystem::CreationBulletSystem(std::shared_ptr<EntityAdmin> adm
 
 void ecs::CreationBulletSystem::update(float deltaTime)
 {
-    ForEachMatching<CreationBulletTuple>(admin, [this](CreationBulletTuple &t) {
+    ForEachMatching<PlayerCreationBulletTuple>(admin, [this](PlayerCreationBulletTuple &t) {
 
         auto &commands = get<CCommand>(t).commands;
 

@@ -17,6 +17,7 @@
 #include "HandleConnectionSystem.hpp"
 #include "ShootingAISystem.hpp"
 #include "CollisionSystem.hpp"
+#include "DirectionUpdateSystem.hpp"
 
 std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_ptr<EntityAdmin> &admin)
 {
@@ -29,6 +30,7 @@ std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_pt
         std::make_unique<MonsterSpawningSystem>(admin),
         std::make_unique<CommandDirectionSystem>(admin),
         std::make_unique<ShootingAISystem>(admin),
+        std::make_unique<DirectionUpdateSystem>(admin),
         std::make_unique<MoveSystem>(admin),
         std::make_unique<CollisionSystem>(admin),
         std::make_unique<SendSystem>(admin)

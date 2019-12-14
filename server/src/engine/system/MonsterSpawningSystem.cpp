@@ -7,6 +7,7 @@
 
 #include "EntityFactory.hpp"
 #include "MonsterSpawningSystem.hpp"
+#include "DynamicLoadMonsterSystem.hpp"
 
 ecs::MonsterSpawningSystem::MonsterSpawningSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(admin)
 {
@@ -14,15 +15,11 @@ ecs::MonsterSpawningSystem::MonsterSpawningSystem(std::shared_ptr<EntityAdmin> a
 
 void ecs::MonsterSpawningSystem::update(float dTime)
 {
-    timeSinceLastSpawn += dTime;
-    if (timeSinceLastSpawn > 2) {
-        EntityFactory::createShootingMonster(admin, GetPool<CTransform>(admin).create(generateRandomPosition()),
-            GetPool<CDirection>(admin).create(CDirection::LEFT));
-        timeSinceLastSpawn = 0;
-    }
+    for (auto &lib : DynamicLoadMonsterSystem::monsterLibs)
+        lib->update(admin, dTime);
 }
 
 mut::Vec2f ecs::MonsterSpawningSystem::generateRandomPosition()
 {
-    return mut::Vec2f(1.0, static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+    return mut::Vec2f(0.9, static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
 }

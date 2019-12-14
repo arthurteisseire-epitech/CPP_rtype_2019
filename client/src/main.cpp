@@ -5,94 +5,114 @@
 ** main.cpp
 */
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
-#include <sstream>
-#include <utility>
-#include "Game/KeyBind.hpp"
-#include "Game/Window.hpp"
-#include "Network/Network.hpp"
-#include "Scene/Menu/MainMenu.hpp"
+#include <cstring>
+#include <regex>
+#include "INetwork.hpp"
+#include "sfNetwork.hpp"
+#include "GameSprite.hpp"
+#include "Buffer.hpp"
 
-std::pair<std::string, uint16_t> parseArgs(int ac, char **av)
+void handle_events(game::INetwork *network, sf::RenderWindow &window)
 {
-    for (int i = 1; i < ac; i++) {
-        std::string argument(av[i]);
-        if (argument == "-h" || argument == "--help") {
-            std::cout << "Usage:\t./r-type_client [serverIp] clientPort" << std::endl;
-            std::cout << "\tserverIp\t(OPTIONAL) The IPv4 the client will use to communicate with the server." << std::endl;
-            std::cout << "\tclientPort\tThe port which will be used to receive the server packets." << std::endl;
-            std::exit(0);
-        }
-    }
-    std::string serverIp;
-    int64_t clientPort;
-    if (ac == 2) {
-        serverIp = "127.0.0.1";
-        try {
-            clientPort = std::stoi(av[1]);
-        } catch (std::logic_error &invalidArgument) {
-            throw std::runtime_error(std::string("\'parseArgs\': Cannot parse the port: ") + av[1]);
-        }
-    } else if (ac == 3) {
-        serverIp = av[1];
-        try {
-            std::istringstream ipStream(serverIp);
-            std::string subIpStr;
-            int ipSize = 0;
-            while (std::getline(ipStream, subIpStr, '.')) {
-                int64_t subIp(std::stoi(subIpStr));
-                if (subIpStr.empty() || subIp < 0 || subIp > 255) {
-                    throw std::logic_error("");
+    size_t sent;
+    sf::Event event{};
+    static const std::vector<std::pair<sf::Keyboard::Key, std::string>> keys = {{sf::Keyboard::Left, "action_left"},
+        {sf::Keyboard::Right, "action_right"}, {sf::Keyboard::Up, "action_up"}, {sf::Keyboard::Down, "action_down"},
+        {sf::Keyboard::Space, "action_space"}};
+
+    while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed)
+            window.close();
+        if (event.type == sf::Event::KeyPressed) {
+            for (auto &key : keys)
+                if (sf::Keyboard::isKeyPressed(key.first)) {
+                    game::Buffer data(0, key.second);
+                    network->send(&data, sizeof(data), sent);
                 }
-                ipSize++;
-            }
-            if (ipSize != 4 || serverIp[serverIp.size() - 1] == '.') {
-                throw std::logic_error("");
-            }
-        } catch (std::logic_error &invalidArgument) {
-            throw std::runtime_error(std::string("\'parseArgs\': The given IPv4 is invalid: ") + av[1]);
         }
-        try {
-            clientPort = std::stoi(av[2]);
-        } catch (std::logic_error &invalidArgument) {
-            throw std::runtime_error(std::string("\'parseArgs\': Cannot parse the port: ") + av[2]);
-        }
-    } else {
-        throw std::runtime_error("\'parseArgs\': This program requires at least 1 argument at launch. Please retry with -h or --help for more information.");
     }
-    if (clientPort < 0 || clientPort > 65535 || clientPort == SERVER_PORT) {
-        throw std::runtime_error("\'parseArgs\': The given port is invalid.");
-    }
-    return {serverIp, clientPort};
 }
 
-int main(int ac, char **av)
+void handleServerInstructions(game::GameSprite &gameSprite, sf::RenderWindow &window, game::Buffer data,
+                              std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> &toDraw)
 {
-    Client::IScene *scene = nullptr;
-    try {
-        std::pair<std::string, uint16_t> networkSettings(parseArgs(ac, av));
-        scene = new Client::MainMenu();
-        Client::KeyBind keyBind;
-        Client::Network network(networkSettings.first, networkSettings.second);
-        Client::Window window;
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                }
-                scene->event(scene, event, keyBind, network, window);
-            }
-            scene->update(scene, network, window);
-            window.clear();
-            scene->render(window);
-            window.display();
+    std::string dataStr(data.data.begin(), data.data.end());
+    std::cmatch match;
+
+    std::cout << dataStr << std::endl;
+    if (!std::regex_match(dataStr.c_str(), match, std::regex("entity_set:(.+?);([-+]?[0-9]*\\.?[0-9]+),([-+]?[0-9]*\\.?[0-9]+)"))) {
+        std::cerr << "did not match buffer " << dataStr << std::endl;
+        return;
+    }
+
+    const unsigned int id = data.id;
+    const std::string typeStr = match[1];
+    const float x = std::stof(match[2]);
+    const float y = std::stof(match[3]);
+    const auto &pair = toDraw.find(id);
+
+    if (x < -0.1 || x > 1.1 || y < -0.1 || y > 1.1) {
+        if (pair != toDraw.end())
+            toDraw.erase(pair);
+        return;
+    }
+    if (pair == toDraw.end() || gameSprite.getType(match[1]) != pair->second.first) {
+        toDraw[id] = std::make_pair(gameSprite.getType(typeStr), gameSprite.getSpriteOfType(typeStr));
+        std::cout << "creating" << std::endl;
+    }
+    toDraw.at(id).second.setPosition(x * window.getSize().x, y * window.getSize().y);
+}
+
+void updateWindow(sf::RenderWindow &window,
+                  const std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> &toDraw)
+{
+    window.clear();
+    if (!toDraw.empty()) {
+        for (const auto &sprite : toDraw)
+            window.draw(sprite.second.second);
+        window.display();
+    }
+}
+
+void endGame(game::INetwork *network)
+{
+    network->disconnect();
+    delete network;
+    std::cout << "client closed" << std::endl;
+}
+
+int display(game::INetwork *network)
+{
+    sf::RenderWindow window(sf::VideoMode(200, 200), "r_type");
+    game::GameSprite gameSprite;
+    std::unordered_map<int, std::pair<game::GameSprite::Type, sf::Sprite>> toDraw;
+    game::Buffer data;
+    std::clock_t lastDrawTime = (double)std::clock() / CLOCKS_PER_SEC;
+
+    window.display();
+    while (window.isOpen()) {
+        handle_events(network, window);
+        std::size_t received = 0;
+        if (network->receive(&data, sizeof(data), received))
+            handleServerInstructions(gameSprite, window, data, toDraw);
+        if ((double)std::clock() / CLOCKS_PER_SEC - lastDrawTime >= 0.001) {
+            updateWindow(window, toDraw);
+            lastDrawTime = (double)std::clock() / CLOCKS_PER_SEC;
         }
-    } catch (std::exception &error) {
-        std::cerr << "ERROR: "<< error.what() << std::endl;
-        delete scene;
+    }
+    endGame(network);
+    return 0;
+}
+
+int main()
+{
+    game::INetwork *network = new game::sfNetwork();
+    if (!network->connect("127.0.0.1", 1234)) {
+        std::cerr << "failed to connect" << std::endl;
         return 84;
     }
-    delete scene;
-    return 0;
+    std::cout << "connected !" << std::endl;
+    return display(network);
 }

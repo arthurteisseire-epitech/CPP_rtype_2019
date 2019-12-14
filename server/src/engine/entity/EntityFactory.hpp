@@ -10,6 +10,7 @@
 
 #include "CConnection.hpp"
 #include "EntityAdmin.hpp"
+#include "TypeProtocol.hpp"
 
 namespace ecs
 {
@@ -22,8 +23,18 @@ namespace ecs
         static void createBullet(std::shared_ptr<EntityAdmin> &admin,
                                  ObjectPool<CTransform>::index transformIdx,
                                  ObjectPool<CDirection>::index directionIdx);
+        static void createMonster(std::shared_ptr<EntityAdmin> &admin, TypeProtocol::Type type,
+                                  const ObjectPool<CDirection>::index &directionIdx,
+                                  const ObjectPool<CMoveType>::index &moveTypeIdx,
+                                  const ObjectPool<CCollisionDamage>::index &collisionDmgIdx,
+                                  const ObjectPool<CCooldown>::index &cooldownIdx,
+                                  const ObjectPool<CHealth>::index &healtIdx,
+                                  const ObjectPool<CBulletType>::index &bulletTypeIdx,
+                                  const ObjectPool<CSpeed>::index &speedIdx);
     private:
         static int id;
+
+        static mut::Vec2f generateRandomPosition();
     };
 }
 

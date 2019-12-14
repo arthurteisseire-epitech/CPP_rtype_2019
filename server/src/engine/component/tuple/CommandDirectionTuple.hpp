@@ -8,7 +8,6 @@
 #ifndef RTYPE_COMMANDDIRECTIONTUPLE_HPP
 #define RTYPE_COMMANDDIRECTIONTUPLE_HPP
 
-#include <tuple>
 #include "ObjectPool.hpp"
 #include "CDirection.hpp"
 #include "CCommand.hpp"

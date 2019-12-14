@@ -11,11 +11,13 @@
 #include "MoveTuple.hpp"
 #include "CommandTuple.hpp"
 #include "SendRenderTuple.hpp"
-#include "CreationBulletTuple.hpp"
+#include "PlayerCreationBulletTuple.hpp"
 #include "CommandDirectionTuple.hpp"
 #include "HandleConnectionTuple.hpp"
 #include "ShootingAITuple.hpp"
 #include "CollisionTuple.hpp"
+#include "MonsterTuple.hpp"
+#include "DirectionUpdateTuple.hpp"
 
 namespace ecs
 {
@@ -24,11 +26,13 @@ namespace ecs
             MoveTuple,
             CommandTuple,
             SendTuple,
-            CreationBulletTuple,
+            PlayerCreationBulletTuple,
             InputDirectionTuple,
             HandleConnectionTuple,
             ShootingAITuple,
-            CollisionTuple
+            CollisionTuple,
+            MonsterTuple,
+            DirectionUpdateTuple
         >;
 }
 

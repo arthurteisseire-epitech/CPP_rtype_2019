@@ -20,7 +20,8 @@ namespace ecs
             UP,
             DOWN,
             LEFT,
-            RIGHT
+            RIGHT,
+            LAST
         };
 
         explicit CDirection(CDirection::Direction dir = NONE)
@@ -43,6 +44,8 @@ namespace ecs
                 dir.y = 0;
             }
         }
+
+
 
         mut::Vec2f dir;
     };

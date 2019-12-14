@@ -25,7 +25,6 @@ ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, con
                                   const Packet &buffer) :
     writeBuffer(buffer)
 {
-    std::cout << buffer.data.data() << std::endl;
     admin->network.socket.async_send_to(
         boost::asio::buffer(&writeBuffer, sizeof(writeBuffer)),
         conn.endpoint,
