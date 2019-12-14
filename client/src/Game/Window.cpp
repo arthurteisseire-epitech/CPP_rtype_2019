@@ -18,7 +18,7 @@ Client::Window::Window() : _window(), _fullscreen(true), _sound(true), _vsync(tr
     _framerate(60), _monitor(sf::VideoMode::getDesktopMode()), _renderRatio(
         float(_monitor.width) / float(WIN_REF_SIZE.x),
         float(_monitor.height) / float(WIN_REF_SIZE.y)
-    ), _music()
+    )
 {
     if (!_music.openFromFile(ASSETS_DIR + musicPath[0])) {
         throw std::runtime_error("\'Client::Window::Window\': Cannot load music: " + musicPath[0]);

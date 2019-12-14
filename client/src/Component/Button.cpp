@@ -9,8 +9,12 @@
 #include "CommonComponent.hpp"
 
 Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath) :
-    _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(nullptr)
+    _layer(layer), _position(position), _soundBuffer(), _texture(new sf::Texture()), _textureAlt(nullptr)
 {
+    if (!_soundBuffer.loadFromFile(ASSETS_DIR + std::string("Menu/Click.ogg"))) {
+        throw std::runtime_error("\'Client::Button::Button\': Cannot load sound: Menu/Click.ogg");
+    }
+    _sound.setBuffer(_soundBuffer);
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("\'Client::Button::Button\': Cannot load texture: " + texturePath);
     }
@@ -21,8 +25,12 @@ Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const 
 }
 
 Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const std::string &texturePath, const std::string &textureAltPath, bool invert) :
-    _layer(layer), _position(position), _texture(new sf::Texture()), _textureAlt(new sf::Texture())
+    _layer(layer), _position(position), _soundBuffer(), _texture(new sf::Texture()), _textureAlt(new sf::Texture())
 {
+    if (!_soundBuffer.loadFromFile(ASSETS_DIR + std::string("Menu/Click.ogg"))) {
+        throw std::runtime_error("\'Client::Button::Button\': Cannot load sound: Menu/Click.ogg");
+    }
+    _sound.setBuffer(_soundBuffer);
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("\'Client::Button::Button\': Cannot load texture: " + texturePath);
     } else if (!_textureAlt->loadFromFile(ASSETS_DIR + textureAltPath)) {
@@ -39,6 +47,7 @@ Client::Button::Button(uint8_t layer, const sf::Vector2<float> &position, const 
 
 Client::Button::~Button()
 {
+    _sound.stop();
     delete _texture;
 }
 
@@ -74,6 +83,9 @@ bool Client::Button::event(const sf::Event &event, Client::KeyBind &keyBind, Cli
             newButtonRect.top += buttonRect.height;
         } else if (event.type == sf::Event::MouseButtonReleased ||
             (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)) {
+            if (window.getSound()) {
+                _sound.play();
+            }
             this->invert();
             clicked = true;
         }

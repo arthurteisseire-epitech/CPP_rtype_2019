@@ -8,6 +8,7 @@
 #ifndef RTYPE_BUTTON_HPP
 #define RTYPE_BUTTON_HPP
 
+#include <SFML/Audio.hpp>
 #include "IComponent.hpp"
 
 namespace Client {
@@ -31,8 +32,10 @@ namespace Client {
         void invert();
         uint8_t _layer;
         sf::Vector2<float> _position;
+        sf::SoundBuffer _soundBuffer;
         sf::Texture *_texture;
         sf::Texture *_textureAlt;
+        sf::Sound _sound;
         sf::Sprite _sprite;
     };
 }

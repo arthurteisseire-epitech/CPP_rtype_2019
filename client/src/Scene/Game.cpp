@@ -16,19 +16,19 @@
 #include "Game.hpp"
 #include "Menu/MainMenu.hpp"
 
-static const std::map<std::string, std::pair<std::string, sf::Vector2<uint32_t>>> entityData({
-    {"alien1", {"Game/Alien1.png", {8, 2}}},
-    {"alien2", {"Game/Alien2.png", {8, 2}}},
-    {"blast_stage1", {"Game/BlastStage1.png", {1, 1}}},
-    {"blast_stage2", {"Game/BlastStage2.png", {1, 1}}},
-    {"blast_stage3", {"Game/BlastStage3.png", {2, 1}}},
-    {"enemy_blast_stage1", {"Game/EnemyBlastStage1.png", {1, 1}}},
-    {"enemy_blast_stage2", {"Game/EnemyBlastStage2.png", {1, 1}}},
-    {"enemy_blast_stage3", {"Game/EnemyBlastStage3.png", {2, 1}}},
-    {"enemy_ship1", {"Game/EnemyShip1.png", {8, 1}}},
-    {"enemy_ship2", {"Game/EnemyShip2.png", {8, 1}}},
-    {"power_up", {"Game/PowerUp.png", {12, 1}}},
-    {"vortex", {"Game/Vortex.png", {3, 1}}}
+static const std::map<std::string, std::pair<std::pair<std::string, std::string>, sf::Vector2<uint32_t>>> entityData({
+    {"alien1", {{"", "Game/Alien1.png"}, {8, 2}}},
+    {"alien2", {{"", "Game/Alien2.png"}, {8, 2}}},
+    {"blast_stage1", {{"", "Game/BlastStage1.png"}, {1, 1}}},
+    {"blast_stage2", {{"", "Game/BlastStage2.png"}, {1, 1}}},
+    {"blast_stage3", {{"Game/Blast.ogg", "Game/BlastStage3.png"}, {2, 1}}},
+    {"enemy_blast_stage1", {{"", "Game/EnemyBlastStage1.png"}, {1, 1}}},
+    {"enemy_blast_stage2", {{"", "Game/EnemyBlastStage2.png"}, {1, 1}}},
+    {"enemy_blast_stage3", {{"Game/EnemyBlast.ogg", "Game/EnemyBlastStage3.png"}, {2, 1}}},
+    {"enemy_ship1", {{"", "Game/EnemyShip1.png"}, {8, 1}}},
+    {"enemy_ship2", {{"", "Game/EnemyShip2.png"}, {8, 1}}},
+    {"power_up", {{"", "Game/PowerUp.png"}, {12, 1}}},
+    {"vortex", {{"", "Game/Vortex.png"}, {3, 1}}}
 });
 
 static const std::map<std::string, void (Client::Game::*)(const std::vector<std::string> &, const uint32_t &)> entityAction({
@@ -231,7 +231,7 @@ void Client::Game::setEntity(const std::vector<std::string> &payload, const uint
     if (payload[1] == "ship") {
         _components.push_back(new Client::Ship(id, 1, "Game/Ship.png", payload.size() == 4 && payload[3] == "player"));
     } else {
-        std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
+        std::pair<std::pair<std::string, std::string>, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
         _components.push_back(new Client::Entity(id, 2, payload[1], coord, data.first, data.second));
     }
 }
