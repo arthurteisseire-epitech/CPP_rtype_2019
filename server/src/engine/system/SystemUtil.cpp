@@ -23,7 +23,6 @@ std::vector<std::unique_ptr<ecs::ASystem>> ecs::SystemsUtil::Init(std::shared_pt
 {
     std::unique_ptr<ASystem> init[] = {
         std::make_unique<CreationBulletSystem>(admin),
-        std::make_unique<DispatchPacketSystem>(admin),
         std::make_unique<CommandSystem>(admin),
         std::make_unique<HandleConnectionSystem>(admin),
         std::make_unique<UpdateTypeSystem>(admin),

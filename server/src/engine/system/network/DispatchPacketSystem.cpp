@@ -8,6 +8,8 @@
 #include <utility>
 #include "DispatchPacketSystem.hpp"
 #include "EntityFactory.hpp"
+#include "NetworkSender.hpp"
+#include "SendProtocol.hpp"
 
 ecs::DispatchPacketSystem::DispatchPacketSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
 {
@@ -26,7 +28,7 @@ void ecs::DispatchPacketSystem::update(float)
 
         if (!optConn.has_value()) {
             auto connIdx = GetPool<CConnection>(admin).create(p.first);
-            EntityFactory::createPlayer(admin, connIdx);
+            NetworkSender::send(admin, connIdx, Packet(0, SendProtocol::get(SendProtocol::CONNECTED)));
             GetPool<CConnection>(admin).at(connIdx).readBuffers.push(p.second);
         } else {
             optConn.value().get().readBuffers.push(p.second);

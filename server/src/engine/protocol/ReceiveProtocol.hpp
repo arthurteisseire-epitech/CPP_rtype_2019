@@ -24,6 +24,8 @@ namespace ecs
             CONNECT,
             DISCONNECT,
             COLLISION,
+            GAME_REQUEST,
+            GAME_START,
             UNKOWN,
         };
 
