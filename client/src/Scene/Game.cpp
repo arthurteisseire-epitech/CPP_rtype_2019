@@ -5,12 +5,16 @@
 ** Game.cpp
 */
 
+#include <cmath>
 #include <map>
 #include <sstream>
-#include "Component/Fading.hpp"
-#include "Component/SideScroller.hpp"
+#include "Component/Button.hpp"
 #include "Component/Entity.hpp"
+#include "Component/Fading.hpp"
+#include "Component/Image.hpp"
+#include "Component/SideScroller.hpp"
 #include "Game.hpp"
+#include "Menu/MainMenu.hpp"
 
 static const std::map<std::string, std::pair<std::string, sf::Vector2<uint32_t>>> entityData({
     {"alien1", {"Game/Alien1.png", {8, 2}}},
@@ -55,11 +59,22 @@ static const std::vector<std::pair<std::string, std::string>> entityCollision({
     {"ship", "enemy_ship2"}
 });
 
+static const std::vector<sf::Vector2<float>> buttonPosList({
+    {0.372f, 0.2f},
+    {0.32f, 0.4f},
+    {0.268f, 0.6f}
+});
+
 Client::Game::Game(Client::IScene *prev) :
     _prev(prev), _components({
         new Client::SideScroller(0, "Game/Background.png", 0.1f),
         new Client::Fading(3, 0.5f, 0.5f, true)
-    }), _start(true)
+    }), _pauseComponents({
+        {new Client::Image(4, {-0.5f, 0.5f}, "Menu/MenuBgL.png"), nullptr},
+        {new Client::Button(5, buttonPosList[0], "Menu/ButtonPlay.png"), &Client::Game::play},
+        {new Client::Button(5, buttonPosList[1], "Menu/ButtonMenu.png"), &Client::Game::menu},
+        {new Client::Button(5, buttonPosList[2], "Menu/ButtonQuit.png"), &Client::Game::quit},
+    }), _status(init), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }
 
@@ -67,7 +82,12 @@ Client::Game::Game(std::array<Client::Ship *, 4> &players, Client::IScene *prev)
     _prev(prev), _components({
         new Client::SideScroller(0, "Game/Background.png", 0.1f),
         new Client::Fading(3, 0.5f, 0.5f, true)
-    }), _start(true)
+    }), _pauseComponents({
+        {new Client::Image(4, {-0.5f, 0.5f}, "Menu/MenuBgL.png"), nullptr},
+        {new Client::Button(5, buttonPosList[0], "Menu/ButtonPlay.png"), &Client::Game::play},
+        {new Client::Button(5, buttonPosList[1], "Menu/ButtonMenu.png"), &Client::Game::menu},
+        {new Client::Button(5, buttonPosList[2], "Menu/ButtonQuit.png"), &Client::Game::quit},
+    }), _status(init), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
     for (uint8_t i = 0; players[i]; i++) {
         _components.push_back(players[i]);
@@ -84,22 +104,43 @@ Client::Game::~Game()
 
 void Client::Game::event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
-    for (auto &component : _components) {
-        component->event(event, keyBind, network, window);
+    if (event.type == sf::Event::KeyPressed && keyBind.isBound(event.key.code)) {
+        switch (keyBind.getAction(event.key.code)) {
+        case sf::Keyboard::Key::Escape:
+            if (_status == run) {
+                _status = pause;
+                _clock.restart();
+            } else if (_status == pause) {
+                this->play(network, window);
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    if (_status == run) {
+        for (auto &component : _components) {
+            component->event(event, keyBind, network, window);
+        }
+    } else if (_status == pause) {
+        for (auto &component : _pauseComponents) {
+            if (component.first->event(event, keyBind, network, window)) {
+                (this->*component.second)(network, window);
+            }
+        }
     }
 }
-#include <iostream>
+
 void Client::Game::update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
-    if (_start) {
+    if (_status == init) {
+        network.send(Client::Packet(PACKET_GAME_START).getRaw());
         if (_components.size() == 2) {
             Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
-            uint32_t packetId(packet.getId());
-            _components.push_back(new Client::Ship(packetId, 1, "Game/Ship.png", true));
-            network.send(Client::Packet(PACKET_GAME_START, packetId).getRaw());
+            _components.push_back(new Client::Ship(packet.getId(), 1, "Game/Ship.png", true));
         }
         network.emptyBuffer();
-        _start = false;
+        _status = run;
     }
     for (uint64_t i = 0; true; i++) {
         try {
@@ -148,6 +189,9 @@ void Client::Game::update(Client::IScene *&self, Client::KeyBind &keyBind, Clien
         }
         component1->update(keyBind, network, window);
     }
+    if (_status == pause) {
+        this->pauseMenu(self, keyBind, network, window);
+    }
 }
 
 void Client::Game::render(Client::Window &window)
@@ -155,6 +199,11 @@ void Client::Game::render(Client::Window &window)
     for (uint8_t layer = 0; layer < 255; layer++) {
         for (auto &component : _components) {
             component->render(window, layer);
+        }
+        if (_status == pause) {
+            for (auto &component : _pauseComponents) {
+                component.first->render(window, layer);
+            }
         }
     }
 }
@@ -200,4 +249,72 @@ void Client::Game::setEntity(const std::vector<std::string> &payload, const uint
         std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
         _components.push_back(new Client::Entity(id, 2, payload[1], coord, data.first, data.second));
     }
+}
+
+void Client::Game::pauseMenu(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
+{
+    float clockTime(_clock.getElapsedTime().asSeconds());
+    float spawnTime((clockTime - 0.5f) * 2.f);
+    if (spawnTime < 1.f) {
+        uint8_t i = 0;
+        for (auto &component : _pauseComponents) {
+            if (i == 0) {
+                _pauseComponents[i].first->move({-0.5f + spawnTime, 0.5f});
+            } else {
+                _pauseComponents[i].first->move({buttonPosList[i - 1].x - 1.f + spawnTime, buttonPosList[i - 1].y});
+            }
+            i++;
+        }
+    } else if (_quitRefTime > 0.f) {
+        float quitTime(std::pow((clockTime - _quitRefTime) * 2.f, 4.f));
+        uint8_t i = 0;
+        for (auto &component : _pauseComponents) {
+            if (i == 0) {
+                _pauseComponents[i].first->move({0.5f - quitTime, 0.5f});
+            } else {
+                _pauseComponents[i].first->move({buttonPosList[i - 1].x - quitTime, buttonPosList[i - 1].y});
+            }
+            i++;
+        }
+        if (quitTime > 0.5f) {
+            if (_next) {
+                self = _next;
+                self->update(self, keyBind, network, window);
+            } else {
+                _status = run;
+                _quitRefTime = -1.f;
+            }
+        }
+    } else {
+        uint8_t i = 0;
+        for (auto &component : _pauseComponents) {
+            if (i == 0) {
+                _pauseComponents[i].first->move({0.5f, 0.5f});
+            } else {
+                _pauseComponents[i].first->move({buttonPosList[i - 1].x, buttonPosList[i - 1].y});
+            }
+            i++;
+        }
+    }
+    for (auto &component : _pauseComponents) {
+        component.first->update(keyBind, network, window);
+    }
+}
+
+void Client::Game::play(Client::Network &network, Client::Window &window)
+{
+    _quitRefTime = _clock.getElapsedTime().asSeconds();
+}
+
+void Client::Game::menu(Client::Network &network, Client::Window &window)
+{
+    network.send(Client::Packet(PACKET_GAME_LEAVE).getRaw());
+    _next = new Client::MainMenu(this);
+    _quitRefTime = _clock.getElapsedTime().asSeconds();
+}
+
+void Client::Game::quit(Client::Network &network, Client::Window &window)
+{
+    network.send(Client::Packet(PACKET_GAME_LEAVE).getRaw());
+    window.close();
 }

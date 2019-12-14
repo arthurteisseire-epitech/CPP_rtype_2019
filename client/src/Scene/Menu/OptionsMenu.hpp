@@ -23,7 +23,7 @@ namespace Client {
         void update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void render(Client::Window &window) override;
     private:
-        void window(Client::Window &window);
+        void sound(Client::Window &window);
         void vsync(Client::Window &window);
         void back(Client::Window &window);
         Client::IScene *_prev;

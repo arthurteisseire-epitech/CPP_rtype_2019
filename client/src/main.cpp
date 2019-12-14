@@ -31,7 +31,7 @@ std::pair<std::pair<std::string, uint16_t>, uint16_t> parseArgs(int ac, char **a
         serverIp = "127.0.0.1";
         for (uint8_t i = 1; i < 2; i++) {
             try {
-                ports[i] = std::stoi(av[i]);
+                ports[i - 1] = std::stoi(av[i]);
             } catch (std::logic_error &invalidArgument) {
                 throw std::runtime_error(std::string("\'parseArgs\': Cannot parse the port: ") + av[i]);
             }
@@ -57,7 +57,7 @@ std::pair<std::pair<std::string, uint16_t>, uint16_t> parseArgs(int ac, char **a
         }
         for (uint8_t i = 2; i < 3; i++) {
             try {
-                ports[i] = std::stoi(av[i]);
+                ports[i - 2] = std::stoi(av[i]);
             } catch (std::logic_error &invalidArgument) {
                 throw std::runtime_error(std::string("\'parseArgs\': Cannot parse the port: ") + av[i]);
             }

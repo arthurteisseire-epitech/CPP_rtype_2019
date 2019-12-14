@@ -7,7 +7,7 @@
 
 #include "Window.hpp"
 
-Client::Window::Window() : _window(), _fullscreen(true), _vsync(true),
+Client::Window::Window() : _window(), _fullscreen(true), _sound(true), _vsync(true),
     _framerate(60), _monitor(sf::VideoMode::getDesktopMode()), _renderRatio(
         float(_monitor.width) / float(WIN_REF_SIZE.x),
         float(_monitor.height) / float(WIN_REF_SIZE.y)
@@ -20,6 +20,11 @@ void Client::Window::switchFullscreen()
 {
     _fullscreen = !_fullscreen;
     this->recreateWindow();
+}
+
+void Client::Window::switchSound()
+{
+    _sound = !_sound;
 }
 
 void Client::Window::switchVsync()
@@ -37,6 +42,11 @@ void Client::Window::setFramerate(const uint32_t framerate)
 bool Client::Window::getFullscreen() const
 {
     return _fullscreen;
+}
+
+bool Client::Window::getSound() const
+{
+    return _sound;
 }
 
 bool Client::Window::getVsync() const

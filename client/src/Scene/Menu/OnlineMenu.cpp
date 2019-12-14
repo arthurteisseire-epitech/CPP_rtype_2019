@@ -15,7 +15,7 @@ Client::OnlineMenu::OnlineMenu(Client::IScene *prev) :
         new Client::Image(0, {0.5f, 0.75f}, "Menu/WaitingMsg.png"),
         new Client::Image(0, {0.5f, 0.8f}, "Menu/WaitingTip.png"),
         new Client::Fading(1, 4.0f, 0.5f, true)
-    }), _players({nullptr, nullptr, nullptr, nullptr}), _playerId(0), _clock(), _quitRefTime(-1.f), _next(nullptr)
+    }), _players({nullptr, nullptr, nullptr, nullptr}), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
 }
 
@@ -35,11 +35,10 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::KeyBind &keyBind,
 {
     try {
         Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
-        _playerId = packet.getId();
         uint8_t i(0);
         for (i = 0; _players[i]; i++);
         if (i < _players.size()) {
-            _players[i] = new Client::Ship(_playerId, 128, "Game/Ship.png", true);
+            _players[i] = new Client::Ship(packet.getId(), 128, "Game/Ship.png", true);
         }
     } catch (std::runtime_error &packetNotFound) {}
     try {
@@ -76,7 +75,6 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::KeyBind &keyBind,
     } else if (clockTime - _quitRefTime > 0.5f) {
         self = _next;
         self->update(self, keyBind, network, window);
-        network.send(Client::Packet(PACKET_GAME_START, _playerId).getRaw());
     }
     for (auto &component : _components) {
         component->update(keyBind, network, window);

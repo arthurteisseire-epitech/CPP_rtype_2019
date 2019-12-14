@@ -20,9 +20,11 @@ namespace Client {
         Window();
         ~Window() = default;
         void switchFullscreen();
+        void switchSound();
         void switchVsync();
         void setFramerate(const uint32_t framerate);
         bool getFullscreen() const;
+        bool getSound() const;
         bool getVsync() const;
         uint32_t getFramerate() const;
         sf::Vector2<uint32_t> getSize() const;
@@ -37,6 +39,7 @@ namespace Client {
         void recreateWindow();
         sf::RenderWindow _window;
         bool _fullscreen;
+        bool _sound;
         bool _vsync;
         uint32_t _framerate;
         sf::VideoMode _monitor;

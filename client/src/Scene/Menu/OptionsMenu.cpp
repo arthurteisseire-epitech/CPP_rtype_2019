@@ -21,7 +21,7 @@ Client::OptionsMenu::OptionsMenu(const Client::Window &window, Client::IScene *p
         new Client::Image(1, {-0.5f, 0.5f}, "Menu/MenuBgL.png"),
         new Client::Image(0, {0.5f, 0.5f}, "Menu/MenuBgR.png")
     }), _buttons({
-        {new Client::Button(2, buttonPosList[0], "Menu/ButtonWinOn.png", "Menu/ButtonWinOff.png", window.getFullscreen()), &Client::OptionsMenu::window},
+        {new Client::Button(2, buttonPosList[0], "Menu/ButtonSoundOff.png", "Menu/ButtonSoundOn.png", window.getSound()), &Client::OptionsMenu::sound},
         {new Client::Button(2, buttonPosList[1], "Menu/ButtonVsyncOff.png", "Menu/ButtonVsyncOn.png", window.getVsync()), &Client::OptionsMenu::vsync},
         {new Client::Button(2, buttonPosList[2], "Menu/ButtonBack.png"), &Client::OptionsMenu::back}
     }), _clock(), _quitRefTime(-1.f), _next(nullptr)
@@ -48,9 +48,9 @@ void Client::OptionsMenu::render(Client::Window &window)
     MENU_RENDER
 }
 
-void Client::OptionsMenu::window(Client::Window &window)
+void Client::OptionsMenu::sound(Client::Window &window)
 {
-    window.switchFullscreen();
+    window.switchSound();
 }
 
 void Client::OptionsMenu::vsync(Client::Window &window)

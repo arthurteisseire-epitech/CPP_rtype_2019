@@ -17,6 +17,7 @@
 #define PACKET_CONNECT "connect"
 #define PACKET_DISCONNECT "disconnect"
 #define PACKET_ENTITY_COLLISION "entity_collision"
+#define PACKET_GAME_LEAVE "game_leave"
 #define PACKET_GAME_START "game_start"
 
 //RECEIVE
