@@ -54,6 +54,12 @@ namespace ecs
         }
         return std::nullopt;
     }
+
+    template<class T, class Tuple>
+    T &GetFromTuple(Tuple &tuple, std::shared_ptr<EntityAdmin> &admin)
+    {
+        return GetPool<T>(admin).at(std::get<typename ObjectPool<T>::index>(tuple));
+    }
 }
 
 #endif

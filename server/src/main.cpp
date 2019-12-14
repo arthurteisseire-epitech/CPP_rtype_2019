@@ -19,24 +19,17 @@
 
 using namespace ecs;
 
-template<class T, class Tuple>
-T &get(Tuple &tuple, std::shared_ptr<EntityAdmin> &admin)
-{
-    return GetPool<T>(admin).at(std::get<typename ObjectPool<T>::index>(tuple));
-}
-
 void notifyPlayers(std::shared_ptr<EntityAdmin> &admin)
 {
     for (std::size_t i = 0; i < GetPool<CConnection>(admin).size(); ++i)
         EntityFactory::createPlayer(admin, ObjectPool<CConnection>::index(i));
 
     ForEachMatching<NotifyPlayerTuple>(admin, [&admin](NotifyPlayerTuple &t) {
-        NetworkSender::send(admin, get<CConnection>(t, admin), Packet(get<CId>(t, admin).id,
-                                                                      SendProtocol::entitySetToString(
-                                                                          get<CType>(t, admin).name,
-                                                                          get<CTransform>(t, admin).vec.x,
-                                                                          get<CTransform>(t, admin).vec.y) +
-                                                                          ":player"));
+        auto s = SendProtocol::entitySetToString(GetFromTuple<CType>(t, admin).name,
+                                                 GetFromTuple<CTransform>(t, admin).vec.x,
+                                                 GetFromTuple<CTransform>(t, admin).vec.y) + ":player";
+
+        NetworkSender::send(admin, GetFromTuple<CConnection>(t, admin), Packet(GetFromTuple<CId>(t, admin).id, s));
     });
 }
 

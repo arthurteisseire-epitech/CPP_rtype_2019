@@ -24,16 +24,9 @@ namespace ecs
         virtual void update(float deltaTime) = 0;
 
         template<class T, class Tuple>
-        std::conditional_t<has_type<typename ObjectPool<T>::index, Tuple>::value, T, const T> &get(Tuple &tuple)
+        T &get(Tuple &tuple)
         {
-            using type = std::conditional_t
-                <
-                    has_type<typename ObjectPool<T>::index, Tuple>::value,
-                    typename ObjectPool<T>::index,
-                    const typename ObjectPool<T>::index
-                >;
-
-            return std::get<ObjectPool<T>>(admin->pools).at(std::get<type>(tuple));
+            return GetFromTuple<T>(tuple, admin);
         }
 
     protected:
