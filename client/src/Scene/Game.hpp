@@ -14,8 +14,7 @@
 namespace Client {
     class Game : public IScene {
     public:
-        Game(Client::IScene *prev = nullptr);
-        Game(std::array<Client::Ship *, 4> &players, Client::IScene *prev = nullptr);
+        Game(bool multi, Client::IScene *prev = nullptr);
         ~Game() override;
         void event(Client::IScene *&self, sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
         void update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window) override;
@@ -31,6 +30,7 @@ namespace Client {
         Client::IScene *_prev;
         std::vector<Client::IComponent *> _components;
         std::vector<std::pair<Client::IComponent *, void (Client::Game::*)(Client::Network &, Client::Window &)>> _pauseComponents;
+        bool _multi;
         Client::Game::Status _status;
         sf::Clock _clock;
         float _quitRefTime;

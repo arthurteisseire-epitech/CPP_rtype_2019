@@ -65,7 +65,7 @@ static const std::vector<sf::Vector2<float>> buttonPosList({
     {0.268f, 0.6f}
 });
 
-Client::Game::Game(Client::IScene *prev) :
+Client::Game::Game(bool multi, Client::IScene *prev) :
     _prev(prev), _components({
         new Client::SideScroller(0, "Game/Background.png", 0.1f),
         new Client::Fading(3, 0.5f, 0.5f, true)
@@ -74,24 +74,8 @@ Client::Game::Game(Client::IScene *prev) :
         {new Client::Button(5, buttonPosList[0], "Menu/ButtonPlay.png"), &Client::Game::play},
         {new Client::Button(5, buttonPosList[1], "Menu/ButtonMenu.png"), &Client::Game::menu},
         {new Client::Button(5, buttonPosList[2], "Menu/ButtonQuit.png"), &Client::Game::quit},
-    }), _status(init), _clock(), _quitRefTime(-1.f), _next(nullptr)
+    }), _multi(multi), _status(init), _clock(), _quitRefTime(-1.f), _next(nullptr)
 {
-}
-
-Client::Game::Game(std::array<Client::Ship *, 4> &players, Client::IScene *prev) :
-    _prev(prev), _components({
-        new Client::SideScroller(0, "Game/Background.png", 0.1f),
-        new Client::Fading(3, 0.5f, 0.5f, true)
-    }), _pauseComponents({
-        {new Client::Image(4, {-0.5f, 0.5f}, "Menu/MenuBgL.png"), nullptr},
-        {new Client::Button(5, buttonPosList[0], "Menu/ButtonPlay.png"), &Client::Game::play},
-        {new Client::Button(5, buttonPosList[1], "Menu/ButtonMenu.png"), &Client::Game::menu},
-        {new Client::Button(5, buttonPosList[2], "Menu/ButtonQuit.png"), &Client::Game::quit},
-    }), _status(init), _clock(), _quitRefTime(-1.f), _next(nullptr)
-{
-    for (uint8_t i = 0; players[i]; i++) {
-        _components.push_back(players[i]);
-    }
 }
 
 Client::Game::~Game()
@@ -134,12 +118,12 @@ void Client::Game::event(Client::IScene *&self, sf::Event &event, Client::KeyBin
 void Client::Game::update(Client::IScene *&self, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
 {
     if (_status == init) {
-        network.send(Client::Packet(PACKET_GAME_START).getRaw());
-        if (_components.size() == 2) {
+        if (!_multi) {
             Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
-            _components.push_back(new Client::Ship(packet.getId(), 1, "Game/Ship.png", true));
+            network.send(Client::Packet(PACKET_GAME_REQUEST).getRaw());
         }
         network.emptyBuffer();
+        network.send(Client::Packet(PACKET_GAME_START).getRaw());
         _status = run;
     }
     for (uint64_t i = 0; true; i++) {
@@ -244,7 +228,7 @@ void Client::Game::setEntity(const std::vector<std::string> &payload, const uint
         }
     }
     if (payload[1] == "ship") {
-        _components.push_back(new Client::Ship(id, 1, "Game/Ship.png", false));
+        _components.push_back(new Client::Ship(id, 1, "Game/Ship.png", payload.size() == 4 && payload[3] == "player"));
     } else {
         std::pair<std::string, sf::Vector2<uint32_t>> data = entityData.find(payload[1])->second;
         _components.push_back(new Client::Entity(id, 2, payload[1], coord, data.first, data.second));
@@ -280,6 +264,7 @@ void Client::Game::pauseMenu(Client::IScene *&self, Client::KeyBind &keyBind, Cl
             if (_next) {
                 self = _next;
                 self->update(self, keyBind, network, window);
+                network.send(Client::Packet(PACKET_CONNECT).getRaw());
             } else {
                 _status = run;
                 _quitRefTime = -1.f;
@@ -308,13 +293,12 @@ void Client::Game::play(Client::Network &network, Client::Window &window)
 
 void Client::Game::menu(Client::Network &network, Client::Window &window)
 {
-    network.send(Client::Packet(PACKET_GAME_LEAVE).getRaw());
+    network.send(Client::Packet(PACKET_DISCONNECT).getRaw());
     _next = new Client::MainMenu(this);
     _quitRefTime = _clock.getElapsedTime().asSeconds();
 }
 
 void Client::Game::quit(Client::Network &network, Client::Window &window)
 {
-    network.send(Client::Packet(PACKET_GAME_LEAVE).getRaw());
     window.close();
 }

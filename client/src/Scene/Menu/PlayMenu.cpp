@@ -52,7 +52,7 @@ void Client::PlayMenu::render(Client::Window &window)
 
 void Client::PlayMenu::solo(Client::Window &window)
 {
-    _next = new Client::Game(this);
+    _next = new Client::Game(false, this);
     _components.push_back(new Client::Fading(3, 0.5f));
     _quitRefTime = _clock.getElapsedTime().asSeconds();
 }

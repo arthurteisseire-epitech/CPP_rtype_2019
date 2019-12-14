@@ -27,7 +27,7 @@ namespace Client {
     private:
         Client::IScene *_prev;
         std::vector<Client::IComponent *> _components;
-        std::array<Client::Ship *, 4> _players;
+        uint8_t _playerNb;
         sf::Clock _clock;
         float _quitRefTime;
         Client::IScene *_next;
