@@ -31,13 +31,12 @@ void notifyPlayers(std::shared_ptr<EntityAdmin> &admin)
         EntityFactory::createPlayer(admin, ObjectPool<CConnection>::index(i));
 
     ForEachMatching<NotifyPlayerTuple>(admin, [&admin](NotifyPlayerTuple &t) {
-        auto s =
-            std::string(SendProtocol::get(SendProtocol::ENTITY_SET)) + ':' + std::string(get<CType>(t, admin).name) +
-                ':' +
-                std::to_string(get<CTransform>(t, admin).vec.x) + ',' +
-                std::to_string(get<CTransform>(t, admin).vec.y) + ":player";
-
-        NetworkSender::send(admin, get<CConnection>(t, admin), Packet(get<CId>(t, admin).id, s));
+        NetworkSender::send(admin, get<CConnection>(t, admin), Packet(get<CId>(t, admin).id,
+                                                                      SendProtocol::entitySetToString(
+                                                                          get<CType>(t, admin).name,
+                                                                          get<CTransform>(t, admin).vec.x,
+                                                                          get<CTransform>(t, admin).vec.y) +
+                                                                          ":player"));
     });
 }
 
@@ -51,9 +50,7 @@ void startGame(std::shared_ptr<EntityAdmin> &admin, std::vector<std::unique_ptr<
 
 void notifyAllMates(std::shared_ptr<EntityAdmin> &admin, Packet &packet, const boost::asio::ip::udp::endpoint &endpoint)
 {
-    std::cout << "notify mates..." << std::endl;
     ForEachMatching<CConnection>(admin, [&admin, &packet, &endpoint](CConnection &conn) {
-        std::cout << "notify a mate..." << std::endl;
         if (endpoint == conn.endpoint) {
             for (std::size_t i = 0; i < GetPool<CConnection>(admin).size() - 1; ++i)
                 NetworkSender::send(admin, conn,
@@ -101,7 +98,10 @@ int main()
 
     std::cout << "server listening on port " << admin->network.socket.local_endpoint().port() << std::endl;
     std::thread t([&receiveSystem]() {receiveSystem.update(0.16);});
-    std::thread t2([&dispatchPacketSystem]() { while (true) dispatchPacketSystem.update(0.16); });
+    std::thread t2([&dispatchPacketSystem]() {
+        while (true)
+            dispatchPacketSystem.update(0.16);
+    });
 
     waitForStartGame(admin);
     notifyPlayers(admin);

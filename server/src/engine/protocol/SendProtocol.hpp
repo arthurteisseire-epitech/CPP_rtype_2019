@@ -23,6 +23,7 @@ namespace ecs
         };
 
         static std::string_view get(Key key);
+        static std::string entitySetToString(std::string_view type, float x, float y);
     private:
         static const std::unordered_map<Key, std::string_view> commands;
     };
