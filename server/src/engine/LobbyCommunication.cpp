@@ -12,7 +12,6 @@
 
 void ecs::LobbyCommunication::waitForStartGame(std::shared_ptr<EntityAdmin> &admin)
 {
-    auto &buffers = admin->network.readBuffers;
     bool gameStart = false;
 
     while (true) {
