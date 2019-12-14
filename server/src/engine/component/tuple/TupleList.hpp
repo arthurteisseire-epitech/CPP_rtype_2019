@@ -17,6 +17,7 @@
 #include "ShootingAITuple.hpp"
 #include "CollisionTuple.hpp"
 #include "DestroyOOBTuple.hpp"
+#include "NotifyPlayerTuple.hpp"
 
 namespace ecs
 {
@@ -30,7 +31,8 @@ namespace ecs
             HandleConnectionTuple,
             ShootingAITuple,
             CollisionTuple,
-            DestroyOOBTuple
+            DestroyOOBTuple,
+            NotifyPlayerTuple
         >;
 }
 

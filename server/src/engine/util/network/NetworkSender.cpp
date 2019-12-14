@@ -6,6 +6,7 @@
 */
 
 #include <boost/bind.hpp>
+#include <utility>
 #include "NetworkSender.hpp"
 #include "Util.hpp"
 
@@ -18,17 +19,23 @@ void ecs::NetworkSender::send(const std::shared_ptr<EntityAdmin> &admin, ecs::Ob
 void ecs::NetworkSender::send(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
                               const ecs::Packet &buffer)
 {
-    new NetworkSender(admin, conn, buffer);
+    send(admin, conn.endpoint, buffer);
 }
 
-ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+void ecs::NetworkSender::send(const std::shared_ptr<EntityAdmin> &admin, const boost::asio::ip::udp::endpoint &endpoint,
+                              const ecs::Packet &buffer)
+{
+    new NetworkSender(admin, endpoint, buffer);
+}
+
+ecs::NetworkSender::NetworkSender(const std::shared_ptr<EntityAdmin> &admin, const boost::asio::ip::udp::endpoint& endpoint,
                                   const Packet &buffer) :
     writeBuffer(buffer)
 {
     std::cout << buffer.data.data() << std::endl;
     admin->network.socket.async_send_to(
         boost::asio::buffer(&writeBuffer, sizeof(writeBuffer)),
-        conn.endpoint,
+        endpoint,
         std::bind(&ecs::NetworkSender::handleSend, this)
     );
 }

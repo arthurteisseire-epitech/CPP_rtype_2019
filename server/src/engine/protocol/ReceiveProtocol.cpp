@@ -5,6 +5,7 @@
 ** ReceiveProtocol.cpp
 */
 
+#include <iostream>
 #include "ReceiveProtocol.hpp"
 
 const std::unordered_map<std::string_view, ecs::ReceiveProtocol::Key> ecs::ReceiveProtocol::commands = {
@@ -16,13 +17,17 @@ const std::unordered_map<std::string_view, ecs::ReceiveProtocol::Key> ecs::Recei
     {"connect", ecs::ReceiveProtocol::CONNECT},
     {"disconnect", ecs::ReceiveProtocol::DISCONNECT},
     {"entity_collision", ecs::ReceiveProtocol::COLLISION},
+    {"game_request", ecs::ReceiveProtocol::GAME_REQUEST},
+    {"game_start", ecs::ReceiveProtocol::GAME_START},
 };
 
 std::pair<ecs::ReceiveProtocol::Key, std::string> ecs::ReceiveProtocol::find(const std::string &command)
 {
     auto keyString = command.substr(0, command.find(':'));
     auto it = commands.find(keyString);
-    if (it == commands.end())
+    if (it == commands.end()) {
+        std::cout << "'" << keyString << "': unkown in receive protocol" << std::endl;
         return {UNKOWN, ""};
+    }
     return {it->second, command.substr(std::min(command.length(), keyString.length() + 1))};
 }

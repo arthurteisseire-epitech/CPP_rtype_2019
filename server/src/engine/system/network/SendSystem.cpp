@@ -6,7 +6,7 @@
 */
 
 #include <boost/bind.hpp>
-#include <SendProtocol.hpp>
+#include "SendProtocol.hpp"
 #include "SendSystem.hpp"
 #include "NetworkSender.hpp"
 #include "Util.hpp"
