@@ -20,7 +20,7 @@ namespace ecs
 {
     struct EntityAdmin {
         EntityAdmin() :
-            network(1234),
+            network(0),
             currentId(0)
         {
         }

@@ -16,6 +16,7 @@ int main()
     ecs::ReceiveSystem connSystem(admin);
     auto systems = ecs::SystemsUtil::Init(admin);
 
+    std::cout << "server listening on port " << admin->network.socket.local_endpoint().port() << std::endl;
     std::thread t([&]() {
         connSystem.update(0.16);
     });
