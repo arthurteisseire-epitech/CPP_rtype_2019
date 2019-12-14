@@ -76,7 +76,7 @@ void Client::OnlineMenu::update(Client::IScene *&self, Client::KeyBind &keyBind,
     } else if (clockTime - _quitRefTime > 0.5f) {
         self = _next;
         self->update(self, keyBind, network, window);
-        network.send(Client::Packet(PACKET_START_GAME, _playerId).getRaw());
+        network.send(Client::Packet(PACKET_GAME_START, _playerId).getRaw());
     }
     for (auto &component : _components) {
         component->update(keyBind, network, window);

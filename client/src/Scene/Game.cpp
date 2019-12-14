@@ -96,7 +96,7 @@ void Client::Game::update(Client::IScene *&self, Client::KeyBind &keyBind, Clien
             Client::Packet packet(network.findReceived(PACKET_PLAYER_CONNECTED));
             uint32_t packetId(packet.getId());
             _components.push_back(new Client::Ship(packetId, 1, "Game/Ship.png", true));
-            network.send(Client::Packet(PACKET_START_GAME, packetId).getRaw());
+            network.send(Client::Packet(PACKET_GAME_START, packetId).getRaw());
         }
         network.emptyBuffer();
         _start = false;

@@ -8,8 +8,8 @@
 #include <iostream>
 #include "Network.hpp"
 
-Client::Network::Network(const std::string &serverIp, const uint16_t &clientPort) :
-    _socket(), _serverIp(serverIp), _active(true), _receiver(&Client::Network::receiver, this)
+Client::Network::Network(const std::pair<std::string, uint16_t> &serverAddr, const uint16_t &clientPort) :
+    _socket(), _serverIp(serverAddr.first), _serverPort(serverAddr.second), _active(true), _receiver(&Client::Network::receiver, this)
 {
     _socket.bind(clientPort);
     this->send(Client::Packet(PACKET_CONNECT).getRaw());
@@ -32,7 +32,7 @@ Client::Network::~Network()
 
 void Client::Network::send(const void *data, const uint64_t &size)
 {
-    _socket.send(data, size, _serverIp, SERVER_PORT);
+    _socket.send(data, size, _serverIp, _serverPort);
 }
 
 void Client::Network::send(const Client::RawPacket *packet)
