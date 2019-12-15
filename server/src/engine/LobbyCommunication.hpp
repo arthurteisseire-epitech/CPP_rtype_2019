@@ -8,6 +8,7 @@
 #ifndef RTYPE_LOBBYCOMMUNICATION_HPP
 #define RTYPE_LOBBYCOMMUNICATION_HPP
 
+#include <SendProtocol.hpp>
 #include "EntityAdmin.hpp"
 #include "SystemUtil.hpp"
 
@@ -20,7 +21,10 @@ namespace ecs
         static void startGame(std::shared_ptr<EntityAdmin> &admin, std::vector<std::unique_ptr<ASystem>> &systems);
 
     private:
-        static void notifyAllMates(std::shared_ptr<EntityAdmin> &admin, Packet &packet, const boost::asio::ip::udp::endpoint &endpoint);
+        static void notifyAllMates(std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+                                   ecs::SendProtocol::Key messageKey);
+        static void notifyThisConnection(std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+                                         ecs::SendProtocol::Key messageKey);
     };
 }
 

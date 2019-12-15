@@ -28,8 +28,8 @@ namespace ecs
             }
 
         private:
-            std::thread thread;
             std::unique_ptr<ASystem> system;
+            std::thread thread;
         };
 
     public:

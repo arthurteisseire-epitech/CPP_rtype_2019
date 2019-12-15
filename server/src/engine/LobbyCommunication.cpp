@@ -22,8 +22,11 @@ void ecs::LobbyCommunication::waitForStartGame(std::shared_ptr<EntityAdmin> &adm
                 std::string s(buffer.begin(), buffer.end());
                 s.erase(std::remove_if(s.begin(), s.end(), iscntrl), s.end());
 
-                if (ReceiveProtocol::find(s).first == ReceiveProtocol::GAME_REQUEST)
-                    notifyAllMates(admin, packet, conn.endpoint);
+                if (ReceiveProtocol::find(s).first == ReceiveProtocol::GAME_REQUEST) {
+                    conn.isInLobby = true;
+                    notifyThisConnection(admin, conn, SendProtocol::MATE_CONNECTED);
+                    notifyAllMates(admin, conn, SendProtocol::MATE_CONNECTED);
+                }
 
                 if (ReceiveProtocol::find(s).first == ReceiveProtocol::GAME_START)
                     gameStart = true;
@@ -59,15 +62,21 @@ void ecs::LobbyCommunication::startGame(std::shared_ptr<EntityAdmin> &admin,
     }
 }
 
-void ecs::LobbyCommunication::notifyAllMates(std::shared_ptr<EntityAdmin> &admin, Packet &packet,
-                                             const boost::asio::ip::udp::endpoint &endpoint)
+void ecs::LobbyCommunication::notifyThisConnection(std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+                                                   SendProtocol::Key messageKey)
 {
-    ForEachMatching<CConnection>(admin, [&admin, &packet, &endpoint](CConnection &conn) {
-        if (endpoint == conn.endpoint) {
-            for (std::size_t i = 0; i < GetPool<CConnection>(admin).size() - 1; ++i)
-                NetworkSender::send(admin, conn, Packet(0, SendProtocol::get(SendProtocol::MATE_CONNECTED)));
-        } else {
-            NetworkSender::send(admin, conn, Packet(0, SendProtocol::get(SendProtocol::MATE_CONNECTED)));
+    ForEachMatching<CConnection>(admin, [&admin, &conn, &messageKey](CConnection &mate) {
+        if (mate.endpoint != conn.endpoint && mate.isInLobby)
+            NetworkSender::send(admin, conn, Packet(0, SendProtocol::get(messageKey)));
+    });
+}
+
+void ecs::LobbyCommunication::notifyAllMates(std::shared_ptr<EntityAdmin> &admin, const CConnection &conn,
+                                             SendProtocol::Key messageKey)
+{
+    ForEachMatching<CConnection>(admin, [&admin, &conn, &messageKey](CConnection &mate) {
+        if (mate.endpoint != conn.endpoint && mate.isInLobby) {
+            NetworkSender::send(admin, mate, Packet(0, SendProtocol::get(messageKey)));
         }
     });
 }

@@ -19,10 +19,12 @@ namespace ecs
 {
     struct CConnection {
         explicit CConnection(boost::asio::ip::udp::endpoint endpoint) :
-            endpoint(std::move(endpoint))
+            endpoint(std::move(endpoint)),
+            isInLobby(false)
         {
         }
 
+        bool isInLobby;
         boost::asio::ip::udp::endpoint endpoint;
         std::queue<Packet> readBuffers{};
     };
