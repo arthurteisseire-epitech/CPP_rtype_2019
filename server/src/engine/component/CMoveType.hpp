@@ -18,7 +18,7 @@ namespace ecs
             NONE,
         } type;
 
-        explicit CMoveType(MOVE_TYPE type) : type(type) {}
+        CMoveType(MOVE_TYPE type) : type(type) {}
     };
 }
 
