@@ -22,12 +22,10 @@ namespace ecs
             ENEMY_SHIP2,
             ALIEN,
             ALIEN2,
-            MISSILE_STAGE1,
-            MISSILE_STAGE2,
-            MISSILE_STAGE3,
-            ENEMY_BLAST_STAGE1,
-            ENEMY_BLAST_STAGE2,
-            ENEMY_BLAST_STAGE3,
+            PLAYER_LASER,
+            ENEMY_BLAST1_STAGE1,
+            ENEMY_BLAST1_STAGE2,
+            ENEMY_BLAST1_STAGE3,
             VORTEX,
             POWERUP
         };

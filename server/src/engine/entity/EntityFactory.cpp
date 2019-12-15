@@ -41,7 +41,7 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
 {
     admin->entities.emplace_back(
         new Entity(admin,
-                   GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::MISSILE_STAGE3)),
+                   GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::PLAYER_LASER)),
                    GetPool<CId>(admin).create(nextId(admin)),
                    GetPool<CSpeed>(admin).create(5),
                    GetPool<CCollisionDamage>(admin).create(5),
