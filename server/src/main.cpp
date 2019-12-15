@@ -9,7 +9,7 @@
 #include "SystemUtil.hpp"
 
 #include "ReceiveSystem.hpp"
-#include "DynamicLoadMonsterSystem.hpp"
+#include "monster_loading/DynamicLoadMonsterSystem.hpp"
 #include "DispatchPacketSystem.hpp"
 
 #include "SystemThreadPool.hpp"

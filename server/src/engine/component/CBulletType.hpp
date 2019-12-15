@@ -13,7 +13,9 @@ namespace ecs
     struct CBulletType {
         enum BulletType {
             BASIC,
-            ENEMY_BASIC
+            ENEMY_BASIC,
+            VORTEX,
+            LAST
         } type;
 
         CBulletType(BulletType type) : type(type) {}
