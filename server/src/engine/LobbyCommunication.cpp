@@ -56,7 +56,7 @@ void ecs::LobbyCommunication::startGame(std::shared_ptr<EntityAdmin> &admin,
 {
     while (true) {
         SystemsUtil::Update(systems, 0.16);
-        std::this_thread::sleep_for(std::chrono::milliseconds(160));
+        std::this_thread::sleep_for(std::chrono::milliseconds(40));
     }
 }
 
