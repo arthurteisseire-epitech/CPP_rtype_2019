@@ -6,11 +6,12 @@
 */
 
 #include <random>
+#include <utility>
 #include "DirectionUpdateSystem.hpp"
 #include "DirectionUpdateTuple.hpp"
 
 ecs::DirectionUpdateSystem::DirectionUpdateSystem(std::shared_ptr<EntityAdmin> admin) :
-    ASystem(admin),
+    ASystem(std::move(admin)),
     moveUpdate(initMap())
 {
 }

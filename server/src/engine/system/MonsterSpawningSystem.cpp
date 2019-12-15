@@ -7,9 +7,12 @@
 
 #include "EntityFactory.hpp"
 #include "MonsterSpawningSystem.hpp"
+
+#include <utility>
 #include "monster_loading/DynamicLoadMonsterSystem.hpp"
 
-ecs::MonsterSpawningSystem::MonsterSpawningSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(admin)
+ecs::MonsterSpawningSystem::MonsterSpawningSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
