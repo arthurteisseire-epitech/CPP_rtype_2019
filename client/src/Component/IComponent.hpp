@@ -31,6 +31,7 @@ namespace Client {
         virtual uint32_t getId() const = 0;
         virtual sf::Vector2<float> getPosition() const = 0;
         virtual sf::Vector2<float> getSpriteSize() const = 0;
+        virtual void setLife(float life) = 0;
     };
 }
 

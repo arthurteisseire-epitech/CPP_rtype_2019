@@ -49,7 +49,7 @@ void Client::Fading::render(Client::Window &window, uint8_t layer)
 
 bool Client::Fading::collide(Client::IComponent *component, Client::Window &window)
 {
-    COMPONENT_COLLIDE
+    return false;
 }
 
 std::string Client::Fading::getIdentity() const
@@ -70,4 +70,8 @@ sf::Vector2<float> Client::Fading::getPosition() const
 sf::Vector2<float> Client::Fading::getSpriteSize() const
 {
     return _sprite.getSize();
+}
+
+void Client::Fading::setLife(float life)
+{
 }

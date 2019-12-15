@@ -80,3 +80,7 @@ sf::Vector2<float> Client::Image::getSpriteSize() const
 {
     COMPONENT_SPRITE_SIZE
 }
+
+void Client::Image::setLife(float life)
+{
+}

@@ -76,3 +76,7 @@ sf::Vector2<float> Client::Loader::getSpriteSize() const
 {
     COMPONENT_SPRITE_SIZE
 }
+
+void Client::Loader::setLife(float life)
+{
+}

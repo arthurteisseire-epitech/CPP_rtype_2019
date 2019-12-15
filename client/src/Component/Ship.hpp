@@ -26,13 +26,18 @@ namespace Client {
         uint32_t getId() const override;
         sf::Vector2<float> getPosition() const override;
         sf::Vector2<float> getSpriteSize() const override;
+        void setLife(float setLife) override;
     private:
         uint32_t _id;
         uint8_t _layer;
         bool _controlled;
+        float _life;
+        std::pair<uint8_t, float> _animation;
         sf::Vector2<float> _position;
         sf::Texture *_texture;
         sf::Sprite _sprite;
+        sf::RectangleShape _lifeBar;
+        sf::RectangleShape _lifeBarBack;
     };
 }
 

@@ -17,7 +17,7 @@ static const std::map<sf::Keyboard::Key, std::string> shipAction({
 });
 
 Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, bool controlled) :
-    _id(id), _layer(layer), _controlled(controlled), _position(0.1f, 0.5f), _texture(new sf::Texture())
+    _id(id), _layer(layer), _controlled(controlled), _life(1.f), _animation({0, 0.f}), _position(0.1f, 0.5f), _texture(new sf::Texture())
 {
     if (!_texture->loadFromFile(ASSETS_DIR + texturePath)) {
         throw std::runtime_error("\'Client::Ship::Ship\': Cannot load texture: " + texturePath);
@@ -28,6 +28,8 @@ Client::Ship::Ship(uint32_t id, uint8_t layer, const std::string &texturePath, b
     textureRect.top *= textureRect.height;
     _sprite = sf::Sprite(*_texture, textureRect);
     _sprite.setOrigin(sf::Vector2<float>(textureRect.width, textureRect.height));
+    _lifeBar.setFillColor({32, 32, 192, 255});
+    _lifeBarBack.setFillColor({32, 32, 32, 255});
 }
 
 Client::Ship::~Ship()
@@ -43,11 +45,13 @@ void Client::Ship::move(const sf::Vector2<float> &position)
 void Client::Ship::adjust(Client::Window &window)
 {
     COMPONENT_ADJUST
+    COMPONENT_ADJUST_LIFEBAR
 }
 
 void Client::Ship::place(Client::Window &window)
 {
     COMPONENT_PLACE
+    COMPONENT_PLACE_LIFEBAR
 }
 
 bool Client::Ship::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
@@ -66,7 +70,18 @@ void Client::Ship::update(Client::KeyBind &keyBind, Client::Network &network, Cl
     }
     sf::Rect<int> spriteRect(_sprite.getTextureRect());
     float moveRatio(_sprite.getPosition().y / window.getSize().y - _position.y);
-    spriteRect.left = (2 + (moveRatio > 0.f) + (moveRatio > 0.01f) - (moveRatio < 0.f) - (moveRatio < 0.01f)) * spriteRect.width;
+    if (moveRatio != 0) {
+        _animation.first = 8;
+        _animation.second = moveRatio;
+    } else {
+        if (_animation.first > 0) {
+            _animation.first--;
+        }
+        if (_animation.first == 0) {
+            _animation.second = 0.f;
+        }
+    }
+    spriteRect.left = (2 + 2 * (_animation.second > 0.f) - 2 * (_animation.second < 0.f)) * spriteRect.width;
     _sprite.setTextureRect(spriteRect);
     this->adjust(window);
     this->place(window);
@@ -76,6 +91,8 @@ void Client::Ship::render(Client::Window &window, uint8_t layer)
 {
     if (layer == _layer) {
         window.draw(_sprite);
+        window.draw(_lifeBarBack);
+        window.draw(_lifeBar);
     }
 }
 
@@ -102,4 +119,9 @@ sf::Vector2<float> Client::Ship::getPosition() const
 sf::Vector2<float> Client::Ship::getSpriteSize() const
 {
     COMPONENT_SPRITE_SIZE
+}
+
+void Client::Ship::setLife(float life)
+{
+    _life = life;
 }
