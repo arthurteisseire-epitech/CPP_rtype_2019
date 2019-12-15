@@ -14,7 +14,7 @@ void ecs::LobbyCommunication::waitForStartGame(std::shared_ptr<EntityAdmin> &adm
 {
     bool gameStart = false;
 
-    while (true) {
+    while (!gameStart) {
         ForEachMatching<CConnection>(admin, [&admin, &gameStart](CConnection &conn) {
             while (!conn.readBuffers.empty()) {
                 auto &buffer = conn.readBuffers.front().data;
@@ -33,8 +33,6 @@ void ecs::LobbyCommunication::waitForStartGame(std::shared_ptr<EntityAdmin> &adm
                 conn.readBuffers.pop();
             }
         });
-        if (gameStart)
-            break;
     }
 }
 
