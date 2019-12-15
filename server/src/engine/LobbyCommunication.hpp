@@ -16,7 +16,7 @@ namespace ecs
 {
     class LobbyCommunication {
     public:
-        static void waitForStartGame(std::shared_ptr<EntityAdmin> &admin);
+        static void waitStartGame(std::shared_ptr<EntityAdmin> &admin);
         static void notifyPlayers(std::shared_ptr<EntityAdmin> &admin);
         static void startGame(std::shared_ptr<EntityAdmin> &admin, std::vector<std::unique_ptr<ASystem>> &systems);
 

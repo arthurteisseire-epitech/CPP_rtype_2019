@@ -23,7 +23,7 @@ static void newGame()
     auto systems = SystemsUtil::Init(admin);
     SystemThreadPool<ReceiveSystem, DispatchPacketSystem, DynamicLoadMonsterSystem> systemThreadPool(admin);
 
-    LobbyCommunication::waitForStartGame(admin);
+    LobbyCommunication::waitStartGame(admin);
     LobbyCommunication::notifyPlayers(admin);
     LobbyCommunication::startGame(admin, systems);
 }

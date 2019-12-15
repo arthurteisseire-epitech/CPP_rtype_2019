@@ -10,7 +10,7 @@
 #include "SendProtocol.hpp"
 #include "NetworkSender.hpp"
 
-void ecs::LobbyCommunication::waitForStartGame(std::shared_ptr<EntityAdmin> &admin)
+void ecs::LobbyCommunication::waitStartGame(std::shared_ptr<EntityAdmin> &admin)
 {
     bool gameStart = false;
 
