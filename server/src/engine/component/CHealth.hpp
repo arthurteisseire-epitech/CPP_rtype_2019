@@ -11,7 +11,7 @@
 namespace ecs
 {
     struct CHealth {
-        explicit CHealth(int life = 100) :
+        CHealth(int life = 100) :
             life(life),
             maxLife(life)
         {

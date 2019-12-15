@@ -14,9 +14,10 @@ void ecs::EntityUtil::DestroyEntity(std::shared_ptr<ecs::EntityAdmin> &admin, un
 {
     for (auto &entity: admin->entities)
         if (entity->getId(admin) == id) {
-            entity->destroy(admin);
             ForEachMatching<CConnection>(admin, [&admin, &id] (CConnection &conn) {
                 NetworkSender::send(admin, conn, Packet(id, std::string(SendProtocol::get(SendProtocol::ENTITY_DESTROY))));
             });
+            entity->destroy(admin);
+            return;
         }
 }

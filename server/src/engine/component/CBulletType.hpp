@@ -11,11 +11,12 @@
 namespace ecs
 {
     struct CBulletType {
-        enum BULLET_TYPE {
-            BASIC
+        enum BulletType {
+            BASIC,
+            ENEMY_BASIC
         } type;
 
-        explicit CBulletType(BULLET_TYPE type) : type(type) {}
+        CBulletType(BulletType type) : type(type) {}
     };
 }
 

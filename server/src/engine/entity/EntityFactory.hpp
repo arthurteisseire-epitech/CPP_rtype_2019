@@ -11,11 +11,20 @@
 #include "CConnection.hpp"
 #include "EntityAdmin.hpp"
 #include "TypeProtocol.hpp"
+#include "Entity.hpp"
 
 namespace ecs
 {
     class EntityFactory {
     public:
+        template <typename ...Args>
+        static void createEntity(std::shared_ptr<EntityAdmin> &admin, Args &&...args) {
+            admin->entities.emplace_back<>(new Entity(admin,
+                GetPool<CId>(admin).create(nextId(admin)),
+                std::forward<Args>(args)...)
+                );
+        }
+
         static void createPlayer(std::shared_ptr<EntityAdmin> &admin, ObjectPool<CConnection>::index connIdx);
         static void createShootingMonster(std::shared_ptr<EntityAdmin> &admin,
                                           ObjectPool<CTransform>::index transformIdx,
@@ -29,7 +38,7 @@ namespace ecs
                                   const ObjectPool<CCollisionDamage>::index &collisionDmgIdx,
                                   const ObjectPool<CCooldown>::index &cooldownIdx,
                                   const ObjectPool<CHealth>::index &healtIdx,
-                                  const ObjectPool<CBulletType>::index &bulletTypeIdx,
+                                  const ObjectPool<CGun>::index &gunIdx,
                                   const ObjectPool<CSpeed>::index &speedIdx);
     private:
         static int id;

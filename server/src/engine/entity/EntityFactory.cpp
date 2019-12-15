@@ -8,7 +8,6 @@
 #include "EntityFactory.hpp"
 #include "Util.hpp"
 #include "TypeProtocol.hpp"
-#include "Entity.hpp"
 
 #include "CConnection.hpp"
 #include "CTransform.hpp"
@@ -79,7 +78,7 @@ void ecs::EntityFactory::createMonster(std::shared_ptr<EntityAdmin> &admin, Type
                                        const ObjectPool<CCollisionDamage>::index &collisionDmgIdx,
                                        const ObjectPool<CCooldown>::index &cooldownIdx,
                                        const ObjectPool<CHealth>::index &healtIdx,
-                                       const ObjectPool<CBulletType>::index &bulletTypeIdx,
+                                       const ObjectPool<CGun>::index &gunIdx,
                                        const ObjectPool<CSpeed>::index &speedIdx)
 {
     admin->entities.emplace_back(
@@ -92,7 +91,7 @@ void ecs::EntityFactory::createMonster(std::shared_ptr<EntityAdmin> &admin, Type
             collisionDmgIdx,
             cooldownIdx,
             healtIdx,
-            bulletTypeIdx,
+            gunIdx,
             speedIdx
         )
     );
