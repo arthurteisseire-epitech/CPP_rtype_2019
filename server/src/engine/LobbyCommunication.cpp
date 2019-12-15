@@ -39,7 +39,8 @@ void ecs::LobbyCommunication::waitStartGame(std::shared_ptr<EntityAdmin> &admin)
 void ecs::LobbyCommunication::notifyPlayers(std::shared_ptr<EntityAdmin> &admin)
 {
     for (std::size_t i = 0; i < GetPool<CConnection>(admin).size(); ++i)
-        EntityFactory::createPlayer(admin, ObjectPool<CConnection>::index(i));
+        if (GetPool<CConnection>(admin).at(ObjectPool<CConnection>::index(i)).isInLobby)
+            EntityFactory::createPlayer(admin, ObjectPool<CConnection>::index(i));
 
     ForEachMatching<NotifyPlayerTuple>(admin, [&admin](NotifyPlayerTuple &t) {
         auto s = SendProtocol::entitySetToString(GetFromTuple<CType>(t, admin).name,
