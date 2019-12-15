@@ -15,21 +15,26 @@ const std::map<ecs::ReceiveProtocol::Key, ecs::CDirection::Direction> ecs::Comma
     {ecs::ReceiveProtocol::DOWN, ecs::CDirection::DOWN}
 };
 
-ecs::CommandDirectionSystem::CommandDirectionSystem(std::shared_ptr<EntityAdmin> admin) : ASystem(std::move(admin))
+ecs::CommandDirectionSystem::CommandDirectionSystem(std::shared_ptr<EntityAdmin> admin) :
+    ASystem(std::move(admin))
 {
 }
 
 void ecs::CommandDirectionSystem::update(float dt)
 {
-    ForEachMatching<InputDirectionTuple>(admin, [this] (InputDirectionTuple &t) {
+    ForEachMatching<InputDirectionTuple>(admin, [this](InputDirectionTuple &t) {
 
-        auto dir = CDirection::NONE;
         auto &inputs = get<CCommand>(t).commands;
+        decltype(get<CCommand>(t).commands) uniqueDir;
 
-        auto it = std::find_if(inputs.begin(), inputs.end(), &isKeyADirection);
-        if (it != inputs.end())
-            dir = directions.at(it->first);
-        get<CDirection>(t).setDirection(dir);
+        std::copy_if(inputs.begin(), inputs.end(), std::back_inserter(uniqueDir), isKeyADirection);
+        std::sort(uniqueDir.begin(), uniqueDir.end());
+
+        uniqueDir.erase(std::unique(uniqueDir.begin(), uniqueDir.end()), uniqueDir.end());
+
+        get<CDirection>(t).resetDir();
+        for (auto &d : uniqueDir)
+            get<CDirection>(t).addDir(directions.at(d.first));
     });
 }
 

@@ -29,23 +29,35 @@ namespace ecs
             setDirection(dir);
         }
 
-        void setDirection(CDirection::Direction dir_enum)
+        void setDirection(CDirection::Direction dirEnum)
         {
-            if (dir_enum == LEFT)
+            dir = {0, 0};
+            if (dirEnum == LEFT)
                 dir.x = -0.01;
-            else if (dir_enum == RIGHT)
+            else if (dirEnum == RIGHT)
                 dir.x = 0.01;
-            else if (dir_enum == UP)
+            else if (dirEnum == UP)
                 dir.y = -0.01;
-            else if (dir_enum == DOWN)
+            else if (dirEnum == DOWN)
                 dir.y = 0.01;
-            if (dir_enum == NONE) {
-                dir.x = 0;
-                dir.y = 0;
-            }
         }
 
+        void resetDir()
+        {
+            dir = {0, 0};
+        }
 
+        void addDir(CDirection::Direction dirEnum)
+        {
+            if (dirEnum == LEFT)
+                dir.x -= 0.01;
+            else if (dirEnum == RIGHT)
+                dir.x += 0.01;
+            else if (dirEnum == UP)
+                dir.y -= 0.01;
+            else if (dirEnum == DOWN)
+                dir.y += 0.01;
+        }
 
         mut::Vec2f dir;
     };
