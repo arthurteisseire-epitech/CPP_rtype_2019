@@ -32,7 +32,6 @@ namespace ecs
             InputDirectionTuple,
             HandleConnectionTuple,
             ShootingAITuple,
-            CollisionTuple,
             MonsterTuple,
             DirectionUpdateTuple,
             CollisionTuple,
