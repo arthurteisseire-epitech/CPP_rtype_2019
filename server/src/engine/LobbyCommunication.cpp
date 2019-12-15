@@ -17,8 +17,7 @@ void ecs::LobbyCommunication::waitForStartGame(std::shared_ptr<EntityAdmin> &adm
     while (true) {
         ForEachMatching<CConnection>(admin, [&admin, &gameStart](CConnection &conn) {
             while (!conn.readBuffers.empty()) {
-                auto &packet = conn.readBuffers.front();
-                auto &buffer = packet.data;
+                auto &buffer = conn.readBuffers.front().data;
                 std::string s(buffer.begin(), buffer.end());
                 s.erase(std::remove_if(s.begin(), s.end(), iscntrl), s.end());
 
@@ -75,8 +74,7 @@ void ecs::LobbyCommunication::notifyAllMates(std::shared_ptr<EntityAdmin> &admin
                                              SendProtocol::Key messageKey)
 {
     ForEachMatching<CConnection>(admin, [&admin, &conn, &messageKey](CConnection &mate) {
-        if (mate.endpoint != conn.endpoint && mate.isInLobby) {
+        if (mate.endpoint != conn.endpoint && mate.isInLobby)
             NetworkSender::send(admin, mate, Packet(0, SendProtocol::get(messageKey)));
-        }
     });
 }
