@@ -85,3 +85,7 @@ sf::Vector2<float> Client::SideScroller::getSpriteSize() const
 {
     COMPONENT_SPRITE_SIZE
 }
+
+void Client::SideScroller::setLife(float life)
+{
+}

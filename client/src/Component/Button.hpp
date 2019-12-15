@@ -28,6 +28,7 @@ namespace Client {
         uint32_t getId() const override;
         sf::Vector2<float> getPosition() const override;
         sf::Vector2<float> getSpriteSize() const override;
+        void setLife(float setLife) override;
     private:
         void invert();
         uint8_t _layer;

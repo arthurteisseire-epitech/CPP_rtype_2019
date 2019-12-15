@@ -8,8 +8,8 @@
 #include "CommonComponent.hpp"
 #include "Entity.hpp"
 
-Client::Entity::Entity(uint32_t id, uint8_t layer, const std::string &identity, const sf::Vector2<float> &position, const std::pair<std::string, std::string> &assetsPath, const sf::Vector2<uint32_t> &layout) :
-    _id(id), _layer(layer), _identity(identity), _position(position), _clock(), _soundPlayed(false), _soundBuffer(assetsPath.first.empty() ? nullptr : new sf::SoundBuffer()), _texture(new sf::Texture())
+Client::Entity::Entity(uint32_t id, uint8_t layer, const std::string &identity, const sf::Vector2<float> &position, const std::pair<std::string, std::string> &assetsPath, const sf::Vector2<uint32_t> &layout, bool hasLife) :
+    _id(id), _layer(layer), _life(hasLife ? 1.f : -1.f), _identity(identity), _position(position), _clock(), _soundPlayed(false), _soundBuffer(assetsPath.first.empty() ? nullptr : new sf::SoundBuffer()), _texture(new sf::Texture())
 {
     if (_soundBuffer) {
         if (!_soundBuffer->loadFromFile(ASSETS_DIR + assetsPath.first)) {
@@ -26,6 +26,10 @@ Client::Entity::Entity(uint32_t id, uint8_t layer, const std::string &identity, 
     textureRect.top *= textureRect.height;
     _sprite = sf::Sprite(*_texture, textureRect);
     _sprite.setOrigin(sf::Vector2<float>(textureRect.width, textureRect.height));
+    if (hasLife) {
+        _lifeBar.setFillColor({192, 32, 32, 255});
+        _lifeBarBack.setFillColor({32, 32, 32, 255});
+    }
 }
 
 Client::Entity::~Entity()
@@ -43,11 +47,17 @@ void Client::Entity::move(const sf::Vector2<float> &position)
 void Client::Entity::adjust(Client::Window &window)
 {
     COMPONENT_ADJUST
+    if (_life > 0.f) {
+        COMPONENT_ADJUST_LIFEBAR
+    }
 }
 
 void Client::Entity::place(Client::Window &window)
 {
     COMPONENT_PLACE
+    if (_life > 0.f) {
+        COMPONENT_PLACE_LIFEBAR
+    }
 }
 
 bool Client::Entity::event(const sf::Event &event, Client::KeyBind &keyBind, Client::Network &network, Client::Window &window)
@@ -77,6 +87,10 @@ void Client::Entity::render(Client::Window &window, uint8_t layer)
 {
     if (layer == _layer) {
         window.draw(_sprite);
+        if (_life > 0.f) {
+            window.draw(_lifeBarBack);
+            window.draw(_lifeBar);
+        }
     }
 }
 
@@ -103,4 +117,11 @@ sf::Vector2<float> Client::Entity::getPosition() const
 sf::Vector2<float> Client::Entity::getSpriteSize() const
 {
     COMPONENT_SPRITE_SIZE
+}
+
+void Client::Entity::setLife(float life)
+{
+    if (_life > 0.f) {
+        _life = life;
+    }
 }

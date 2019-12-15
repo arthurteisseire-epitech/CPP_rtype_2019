@@ -14,7 +14,7 @@
 namespace Client {
     class Entity : public IComponent {
     public:
-        Entity(uint32_t id, uint8_t layer, const std::string &identity, const sf::Vector2<float> &position, const std::pair<std::string, std::string> &assetsPath, const sf::Vector2<uint32_t> &layout);
+        Entity(uint32_t id, uint8_t layer, const std::string &identity, const sf::Vector2<float> &position, const std::pair<std::string, std::string> &assetsPath, const sf::Vector2<uint32_t> &layout, bool hasLife);
         ~Entity() override;
         void move(const sf::Vector2<float> &position) override;
         void adjust(Client::Window &window) override;
@@ -27,9 +27,11 @@ namespace Client {
         uint32_t getId() const override;
         sf::Vector2<float> getPosition() const override;
         sf::Vector2<float> getSpriteSize() const override;
+        void setLife(float setLife) override;
     private:
         uint32_t _id;
         uint8_t _layer;
+        float _life;
         std::string _identity;
         sf::Vector2<float> _position;
         sf::Clock _clock;
@@ -38,6 +40,8 @@ namespace Client {
         sf::Texture *_texture;
         sf::Sound _sound;
         sf::Sprite _sprite;
+        sf::RectangleShape _lifeBar;
+        sf::RectangleShape _lifeBarBack;
     };
 }
 

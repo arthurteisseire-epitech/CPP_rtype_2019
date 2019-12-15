@@ -27,6 +27,7 @@ void ecs::SendSystem::updateTuple(ecs::SendTuple &t)
         NetworkSender::send(admin, conn, Packet(get<CId>(t).id,
                                                 SendProtocol::entitySetToString(get<CType>(t).name,
                                                                                 get<CTransform>(t).vec.x,
-                                                                                get<CTransform>(t).vec.y)));
+                                                                                get<CTransform>(t).vec.y,
+                                                                                get<CHealth>(t).getLifeRatio())));
     });
 }

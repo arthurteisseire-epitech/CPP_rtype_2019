@@ -132,6 +132,10 @@ sf::Vector2<float> Client::Button::getSpriteSize() const
     COMPONENT_SPRITE_SIZE
 }
 
+void Client::Button::setLife(float life)
+{
+}
+
 void Client::Button::invert()
 {
     if (_textureAlt) {
