@@ -11,6 +11,7 @@
 #include "ObjectPool.hpp"
 #include "CTransform.hpp"
 #include "CConnection.hpp"
+#include "CHealth.hpp"
 #include "CType.hpp"
 #include "CId.hpp"
 
@@ -21,7 +22,8 @@ namespace ecs
             ObjectPool<CTransform>::index,
             ObjectPool<CType>::index,
             ObjectPool<CConnection>::index,
-            ObjectPool<CId>::index
+            ObjectPool<CId>::index,
+            ObjectPool<CHealth>::index
         >;
 }
 

@@ -45,7 +45,8 @@ void ecs::LobbyCommunication::notifyPlayers(std::shared_ptr<EntityAdmin> &admin)
     ForEachMatching<NotifyPlayerTuple>(admin, [&admin](NotifyPlayerTuple &t) {
         auto s = SendProtocol::entitySetToString(GetFromTuple<CType>(t, admin).name,
                                                  GetFromTuple<CTransform>(t, admin).vec.x,
-                                                 GetFromTuple<CTransform>(t, admin).vec.y) + ":player";
+                                                 GetFromTuple<CTransform>(t, admin).vec.y,
+                                                 GetFromTuple<CHealth>(t, admin).getLifeRatio()) + ":player";
 
         NetworkSender::send(admin, GetFromTuple<CConnection>(t, admin), Packet(GetFromTuple<CId>(t, admin).id, s));
     });

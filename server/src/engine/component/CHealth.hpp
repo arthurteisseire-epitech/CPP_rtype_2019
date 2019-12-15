@@ -12,11 +12,18 @@ namespace ecs
 {
     struct CHealth {
         explicit CHealth(int life = 100) :
-            life(life)
+            life(life),
+            maxLife(life)
         {
         }
 
+        [[nodiscard]] float getLifeRatio() const
+        {
+            return static_cast<float>(life) / static_cast<float>(maxLife);
+        }
+
         int life;
+        int maxLife;
     };
 }
 
