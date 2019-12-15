@@ -18,9 +18,18 @@ namespace ecs
     public:
         enum Type {
             SHIP_NORMAL,
-            SHIP_INVERTED,
-            MISSILE_NORMAL,
-            ENEMY_BLAST
+            ENEMY_SHIP,
+            ENEMY_SHIP2,
+            ALIEN,
+            ALIEN2,
+            MISSILE_STAGE1,
+            MISSILE_STAGE2,
+            MISSILE_STAGE3,
+            ENEMY_BLAST_STAGE1,
+            ENEMY_BLAST_STAGE2,
+            ENEMY_BLAST_STAGE3,
+            VORTEX,
+            POWERUP
         };
 
         static std::string_view get(Type type);

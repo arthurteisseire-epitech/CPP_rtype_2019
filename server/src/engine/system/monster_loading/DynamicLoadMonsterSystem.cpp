@@ -9,7 +9,7 @@
 #include "DynamicLoadMonsterSystem.hpp"
 #include "MonsterTuple.hpp"
 #include "EntityFactory.hpp"
-#include "BasicMonster.hpp"
+#include "RandomMonster.hpp"
 
 ecs::DynamicLoadMonsterSystem::DynamicLoadMonsterSystem(std::shared_ptr<EntityAdmin> admin) :
     ASystem(admin),
@@ -20,7 +20,7 @@ ecs::DynamicLoadMonsterSystem::DynamicLoadMonsterSystem(std::shared_ptr<EntityAd
 
 // TODO: remove and replace with dynamic loading
 std::map<std::string, std::function<std::unique_ptr<ecs::AMonster>()>> ecs::DynamicLoadMonsterSystem::monsterFactory = {
-    {"basic", []() {return std::make_unique<BasicMonster>();}}
+    {"basic", []() {return std::make_unique<RandomMonster>();}}
 };
 
 std::vector<std::unique_ptr<ecs::AMonster>> ecs::DynamicLoadMonsterSystem::monsterLibs = {};

@@ -41,7 +41,7 @@ void ecs::EntityFactory::createBullet(std::shared_ptr<EntityAdmin> &admin,
 {
     admin->entities.emplace_back(
         new Entity(admin,
-                   GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::MISSILE_NORMAL)),
+                   GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::MISSILE_STAGE3)),
                    GetPool<CId>(admin).create(nextId(admin)),
                    GetPool<CSpeed>(admin).create(5),
                    GetPool<CCollisionDamage>(admin).create(5),
@@ -59,7 +59,7 @@ void ecs::EntityFactory::createShootingMonster(std::shared_ptr<EntityAdmin> &adm
 {
     admin->entities.emplace_back(
         new Entity(admin,
-                   GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::SHIP_INVERTED)),
+                   GetPool<CType>(admin).create(TypeProtocol::get(TypeProtocol::ENEMY_SHIP)),
                    GetPool<CId>(admin).create(nextId(admin)),
                    GetPool<CCooldown>(admin).create(1),
                    GetPool<CSpeed>(admin).create(2),
