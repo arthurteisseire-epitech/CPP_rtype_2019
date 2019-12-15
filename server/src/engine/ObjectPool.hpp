@@ -41,10 +41,9 @@ namespace ecs
         index create(Args &&...args)
         {
             std::lock_guard<std::mutex> lock(mutex);
-            typename std::vector<std::pair<MEMORY, T>>::iterator it;
 
             if (pool.size() == pool.capacity()) {
-                it = emplaceOnFreeSpace(args...);
+                auto it = emplaceOnFreeSpace(args...);
                 if (it != pool.end())
                     return index(it - pool.begin());
                 reallocate();
