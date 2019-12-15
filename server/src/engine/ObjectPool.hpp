@@ -96,7 +96,7 @@ namespace ecs
         template<typename ...Args>
         std::pair<MEMORY, T> newElement(Args&& ...args)
         {
-            return {UNAVAILABLE, T(args...)};
+            return {UNAVAILABLE, T(std::forward<Args>(args)...)};
         }
 
         void reallocate()
