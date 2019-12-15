@@ -18,7 +18,7 @@ namespace ecs
 {
     struct CGun {
         CGun(const CBulletType &type = CBulletType::BASIC, const CSpeed &speed = 5, const CCollisionDamage &damage = 20,
-             const CCooldown &cooldown = 2, const CHealth &health = 10, const CMoveType &moveType = CMoveType::STRAIGHT) :
+             const CCooldown &cooldown = 2, const CHealth &health = 1, const CMoveType &moveType = CMoveType::STRAIGHT) :
                 type(type),
                 speed(speed),
                 damage(damage),

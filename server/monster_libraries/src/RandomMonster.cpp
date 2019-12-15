@@ -20,9 +20,9 @@ void ecs::RandomMonster::update(std::shared_ptr<EntityAdmin> admin, float deltaT
             GetPool<CCollisionDamage>(admin).create(20),
             GetPool<CCooldown>(admin).create(5),
             GetPool<CHealth>(admin).create(20),
-            GetPool<CGun>(admin).create(generateRandomBullet()),
-            GetPool<CSpeed>(admin).create(2));
-        remaining = 2;
+            GetPool<CGun>(admin).create(generateRandomBullet(), 3),
+            GetPool<CSpeed>(admin).create(1));
+        remaining = 3;
     }
 }
 
@@ -46,4 +46,10 @@ ecs::TypeProtocol::Type ecs::RandomMonster::generateRandomEnemy()
 ecs::CBulletType::BulletType ecs::RandomMonster::generateRandomBullet()
 {
     return enemiesBullet[(rand() % enemiesBullet.size())];
+}
+
+
+ecs::AMonster *monsterEntryPoint()
+{
+    return new ecs::RandomMonster();
 }

@@ -10,7 +10,7 @@
 
 #include <stdexcept>
 
-namespace arc {
+namespace ecs {
 	class LibraryLoaderException : public std::runtime_error {
 	public:
 		explicit LibraryLoaderException(const std::string &message);

@@ -11,6 +11,7 @@
 #include <regex>
 #include "ASystem.hpp"
 #include "AMonster.hpp"
+#include "LibraryLoader.hpp"
 
 namespace ecs
 {
@@ -22,9 +23,10 @@ namespace ecs
         static std::vector<std::unique_ptr<AMonster>> monsterLibs;
     private:
         const std::regex loadLibRegex;
+        std::vector<LibraryLoader> loadedLibs;
+        std::vector<std::string> loadedLibsName;
 
-        static std::vector<std::string> loadedLibs;
-        static std::map<std::string, std::function<std::unique_ptr<AMonster>()>> monsterFactory;
+        bool loadLibrary(const std::string &toLoad);
     };
 }
 

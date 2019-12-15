@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2018
-** arcade
+** r-type
 ** File description:
 ** LibraryLoader.cpp
 */
@@ -9,25 +9,25 @@
 #include "LibraryLoader.hpp"
 #include "LibraryLoaderException.hpp"
 
-arc::LibraryLoader::LibraryLoader() :
+ecs::LibraryLoader::LibraryLoader() :
 	_lib(nullptr)
 {
 }
 
-arc::LibraryLoader::~LibraryLoader()
+ecs::LibraryLoader::~LibraryLoader()
 {
 	if (_lib)
 		dlclose(_lib);
 }
 
-bool arc::LibraryLoader::isFile(const std::string &name) const
+bool ecs::LibraryLoader::isFile(const std::string &name) const
 {
 	struct stat buffer{};
 
 	return (stat(name.c_str(), &buffer) == 0);
 }
 
-void arc::LibraryLoader::load(const std::string &libname)
+void ecs::LibraryLoader::load(const std::string &libname)
 {
 	if (_lib)
 		dlclose(_lib);
@@ -38,7 +38,7 @@ void arc::LibraryLoader::load(const std::string &libname)
 		throw LibraryLoaderException(dlerror());
 }
 
-void *arc::LibraryLoader::findSym(const std::string &symname)
+void *ecs::LibraryLoader::findSym(const std::string &symname)
 {
 	if (_lib == nullptr)
 		throw LibraryLoaderException("No library loaded yet, can't load any symbol");

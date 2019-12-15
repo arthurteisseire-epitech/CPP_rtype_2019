@@ -5,40 +5,45 @@
 ** Created by Arthamios
 */
 
-#include <istream>
+#include "LibraryLoader.hpp"
 #include "DynamicLoadMonsterSystem.hpp"
 #include "MonsterTuple.hpp"
 #include "EntityFactory.hpp"
-#include "RandomMonster.hpp"
 
 ecs::DynamicLoadMonsterSystem::DynamicLoadMonsterSystem(std::shared_ptr<EntityAdmin> admin) :
     ASystem(admin),
-//    loadLibRegex("^load (((/?[^/ ]*)+/?)|(([a-zA-Z]:)?(\\?[a-z  A-Z0-9_.-]+)+))$")
-    loadLibRegex("^load (basic)$")
+    loadLibRegex("^load (.+?.so)$")
 {
+    loadLibrary("../lib/librandom_monster.so");
 }
-
-// TODO: remove and replace with dynamic loading
-std::map<std::string, std::function<std::unique_ptr<ecs::AMonster>()>> ecs::DynamicLoadMonsterSystem::monsterFactory = {
-    {"basic", []() {return std::make_unique<RandomMonster>();}}
-};
 
 std::vector<std::unique_ptr<ecs::AMonster>> ecs::DynamicLoadMonsterSystem::monsterLibs = {};
 
-std::vector<std::string> ecs::DynamicLoadMonsterSystem::loadedLibs = {};
-
-
-void ecs::DynamicLoadMonsterSystem::update(float dTime)
+void ecs::DynamicLoadMonsterSystem::update(float)
 {
     std::string line;
     std::smatch match;
 
     while (std::getline(std::cin, line)) {
-        if (std::regex_match(line, match, loadLibRegex) && std::find(loadedLibs.begin(), loadedLibs.end(), match[1]) == loadedLibs.end()) {
-            std::cout << "matched: " << match[1] << std::endl;
-            monsterLibs.emplace_back(monsterFactory.at(match[1])());
-            loadedLibs.emplace_back(match[1]);
+        if (std::regex_match(line, match, loadLibRegex) && std::find(loadedLibsName.begin(), loadedLibsName.end(), match[1]) == loadedLibsName.end()) {
+            std::string toLoad = match[1];
+            std::cout << "matched: " << toLoad << std::endl;
+            loadLibrary(toLoad);
         } else
             std::cout << "unknown command" << std::endl;
+    }
+}
+
+bool ecs::DynamicLoadMonsterSystem::loadLibrary(const std::string &toLoad)
+{
+    LibraryLoader lib;
+    try {
+        monsterLibs.emplace_back(lib.loadInstance<ecs::AMonster>(toLoad, "monsterEntryPoint"));
+        loadedLibs.emplace_back(lib);
+        loadedLibsName.emplace_back(toLoad);
+        return true;
+    } catch (LibraryLoaderException &exception) {
+        std::cerr << exception.what() << std::endl;
+        return false;
     }
 }

@@ -26,4 +26,6 @@ namespace ecs
     };
 }
 
+extern "C" __attribute__((visibility("default"))) ecs::AMonster *monsterEntryPoint();
+
 #endif

@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2018
-** arcade
+** r-type
 ** File description:
 ** LibraryLoader.hpp
 */
@@ -12,7 +12,7 @@
 #include <string>
 #include "LibraryLoaderException.hpp"
 
-namespace arc {
+namespace ecs {
 	class LibraryLoader {
 	public:
 		LibraryLoader();
@@ -31,14 +31,14 @@ namespace arc {
 	};
 
 	template<typename T>
-	T *arc::LibraryLoader::loadInstance(const std::string &libname, const std::string &entryPoint)
+	T *ecs::LibraryLoader::loadInstance(const std::string &libname, const std::string &entryPoint)
 	{
 		load(libname);
 		return reloadInstance<T>(entryPoint);
 	}
 
 	template<typename T>
-	T *arc::LibraryLoader::reloadInstance(const std::string &entryPoint)
+	T *ecs::LibraryLoader::reloadInstance(const std::string &entryPoint)
 	{
 		T *(*instantiate)();
 
