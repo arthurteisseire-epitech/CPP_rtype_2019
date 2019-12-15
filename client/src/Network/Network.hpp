@@ -17,7 +17,7 @@
 namespace Client {
     class Network {
     public:
-        Network(const std::pair<std::string, uint16_t> &serverAddr, const uint16_t &clientPort);
+        Network(const std::string &serverIp, const uint16_t &serverPort);
         ~Network();
         void send(const void *data, const uint64_t &size);
         void send(const Client::RawPacket *packet);

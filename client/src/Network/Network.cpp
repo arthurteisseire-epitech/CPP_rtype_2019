@@ -8,10 +8,10 @@
 #include <iostream>
 #include "Network.hpp"
 
-Client::Network::Network(const std::pair<std::string, uint16_t> &serverAddr, const uint16_t &clientPort) :
-    _socket(), _serverIp(serverAddr.first), _serverPort(serverAddr.second), _active(true), _receiver(&Client::Network::receiver, this)
+Client::Network::Network(const std::string &serverIp, const uint16_t &serverPort) :
+    _socket(), _serverIp(serverIp), _serverPort(serverPort), _active(true), _receiver(&Client::Network::receiver, this)
 {
-    _socket.bind(clientPort);
+    _socket.bind(0);
     this->send(Client::Packet(PACKET_CONNECT).getRaw());
     _receiver.launch();
 }
