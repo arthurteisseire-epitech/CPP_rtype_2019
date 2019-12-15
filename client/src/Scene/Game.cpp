@@ -39,19 +39,19 @@ static const std::map<std::string, void (Client::Game::*)(const std::vector<std:
 
 static const std::vector<std::pair<std::string, std::string>> entityCollision({
     {"enemy_alien1", "player_laser"},
-    {"enemy_alien1", "ship"},
+    {"enemy_alien1", "player_ship"},
     {"enemy_alien2", "player_laser"},
-    {"enemy_alien2", "ship"},
+    {"enemy_alien2", "player_ship"},
     {"enemy_blast1_stage3", "player_laser"},
-    {"enemy_blast1_stage3", "ship"},
+    {"enemy_blast1_stage3", "player_ship"},
     {"enemy_blast2_stage3", "player_laser"},
-    {"enemy_blast2_stage3", "ship"},
+    {"enemy_blast2_stage3", "player_ship"},
     {"enemy_ship1", "player_laser"},
-    {"enemy_ship1", "ship"},
+    {"enemy_ship1", "player_ship"},
     {"enemy_ship2", "player_laser"},
-    {"enemy_ship2", "ship"},
+    {"enemy_ship2", "player_ship"},
     {"enemy_vortex", "player_laser"},
-    {"enemy_vortex", "ship"},
+    {"enemy_vortex", "player_ship"},
     {"player_laser", "enemy_alien1"},
     {"player_laser", "enemy_alien2"},
     {"player_laser", "enemy_blast1_stage3"},
@@ -212,7 +212,7 @@ void Client::Game::deleteEntity(const std::vector<std::string> &payload, const u
         }
     }
 }
-
+#include <iostream>
 void Client::Game::setEntity(const std::vector<std::string> &payload, const uint32_t &id)
 {
     std::istringstream coordStream(payload[2]);

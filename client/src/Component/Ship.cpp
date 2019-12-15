@@ -103,7 +103,7 @@ bool Client::Ship::collide(Client::IComponent *component, Client::Window &window
 
 std::string Client::Ship::getIdentity() const
 {
-    return "ship";
+    return "player_ship";
 }
 
 uint32_t Client::Ship::getId() const
