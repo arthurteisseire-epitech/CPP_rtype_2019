@@ -17,18 +17,19 @@
 #include "Menu/MainMenu.hpp"
 
 static const std::map<std::string, std::pair<std::pair<std::string, std::string>, std::pair<sf::Vector2<uint32_t>, bool>>> entityData({
-    {"alien1", {{"", "Game/Alien1.png"}, {{8, 2}, true}}},
-    {"alien2", {{"", "Game/Alien2.png"}, {{8, 2}, true}}},
-    {"blast_stage1", {{"", "Game/BlastStage1.png"}, {{1, 1}, false}}},
-    {"blast_stage2", {{"", "Game/BlastStage2.png"}, {{1, 1}, false}}},
-    {"blast_stage3", {{"Game/Blast.ogg", "Game/BlastStage3.png"}, {{2, 1}, false}}},
-    {"enemy_blast_stage1", {{"", "Game/EnemyBlastStage1.png"}, {{1, 1}, false}}},
-    {"enemy_blast_stage2", {{"", "Game/EnemyBlastStage2.png"}, {{1, 1}, false}}},
-    {"enemy_blast_stage3", {{"Game/EnemyBlast.ogg", "Game/EnemyBlastStage3.png"}, {{2, 1}, false}}},
+    {"enemy_alien1", {{"", "Game/EnemyAlien1.png"}, {{8, 2}, true}}},
+    {"enemy_alien2", {{"", "Game/EnemyAlien2.png"}, {{8, 2}, true}}},
+    {"enemy_blast1_stage1", {{"", "Game/EnemyBlast1Stage1.png"}, {{1, 1}, false}}},
+    {"enemy_blast1_stage2", {{"", "Game/EnemyBlast1Stage2.png"}, {{1, 1}, false}}},
+    {"enemy_blast1_stage3", {{"Game/EnemyBlast.ogg", "Game/EnemyBlast1Stage3.png"}, {{2, 1}, false}}},
+    {"enemy_blast2_stage1", {{"", "Game/EnemyBlast2Stage1.png"}, {{1, 1}, false}}},
+    {"enemy_blast2_stage2", {{"", "Game/EnemyBlast2Stage2.png"}, {{1, 1}, false}}},
+    {"enemy_blast2_stage3", {{"Game/EnemyBlast.ogg", "Game/EnemyBlast2Stage3.png"}, {{2, 1}, false}}},
     {"enemy_ship1", {{"", "Game/EnemyShip1.png"}, {{8, 1}, true}}},
     {"enemy_ship2", {{"", "Game/EnemyShip2.png"}, {{8, 1}, true}}},
-    {"power_up", {{"", "Game/PowerUp.png"}, {{12, 1}, false}}},
-    {"vortex", {{"", "Game/Vortex.png"}, {{3, 1}, false}}}
+    {"enemy_vortex", {{"Game/EnemyVortex.ogg", "Game/EnemyVortex.png"}, {{3, 1}, false}}},
+    {"player_laser", {{"Game/PlayerLaser.ogg", "Game/PlayerLaser.png"}, {{2, 1}, false}}},
+    {"power_up", {{"", "Game/PowerUp.png"}, {{12, 1}, false}}}
 });
 
 static const std::map<std::string, void (Client::Game::*)(const std::vector<std::string> &, const uint32_t &)> entityAction({
@@ -37,26 +38,34 @@ static const std::map<std::string, void (Client::Game::*)(const std::vector<std:
 });
 
 static const std::vector<std::pair<std::string, std::string>> entityCollision({
-    {"alien1", "blast_stage3"},
-    {"alien1", "ship"},
-    {"alien2", "blast_stage3"},
-    {"alien2", "ship"},
-    {"blast_stage3", "alien1"},
-    {"blast_stage3", "alien2"},
-    {"blast_stage3", "enemy_blast_stage3"},
-    {"blast_stage3", "enemy_ship1"},
-    {"blast_stage3", "enemy_ship2"},
-    {"enemy_blast_stage3", "blast_stage3"},
-    {"enemy_blast_stage3", "ship"},
-    {"enemy_ship1", "blast_stage3"},
+    {"enemy_alien1", "player_laser"},
+    {"enemy_alien1", "ship"},
+    {"enemy_alien2", "player_laser"},
+    {"enemy_alien2", "ship"},
+    {"enemy_blast1_stage3", "player_laser"},
+    {"enemy_blast1_stage3", "ship"},
+    {"enemy_blast2_stage3", "player_laser"},
+    {"enemy_blast2_stage3", "ship"},
+    {"enemy_ship1", "player_laser"},
     {"enemy_ship1", "ship"},
-    {"enemy_ship2", "blast_stage3"},
+    {"enemy_ship2", "player_laser"},
     {"enemy_ship2", "ship"},
-    {"ship", "alien1"},
-    {"ship", "alien2"},
-    {"ship", "enemy_blast_stage3"},
-    {"ship", "enemy_ship1"},
-    {"ship", "enemy_ship2"}
+    {"enemy_vortex", "player_laser"},
+    {"enemy_vortex", "ship"},
+    {"player_laser", "enemy_alien1"},
+    {"player_laser", "enemy_alien2"},
+    {"player_laser", "enemy_blast1_stage3"},
+    {"player_laser", "enemy_blast2_stage3"},
+    {"player_laser", "enemy_ship1"},
+    {"player_laser", "enemy_ship2"},
+    {"player_laser", "enemy_vortex"},
+    {"player_ship", "enemy_alien1"},
+    {"player_ship", "enemy_alien2"},
+    {"player_ship", "enemy_blast1_stage3"},
+    {"player_ship", "enemy_blast2_stage3"},
+    {"player_ship", "enemy_ship1"},
+    {"player_ship", "enemy_ship2"},
+    {"player_ship", "enemy_vortex"}
 });
 
 static const std::vector<sf::Vector2<float>> buttonPosList({
@@ -229,8 +238,8 @@ void Client::Game::setEntity(const std::vector<std::string> &payload, const uint
             }
         }
     }
-    if (payload[1] == "ship") {
-        _components.push_back(new Client::Ship(id, 1, "Game/Ship.png", payload.size() > 4 && payload[4] == "player"));
+    if (payload[1] == "player_ship") {
+        _components.push_back(new Client::Ship(id, 1, "Game/PlayerShip.png", payload.size() > 4 && payload[4] == "player"));
     } else {
         auto data = entityData.find(payload[1]);
         if (data != entityData.end()) {
