@@ -13,19 +13,15 @@
 #include "CTransform.hpp"
 #include "CDirection.hpp"
 #include "CType.hpp"
-#include "CId.hpp"
-#include "CCooldown.hpp"
-#include "CBulletType.hpp"
+#include "CGun.hpp"
 
 namespace ecs
 {
     using ShootingAITuple = std::tuple
         <
-            ObjectPool<CId>::index,
             ObjectPool<CType>::index,
             ObjectPool<CTransform>::index,
-            ObjectPool<CDirection>::index,
-            ObjectPool<CBulletType>::index
+            ObjectPool<CGun>::index
         >;
 }
 

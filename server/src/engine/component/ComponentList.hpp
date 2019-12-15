@@ -21,6 +21,7 @@
 #include "CHealth.hpp"
 #include "CMoveType.hpp"
 #include "CBulletType.hpp"
+#include "CGun.hpp"
 
 namespace ecs
 {
@@ -37,7 +38,8 @@ namespace ecs
             CCollisionDamage,
             CHealth,
             CMoveType,
-            CBulletType
+            CBulletType,
+            CGun
         >;
 }
 

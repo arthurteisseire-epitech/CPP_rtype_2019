@@ -11,7 +11,7 @@
 namespace ecs
 {
     struct CCollisionDamage {
-        explicit CCollisionDamage(int _damage) :
+        CCollisionDamage(int _damage) :
             damage(_damage)
         {
         }
