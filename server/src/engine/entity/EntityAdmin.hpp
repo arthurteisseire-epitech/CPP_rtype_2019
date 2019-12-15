@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <tuple>
+#include <iostream>
 #include "Types.hpp"
 #include "ObjectPool.hpp"
 #include "IEntity.hpp"

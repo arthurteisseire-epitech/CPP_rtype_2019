@@ -25,9 +25,7 @@ std::pair<ecs::ReceiveProtocol::Key, std::string> ecs::ReceiveProtocol::find(con
 {
     auto keyString = command.substr(0, command.find(':'));
     auto it = commands.find(keyString);
-    if (it == commands.end()) {
-        std::cout << "'" << keyString << "': unkown in receive protocol" << std::endl;
+    if (it == commands.end())
         return {UNKOWN, ""};
-    }
     return {it->second, command.substr(std::min(command.length(), keyString.length() + 1))};
 }

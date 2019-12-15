@@ -10,7 +10,6 @@
 
 #include <algorithm>
 #include <vector>
-#include <iostream>
 #include <mutex>
 
 namespace ecs
