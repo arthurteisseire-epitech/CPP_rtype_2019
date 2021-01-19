@@ -10,4 +10,15 @@ make
 ```
 
 ## USAGE
-`./my_rpg`
+
+### Server
+```
+cd server
+./r-type-server
+```
+
+### Client
+```
+cd client
+./client [server_ip] <server_port>
+```
