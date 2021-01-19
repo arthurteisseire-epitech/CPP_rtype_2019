@@ -32,6 +32,7 @@ bin/
 r-type_client
 r-type_server
 build
+server/tests/googletest/googletest/generated/
 
 #conan
 conan.lock
