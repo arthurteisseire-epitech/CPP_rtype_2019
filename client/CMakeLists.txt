@@ -15,5 +15,5 @@ file(GLOB_RECURSE client_sources src/*.cpp src/*.hpp)
 list(FILTER client_sources EXCLUDE REGEX "src/main.cpp$")
 
 add_executable(${CLIENT_NAME} ${client_sources} src/main.cpp)
-target_link_libraries(${CLIENT_NAME} ${CONAN_LIBS})
+target_link_libraries(${CLIENT_NAME} ${Boost_LIBRARIES} sfml-audio sfml-network sfml-system sfml-graphics sfml-window)
 add_subdirectory(tests EXCLUDE_FROM_ALL)

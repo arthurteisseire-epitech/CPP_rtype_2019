@@ -29,6 +29,6 @@ file(GLOB_RECURSE server_sources src/*.cpp src/*.hpp)
 list(FILTER server_sources EXCLUDE REGEX "src/main.cpp$")
 
 add_executable(${SERVER_NAME} ${server_sources} src/main.cpp)
-target_link_libraries(${SERVER_NAME} ${CONAN_LIBS})
+target_link_libraries(${SERVER_NAME} ${Boost_LIBRARIES} boost_thread pthread dl)
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 add_subdirectory(monster_libraries)

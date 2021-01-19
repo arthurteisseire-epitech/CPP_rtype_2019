@@ -8,7 +8,7 @@
 #ifndef RTYPE_ICOMPONENT_HPP
 #define RTYPE_ICOMPONENT_HPP
 
-#define ASSETS_DIR "../../client/assets/"
+#define ASSETS_DIR "../client/assets/"
 
 #include <cstdint>
 #include <SFML/Graphics.hpp>
