@@ -24,4 +24,7 @@ cd client
 ```
 
 ## Notes
-This is an educational project. There remains some bugs but what was important for us is that monsters are loaded dynamically and Entity Component System framework we created using template meta-programming in the server.
+This is an educational project so there remains some bugs that we didn't fixed but what was important for us is:
+- Monsters are loaded dynamically. You can play in the same local network.
+- Client / Server with home-made protocol following RFC 2119
+- We achieve to create an ECS (Entity Component System) framework functionnal using template meta-programming. Networking, and dynamic monster loading are working in different threads thanks to a home-made thread-pool. Those are part of our ECS.
